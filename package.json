@@ -1,0 +1,40 @@
+{
+  "name": "reactfluxstockduel",
+  "version": "1.0.0",
+  "description": "Stock Duel in React and Flux",
+  "main": "gulpfile.js",
+  "scripts": {
+    "dbup": "knex migrate:latest --knexfile db/index.js; knex seed:run --knexfile db/index.js",
+    "dbdown": "knex migrate:rollback --knexfile db/index.js"
+  },
+  "author": "Anna Rogers",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^0.8.5",
+    "bluebird": "^3.1.1",
+    "body-parser": "^1.14.2",
+    "browserify": "^13.0.0",
+    "cls-bluebird": "^1.0.1",
+    "continuation-local-storage": "^3.1.4",
+    "cookie-parser": "^1.4.1",
+    "express": "^4.13.3",
+    "express-session": "^1.13.0",
+    "flux": "^2.1.1",
+    "gulp": "^3.9.0",
+    "gulp-connect": "^2.3.1",
+    "history": "^1.17.0",
+    "jquery": "^2.2.0",
+    "knex": "^0.9.0",
+    "morgan": "^1.6.1",
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.0.0",
+    "pg": "^4.4.3",
+    "react": "^0.14.6",
+    "react-dom": "^0.14.6",
+    "react-router": "^1.0.3",
+    "reactify": "^1.1.1",
+    "request-promise": "^2.0.0",
+    "superagent": "^1.6.1",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
