@@ -8,17 +8,13 @@ var router = require('./routes/index');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 
-//define a port
+
 var port = process.env.PORT || 3000;
 
 var app = express();
 
 app.use(morgan('dev'));
 app.use(bodyParser.json());
-
-
-//serving the static files
-// app.use('/documentation', express.static(pathToDocumentation));
 
 //connection to the routes in ./routes folder
 app.use('/api', router(knex));
@@ -29,7 +25,7 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/client/index.html');
 });
 
-//then make all client file assests available
+//then make all client file assests available to find the file searching for
 app.use('/', express.static(__dirname + '/client'));
 
 app.listen(port);

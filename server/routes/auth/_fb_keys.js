@@ -1,7 +1,7 @@
 var methods = {};
 
-methods.CLIENT_ID = 1535101000114340;
+methods.CLIENT_ID = 1010355839021712;
 
-methods.CLIENT_SECRET = '0e29666dbab7f9fdcfdd9ac9f030e50d';
+methods.CLIENT_SECRET = 'f103103eaff117880029c604913b5ab0';
  
 module.exports = methods;

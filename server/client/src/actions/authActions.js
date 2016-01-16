@@ -18,11 +18,24 @@ var authActions = {
   sendSignup: function (email, password) {
 
     console.log('ACTIONS Signup!!',email, password);
+    var options = {
+        method: 'POST',
+        uri: "http://localhost:3000/api/users/signup",
+
+    };
+
+    rp(options)
+      .then(function (data) {
+        console.log('data success',data);
+      })
+      .catch(function (err) {
+        console.log('err',err);
+      });
 
   }
 
 };
-console.log('foobarthinguptime');
+
 
 module.exports = authActions;
 
@@ -38,16 +51,3 @@ module.exports = authActions;
     // });
 
 
-// var options = {
-//     method: 'POST',
-//     uri: "http://localhost:3000/api/users/login",
-
-// };
-
-// rp(options)
-//   .then(function (data) {
-//     console.log('data success',data);
-//   })
-//   .catch(function (err) {
-//     console.log('err',err);
-//   });

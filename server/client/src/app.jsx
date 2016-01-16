@@ -8,10 +8,15 @@ var Router = require('react-router').Router;
 var Link = require('react-router').Link;
 var IndexRoute = require('react-router').IndexRoute;
 
-var App = require('./components/index.jsx');
+// var App = require('./components/index.jsx');
 var Home = require('./components/home.jsx');
 var Login = require('./components/auth/login.jsx');
 
+var Create = require('./components/createMatch.jsx');
+var Portfolio = require('./components/portfolio/index.jsx');
+var Search = require('./components/searchStocks/index.jsx');
+var Join = require('./components/toJoin/index.jsx');
+var Matches = require('./components/matches/index.jsx');
 
 
 var App = React.createClass({
@@ -29,7 +34,7 @@ var App = React.createClass({
         <nav className="navbar navbar-fixed-top navbar-inverse">
           <div className="container-fluid">
             <div className="navbar-header">
-              <Link to="/home">Stock Duel</Link>
+              <Link to="/home">Pirate Stocks</Link>
             </div>
           </div>
         </nav>
@@ -47,6 +52,23 @@ var About = React.createClass({
       <div className="container">
         <h3>About</h3>
         <p>Time to get this routing working</p>
+        <div>
+          <div>
+            <Link to="/create">Create Match</Link>
+          </div>
+          <div>
+            <Link to="/search">Stocks</Link>
+          </div>
+          <div>
+            <Link to="/join">Join a New Match</Link>
+          </div>
+          <div>
+            <Link to="/portfolio">Your Portfolio</Link>
+          </div>
+          <div>
+            <Link to="/matches">Your Matches</Link>
+          </div>
+        </div>
       </div>
     )
   }
@@ -57,6 +79,11 @@ ReactDOM.render(
     <Route path="/" component={App}>
       <Route path="home" component={Home} />
       <Route path="about" component={About} />
+        <Route path="create" component={Create} />
+        <Route path="search" component={Search} />
+        <Route path="portfolio" component={Portfolio} />
+        <Route path="join" component={Join} />
+        <Route path="matches" component={Matches} />
       <Route path="login" component={Login} />
     </Route>
   </Router>

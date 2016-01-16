@@ -1,14 +1,22 @@
 {
-  "name": "reactfluxstockduel",
+  "name": "pirate_stocks",
   "version": "1.0.0",
-  "description": "Stock Duel in React and Flux",
+  "description": "Fantasy Stock Trading for Pirates",
   "main": "gulpfile.js",
   "scripts": {
-    "dbup": "knex migrate:latest --knexfile db/index.js; knex seed:run --knexfile db/index.js",
-    "dbdown": "knex migrate:rollback --knexfile db/index.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/muddybarefeet/pirateStocks.git"
   },
   "author": "Anna Rogers",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/muddybarefeet/pirateStocks/issues"
+  },
+  "homepage": "https://github.com/muddybarefeet/pirateStocks#readme",
   "dependencies": {
     "bcrypt": "^0.8.5",
     "bluebird": "^3.1.1",
@@ -21,7 +29,6 @@
     "express-session": "^1.13.0",
     "flux": "^2.1.1",
     "gulp": "^3.9.0",
-    "gulp-connect": "^2.3.1",
     "history": "^1.17.0",
     "jquery": "^2.2.0",
     "knex": "^0.9.0",
@@ -30,11 +37,11 @@
     "passport-facebook": "^2.0.0",
     "pg": "^4.4.3",
     "react": "^0.14.6",
+    "react-bootstrap-datetimepicker": "0.0.22",
     "react-dom": "^0.14.6",
     "react-router": "^1.0.3",
     "reactify": "^1.1.1",
     "request-promise": "^2.0.0",
-    "superagent": "^1.6.1",
     "vinyl-source-stream": "^1.1.0"
   }
 }

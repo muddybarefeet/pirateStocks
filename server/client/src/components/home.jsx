@@ -4,17 +4,12 @@ var Link = require('react-router').Link;
 
 var Home = React.createClass({
 
-  handleLoginClick: function(i) {
-    console.log('You clicked');
-
-  },
-
   render: function () {
 
     return (
       <div className="container headerPaddingTop">
         <div className="centreTitle marginUnder">
-          <h2>StockDuel</h2>
+          <h2>Pirate Stocks</h2>
           <h6>Fantasy Stock Trading</h6>
         </div>
         <div className="container">
@@ -32,7 +27,7 @@ var Home = React.createClass({
         </div>
         <Link to="/about">App</Link>
         <div className="centreTitle" >
-          <button type="button" className="btn btn-primary">Facebook Login</button>
+          <a href="http://localhost:3000/api/auth/facebook"><img className="imgWidth" src='./../../assets/images/login.png' alt="facebook login button" /></a>
         </div>
         <div className="centreTitle" >
           <button type="button" className="btn btn-warning" onClick={this.handleLoginClick}><Link to="login">Signup/ Login</Link></button>

@@ -60,8 +60,8 @@ var Login = React.createClass({
             <h2>Login</h2>
 
             <div className="form-group">
-              <label htmlFor="usr">Email:</label>
-              <input type="text" className="form-control" id="usr" onChange={this.handleLoginEmailChange} />
+              <label htmlFor="email">Email:</label>
+              <input type="email" className="form-control" id="usr" onChange={this.handleLoginEmailChange} />
             </div>
             <div className="form-group">
               <label htmlFor="usr">Password:</label>

@@ -7,7 +7,7 @@ var clientID = process.env.CLIENT_ID || require ('./_fb_keys').CLIENT_ID;
 var clientSecret = process.env.CLIENT_SECRET || require ('./_fb_keys').CLIENT_SECRET;
 
 //process.env.ENVIRONMENT is set in deployment mode in the db index.js
-var callbackURL = process.env.ENVIRONMENT ? 'http://stockduelgame.com/auth/facebook/callback' : 'http://localhost:8080/auth/facebook/callback';
+var callbackURL = process.env.ENVIRONMENT ? 'http://stockduelgame.com/auth/facebook/callback' : 'http://localhost:3000/auth/facebook/callback';
 
 module.exports = function (knex) {
 

@@ -68,15 +68,17 @@ module.exports = function (knex) {
   module.login = function (email, password) {
     
     var id;
+    var userEmail;
     return knex('users').where('email', email)
     .then(function (data) {
       id = data[0].u_id;
+      userEmail = data[0].email;
       return bcrypt.compareAsync(password, data[0].password);
     })
     .then(function (userVerified) {
       //userVerified returns true/false
       if (userVerified) {
-        return {id: id};
+        return {id: id, email: userEmail };
       } else {
         throw new Error("User Not Verified");
       }

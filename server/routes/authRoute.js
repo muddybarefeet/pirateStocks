@@ -15,7 +15,7 @@ module.exports = function (knex, passport) {
 
   //if the user redirected to facebook if no token and return with fail or success
   router.get('/facebook/callback', passport.authenticate('facebook', {
-    successRedirect: '/#/matches',
+    successRedirect: '/#/about',
     failureRedirect: '/'
   }));
 
