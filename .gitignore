@@ -1,2 +1,3 @@
 node_modules/*
+server/client/src/node_modules/*
 routes/auth/_fb_keys.js
