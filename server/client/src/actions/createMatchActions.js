@@ -8,8 +8,23 @@ var CreateMatchActions = {
   createMatch: function (title, type, funds, start, end) {
 
     console.log('ACTIONS create!!',title, type, funds, start, end);
-
-
+    requestHelper
+    .post('matches/', {userId: 13, title: title, type: type, funds: funds, start: start, end: end})
+    .then(function(userData){
+      if (userMatch.data) {
+        userMatch = userMatch.data;
+        console.log('userData create', userMatch);
+        AppDispatcher.handleServerAction({
+          actionType: "CREATE_MATCH",
+          id: userMatch.id,
+          email: userMatch.email,
+          username: userMatch.username
+        });
+      }
+    })
+    .catch(function (err) {
+      console.log('creatematch err', err);
+    });
 
   }
 

@@ -10,17 +10,15 @@ var authActions = {
     requestHelper
     .post('users/login', {email: email, password: password})
     .then(function(userData){
-      if (userData.data) {
-        return userData.data;
+      userData = userData.data;
+      if (userData) {
+        AppDispatcher.handleServerAction({
+          actionType: "USER_LOGIN",
+          id: userData.id,
+          email: userData.email,
+          username: userData.username
+        });
       }
-    })
-    .then(function (userData) {
-      AppDispatcher.handleServerAction({
-        actionType: "USER_LOGIN",
-        id: userData.id,
-        email: userData.email,
-        username: userData.username
-      });
     })
     .catch(function (err) {
       console.log('err login', err);
@@ -33,17 +31,15 @@ var authActions = {
     requestHelper
     .post('users/signup', {username: username, email: email, password: password})
     .then(function(userData){
-      if (userData.data) {
-        return userData.data;
+      userData = userData.data;
+      if (userData) {
+        AppDispatcher.handleServerAction({
+          actionType: "USER_SIGNUP",
+          id: userData.id,
+          email: userData.email,
+          username: userData.username
+        });
       }
-    })
-    .then(function (userData) {
-      AppDispatcher.handleServerAction({
-        actionType: "USER_SIGNUP",
-        id: userData.id,
-        email: userData.email,
-        username: userData.username
-      });
     })
     .catch(function (err) {
       console.log('err signup', err);

@@ -22,14 +22,18 @@ var AuthStore = merge(EventEmitter.prototype, {
   },
 
   addChangeListener: function(callback){
+    console.log('change listener added');
     this.on(CHANGE_EVENT, callback);
   },
 
   removeChangeListener: function(callback){
+    console.log('change listener removed');
     this.removeListener(CHANGE_EVENT, callback);
   }
 
 });
+
+AuthStore.setMaxListeners(0);
 
 AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. Store wants to know if it does anything. Payload 
   var action = payload.action;//payload is the object of data coming from dispactcher //action is the object passed from the actions file

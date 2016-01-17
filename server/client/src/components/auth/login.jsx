@@ -11,13 +11,13 @@ var Login = React.createClass({
     return AuthStore.getUserData();
   },
 
-  // componentDidMount: function () {
-  //   AuthStore.addChangeListener(this._onChangeEvent);
-  // },
+  componentDidMount: function () {
+    AuthStore.addChangeListener(this._onChangeEvent);
+  },
 
-  // componentWillUnmount: function () {
-  //   AuthStore.removeChangeListener(this._onChangeEvent);
-  // },
+  componentWillUnmount: function () {
+    AuthStore.removeChangeListener(this._onChangeEvent);
+  },
 
   _onChangeEvent: function () {
     var user = AuthStore.getUserData().userId;
@@ -38,7 +38,7 @@ var Login = React.createClass({
 
   handleLoginClick: function (i) {
     authActions.sendLogin(this.state.emailLogin, this.state.passLogin);
-    this.setState({emailLogin: "", passLogin: ""});
+    // this.setState({emailLogin: "", passLogin: ""});
     //want to empty the text box
   },
 
@@ -59,7 +59,7 @@ var Login = React.createClass({
 
   handleSignupClick: function (i) {
     authActions.sendSignup(this.state.usernameSignup, this.state.emailSignup, this.state.passSignup);
-    this.setState({usernameSignup: "", emailSignup: "", passSignup: ""});
+    // this.setState({usernameSignup: "", emailSignup: "", passSignup: ""});
     //want to empty the text box
   },
 

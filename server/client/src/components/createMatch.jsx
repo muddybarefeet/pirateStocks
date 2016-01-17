@@ -1,7 +1,6 @@
 
 var React = require('react');
 var Link = require('react-router').Link;
-var $ = require('jquery');
 var DateTimeField = require('react-bootstrap-datetimepicker');
 var createMatchActions = require('./../actions/createMatchActions.js');
 
@@ -21,14 +20,17 @@ var Create = React.createClass({
   },
 
   handleFundsChange: function (event) {
-    this.setState({funds: event.target.value});
+    var funds = event.target.value;
+    var remove$ = funds.split('').slice(1).join('');
+    //how to make a string with comma a number????!!!
+    this.setState({totalFunds: parseInt(remove$)});
   },
 
   //get the date with refs can I add them on the state? Would be neater REVISIT!
   handleClick: function (action) {
     var start = this.refs.startDate.value;
     var end = this.refs.finishDate.value;
-    createMatchActions.createMatch(this.state.matchTitle, this.state.typeOfMatch, this.state.funds, start, end)
+    createMatchActions.createMatch(this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, new Date(start), new Date(end));
   },
 
   render: function () {

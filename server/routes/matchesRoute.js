@@ -40,17 +40,16 @@ module.exports = function (knex) {
   .post(function (req, res) {
 
     var userId = req.body.userId;
-    var startFunds = req.body.startFunds;
-    var startDate = req.body.startdate;
-    var endDate = req.body.enddate;
+    var startFunds = req.body.funds;
+    var startDate = req.body.start;
+    var endDate = req.body.end;
     var type = req.body.type;
     var title = req.body.title;
 
     matchesController.createMatch(userId, startFunds, type, startDate, endDate, title)
       .then(function (match) {
-        return res.status(200).json({
-          data: match
-        });
+        console.log('match Made', match);
+        return res.send(match);
       })
       .catch(function (err) {
         return res.status(400).json({

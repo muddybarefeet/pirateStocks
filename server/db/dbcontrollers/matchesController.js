@@ -16,7 +16,6 @@ module.exports = function (knex) {
     var START_MIN = 30;
     var newDate = new Date(date);
     var start = new Date( Date.UTC(newDate.getFullYear(), newDate.getMonth(), newDate.getDate(), START_HOUR, START_MIN) );
-    console.log(start);
     return start.toISOString();
   }
 
@@ -25,13 +24,15 @@ module.exports = function (knex) {
     var END_HOUR = 21;
     var newDate = new Date(date);
     var end = new Date( Date.UTC(newDate.getFullYear(), newDate.getMonth(), newDate.getDate(), END_HOUR) );
-    console.log(end);
     return end.toISOString();
   }
 
   /* A match requires a creater (userId) {string}, starting funds {number}
    the type (solo or head to head) {string}, start date {date}, end date
    {date} */
+
+  //Create a Match: insert a user into the previously null challengee matches table field. matchId {string}, userId {string}
+  //-------------------------------------------------------------------------------------   
 
   module.createMatch = function (userId, startFunds, type, startDate, endDate, title) {
 
@@ -43,7 +44,7 @@ module.exports = function (knex) {
     endDate = standardizeEnd(endDate);
 
     if (startDate >= endDate){
-      throw new Error('Start date can not occur before end date.');
+      throw new Error('End date can not occur before start date.');
     }
 
     if (startDate < today){
