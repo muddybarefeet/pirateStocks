@@ -11,13 +11,13 @@ var Login = React.createClass({
     return AuthStore.getUserData();
   },
 
-  componentDidMount: function () {
-    AuthStore.addChangeListener(this._onChangeEvent);
-  },
+  // componentDidMount: function () {
+  //   AuthStore.addChangeListener(this._onChangeEvent);
+  // },
 
-  componentWillUnmount: function () {
-    AuthStore.removeChangeListener(this._onChangeEvent);
-  },
+  // componentWillUnmount: function () {
+  //   AuthStore.removeChangeListener(this._onChangeEvent);
+  // },
 
   _onChangeEvent: function () {
     var user = AuthStore.getUserData().userId;

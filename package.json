@@ -1,7 +1,7 @@
 {
   "name": "pirate_stocks",
   "version": "1.0.0",
-  "description": "Fantasy Stock Trading for Pirates",
+  "description": "Fantasy Stock Trading for Pirates and Penguins: because every pirate has an inner penguin",
   "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

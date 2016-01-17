@@ -7,20 +7,25 @@ var CreateMatchActions = {
 
   createMatch: function (title, type, funds, start, end) {
 
-    console.log('ACTIONS create!!',title, type, funds, start, end);
     requestHelper
     .post('matches/', {userId: 13, title: title, type: type, funds: funds, start: start, end: end})
-    .then(function(userData){
-      if (userMatch.data) {
-        userMatch = userMatch.data;
-        console.log('userData create', userMatch);
-        AppDispatcher.handleServerAction({
-          actionType: "CREATE_MATCH",
-          id: userMatch.id,
-          email: userMatch.email,
-          username: userMatch.username
-        });
-      }
+    .then(function(userMatch){
+      console.log('userData create', userMatch);
+      userMatch = userMatch.data;
+      AppDispatcher.handleServerAction({
+        actionType: "CREATE_MATCH",
+        matchId: userMatch.m_id,
+        title: userMatch.title,
+        type: userMatch.type,
+        challengee: userMatch.challengee,
+        creator_id: userMatch.creator_id,
+        startdate: userMatch.startdate,
+        enddate: userMatch.enddate,
+        starting_funds: userMatch.starting_funds,
+        status: userMatch.status,
+        winner: userMatch.winner,
+        created_at: userMatch.created_at
+      });
     })
     .catch(function (err) {
       console.log('creatematch err', err);

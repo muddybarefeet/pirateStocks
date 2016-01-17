@@ -45,11 +45,12 @@ module.exports = function (knex) {
     var endDate = req.body.end;
     var type = req.body.type;
     var title = req.body.title;
-
+    
     matchesController.createMatch(userId, startFunds, type, startDate, endDate, title)
       .then(function (match) {
-        console.log('match Made', match);
-        return res.send(match);
+        return res.status(200).json({
+          data: match
+        });
       })
       .catch(function (err) {
         return res.status(400).json({

@@ -3,6 +3,7 @@ var React = require('react');
 var Link = require('react-router').Link;
 var DateTimeField = require('react-bootstrap-datetimepicker');
 var createMatchActions = require('./../actions/createMatchActions.js');
+var numeral = require('numeral');
 
 var Create = React.createClass({
 
@@ -20,10 +21,8 @@ var Create = React.createClass({
   },
 
   handleFundsChange: function (event) {
-    var funds = event.target.value;
-    var remove$ = funds.split('').slice(1).join('');
-    //how to make a string with comma a number????!!!
-    this.setState({totalFunds: parseInt(remove$)});
+    var funds = numeral().unformat(event.target.value);
+    this.setState({totalFunds: funds});
   },
 
   //get the date with refs can I add them on the state? Would be neater REVISIT!

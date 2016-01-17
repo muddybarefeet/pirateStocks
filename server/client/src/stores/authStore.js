@@ -14,7 +14,7 @@ var _userDetails = {
 var AuthStore = merge(EventEmitter.prototype, {
   
   getUserData: function(){
-    return {};
+    return _userDetails;
   },
 
   emitChange: function (){
@@ -32,8 +32,6 @@ var AuthStore = merge(EventEmitter.prototype, {
   }
 
 });
-
-AuthStore.setMaxListeners(0);
 
 AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. Store wants to know if it does anything. Payload 
   var action = payload.action;//payload is the object of data coming from dispactcher //action is the object passed from the actions file
@@ -53,7 +51,6 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
     console.log('in user login store', _userDetails);
     AuthStore.emitChange();
   }
-
 
 });
 

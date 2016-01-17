@@ -5,14 +5,13 @@ var EventEmitter = require('events').EventEmitter;
 var CHANGE_EVENT = "change";
 var merge = require('merge');
 
-//object of matches keyed by the match names?
 var _userMatches = {
 };
 
 var CreateMatchStore = merge(EventEmitter.prototype, {
   
   getUserData: function(){
-    return {};
+    return _userMatches;
   },
 
   emitChange: function (){
@@ -31,15 +30,19 @@ var CreateMatchStore = merge(EventEmitter.prototype, {
 
 AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. Store wants to know if it does anything. Payload 
   var action = payload.action;//payload is the object of data coming from dispactcher //action is the object passed from the actions file
-
+  
   if(action.actionType === "CREATE_MATCH") {
     console.log('in user creatMatch store', action);
-    // _userMatches[action.title] = action;
+    _userMatches[action.title] = action;
+    console.log('store', _userMatches);
     CreateMatchStore.emitChange();
   }
+
 
 });
 
 
 module.exports = CreateMatchStore;
+
+
 
