@@ -3,7 +3,6 @@ var AppDispatcher = require('./../dispatchers/appDispatcher.js');
 var EventEmitter = require('events').EventEmitter;
 // require('events').EventEmitter.prototype._maxListeners = 10;
 var CHANGE_EVENT = "change";
-var merge = require('merge');
 
 var _userDetails = {
   userId: null,
@@ -11,7 +10,7 @@ var _userDetails = {
   username: null
 };
 
-var AuthStore = merge(EventEmitter.prototype, {
+var AuthStore = Object.assign(new EventEmitter(), {
   
   getUserData: function(){
     return {};
@@ -23,7 +22,7 @@ var AuthStore = merge(EventEmitter.prototype, {
 
   addChangeListener: function(callback){
     console.log('change listener added');
-    this.on(CHANGE_EVENT, callback);
+    this.addListener(CHANGE_EVENT, callback);
   },
 
   removeChangeListener: function(callback){
