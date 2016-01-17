@@ -4,6 +4,7 @@ var EventEmitter = require('events').EventEmitter;
 // require('events').EventEmitter.prototype._maxListeners = 10;
 var CHANGE_EVENT = "change";
 
+
 var _userDetails = {
   userId: null,
   userEmail: null,
@@ -21,12 +22,10 @@ var AuthStore = Object.assign(new EventEmitter(), {
   },
 
   addChangeListener: function(callback){
-    console.log('change listener added');
     this.addListener(CHANGE_EVENT, callback);
   },
 
   removeChangeListener: function(callback){
-    console.log('change listener removed');
     this.removeListener(CHANGE_EVENT, callback);
   }
 

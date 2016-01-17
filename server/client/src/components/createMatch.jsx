@@ -1,14 +1,28 @@
 
 var React = require('react');
 var Link = require('react-router').Link;
-var DateTimeField = require('react-bootstrap-datetimepicker');
 var createMatchActions = require('./../actions/createMatchActions.js');
 var numeral = require('numeral');
+var CreateMatchStore = require('./../stores/matchesStore.js');
 
 var Create = React.createClass({
 
   getInitialState: function() {
     return {};
+  },
+
+  componentDidMount: function () {
+    CreateMatchStore.addChangeListener(this._onChangeEvent);
+  },
+
+  componentWillUnmount: function () {
+    CreateMatchStore.removeChangeListener(this._onChangeEvent);
+  },
+
+  _onChangeEvent: function () {
+    console.log('change got!!!');
+    // this.setState({userId: user, userEmail: userEmail, username: username});
+    console.log('component',this.state);
   },
 
   //methods to add form fields data to the state

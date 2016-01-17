@@ -73,7 +73,7 @@ module.exports = function (knex) {
         })
         .catch(function (err) {
           res.status(404).json({
-            message: err
+            message: err.message
           });
         });
 

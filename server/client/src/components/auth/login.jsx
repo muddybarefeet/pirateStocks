@@ -4,6 +4,7 @@ var React = require('react');
 var Link = require('react-router').Link;
 var authActions = require('./../../actions/authActions.js');
 var AuthStore = require('./../../stores/authStore.js');
+var matchActions = require('./../../actions/matchActions.js');
 
 var Login = React.createClass({
 
@@ -11,13 +12,13 @@ var Login = React.createClass({
     return AuthStore.getUserData();
   },
 
-  // componentDidMount: function () {
-  //   AuthStore.addChangeListener(this._onChangeEvent);
-  // },
+  componentDidMount: function () {
+    AuthStore.addChangeListener(this._onChangeEvent);
+  },
 
-  // componentWillUnmount: function () {
-  //   AuthStore.removeChangeListener(this._onChangeEvent);
-  // },
+  componentWillUnmount: function () {
+    AuthStore.removeChangeListener(this._onChangeEvent);
+  },
 
   _onChangeEvent: function () {
     var user = AuthStore.getUserData().userId;
@@ -25,6 +26,10 @@ var Login = React.createClass({
     var username = AuthStore.getUserData().username;
     this.setState({userId: user, userEmail: userEmail, username: username});
     console.log('component',this.state);
+    //tigger action to go and get all the users matches and update the matches store
+    matchActions.getUserMatches(this.state.userId);
+    //Make this location route properly!!
+    window.location.hash="#/about";
   },
 
   //-------methods for login-------
@@ -38,7 +43,7 @@ var Login = React.createClass({
 
   handleLoginClick: function (i) {
     authActions.sendLogin(this.state.emailLogin, this.state.passLogin);
-    // this.setState({emailLogin: "", passLogin: ""});
+    this.setState({emailLogin: "", passLogin: ""});
     //want to empty the text box
   },
 
@@ -59,7 +64,8 @@ var Login = React.createClass({
 
   handleSignupClick: function (i) {
     authActions.sendSignup(this.state.usernameSignup, this.state.emailSignup, this.state.passSignup);
-    // this.setState({usernameSignup: "", emailSignup: "", passSignup: ""});
+    this.setState({usernameSignup: "", emailSignup: "", passSignup: ""});
+    console.log('yoooo')
     //want to empty the text box
   },
 

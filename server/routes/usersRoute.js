@@ -55,7 +55,7 @@ module.exports = function (knex) {
       })
       .catch(function(err){
         res.status(404).json({
-            message: err[0]
+            message: err.message
         });
       });
 
@@ -77,9 +77,8 @@ module.exports = function (knex) {
         });
       })
       .catch(function(err){
-        console.log(err);
         res.status(404).json({
-            message: err
+            message: err.message
         });
       });
 

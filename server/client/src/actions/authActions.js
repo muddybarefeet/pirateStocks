@@ -6,11 +6,10 @@ var requestHelper = require('./requestHelper.js');
 var authActions = {
 
   sendLogin: function (email, password) {
-    console.log('clicked to login');
+    
     requestHelper
     .post('users/login', {email: email, password: password})
     .then(function(userData){
-      debugger;
       console.log('action response recieved.');
       userData = userData.data;
       if (userData) {
@@ -23,7 +22,6 @@ var authActions = {
       }
     })
     .catch(function (err) {
-      debugger;
       console.log('err login', err);
     });
 

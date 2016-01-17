@@ -25,7 +25,6 @@ var Home = React.createClass({
             </h5>
           </div>
         </div>
-        <Link to="/about">App</Link>
         <div className="centreTitle" >
           <a href="http://localhost:3000/api/auth/facebook"><img className="imgWidth" src='./../../assets/images/login.png' alt="facebook login button" /></a>
         </div>

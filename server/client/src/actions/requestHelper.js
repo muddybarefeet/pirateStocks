@@ -19,11 +19,18 @@ var requestHelper = {
 
     return rp.post(options);
     
-  }/*,*/
+  },
 
-  // get: function(url){
+  get: function(url){
 
-  // },
+    var options = {
+      uri: baseUrl + url,
+      json: true
+    };
+
+    return rp(options);
+
+  }
 
   // put: function(url, body){
 
