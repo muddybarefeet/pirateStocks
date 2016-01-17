@@ -9,14 +9,14 @@ into a vinyl stream that is what gulp is expecting to get.
 A vinyl stream is a Virtual file format, and it 
 is fundamental for Gulp. Thanks to this vinyl 
 streams Gulp doesn't need to write a temporal 
-file between different transformations. And this 
+file between different transformations. And this
 is one of the main advantages it have over Grunt.*/
 var source = require('vinyl-source-stream');
 
 
 var paths = {
   app: ['./server/client/src/app.jsx'],
-  js: ['./src/**/*.*']
+  js: ['./server/client/src/**/*.*']
 };
 
 gulp.task('browserify', function () {
