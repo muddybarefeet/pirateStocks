@@ -1,39 +1,52 @@
+//TODO: relace get data with refs so i can empty the text fields??
 
 var React = require('react');
 var Link = require('react-router').Link;
 var authActions = require('./../../actions/authActions.js');
-var authStore = require('./../../stores/authStore.js');
+var AuthStore = require('./../../stores/authStore.js');
 
 var Login = React.createClass({
 
   getInitialState: function() {
-    return {};
+    return AuthStore.getUserData();
   },
 
   // componentDidMount: function () {
-  //   authStore.addChangeListener(this.onChangeEvent);
+  //   AuthStore.addChangeListener(this._onChangeEvent);
   // },
 
-  // onChangeEvent: funtion () {
-  //   var userId = authStore.getUID();
+  // componentWillUnmount: function () {
+  //   AuthStore.removeChangeListener(this._onChangeEvent);
   // },
+
+  _onChangeEvent: function () {
+    var user = AuthStore.getUserData().userId;
+    var userEmail = AuthStore.getUserData().userEmail;
+    var username = AuthStore.getUserData().username;
+    this.setState({userId: user, userEmail: userEmail, username: username});
+    console.log('component',this.state);
+  },
 
   //-------methods for login-------
   handleLoginEmailChange: function(event) {
-    var that = this;
     this.setState({emailLogin: event.target.value});
   },
 
   handleLoginPasswordChange: function (event) {
-    var that = this;
     this.setState({passLogin: event.target.value});
   },
 
   handleLoginClick: function (i) {
     authActions.sendLogin(this.state.emailLogin, this.state.passLogin);
+    this.setState({emailLogin: "", passLogin: ""});
+    //want to empty the text box
   },
 
   //-------methods for signup-------
+  handleSignupUsernameChange: function (event) {
+    this.setState({usernameSignup: event.target.value});
+  },
+
   handleSignupEmailChange: function(event) {
     var that = this;
     this.setState({emailSignup: event.target.value});
@@ -45,7 +58,9 @@ var Login = React.createClass({
   },
 
   handleSignupClick: function (i) {
-    authActions.sendSignup(this.state.emailSignup, this.state.passSignup);
+    authActions.sendSignup(this.state.usernameSignup, this.state.emailSignup, this.state.passSignup);
+    this.setState({usernameSignup: "", emailSignup: "", passSignup: ""});
+    //want to empty the text box
   },
 
   render: function () {
@@ -68,7 +83,7 @@ var Login = React.createClass({
               <input type="password" className="form-control" id="pwd" onChange={this.handleLoginPasswordChange} />
             </div>
 
-            <div className="centreTitle" >
+            <div>
               <button type="button" className="btn btn-warning" onClick={this.handleLoginClick}>Login</button>
             </div>
 
@@ -78,6 +93,10 @@ var Login = React.createClass({
 
             <h2>Signup</h2>
 
+            <div className="form-group">
+              <label htmlFor="userName">Username:</label>
+              <input type="userName" className="form-control" id="usrname" onChange={this.handleSignupUsernameChange} />
+            </div>
             <div className="form-group">
               <label htmlFor="usr">Email:</label>
               <input type="text" className="form-control" id="usr" onChange={this.handleSignupEmailChange} />

@@ -69,24 +69,30 @@ module.exports = function (knex) {
     
     var id;
     var userEmail;
+    var user_name;
     return knex('users').where('email', email)
     .then(function (data) {
       id = data[0].u_id;
       userEmail = data[0].email;
+      user_name = data[0].username;
       return bcrypt.compareAsync(password, data[0].password);
     })
     .then(function (userVerified) {
       //userVerified returns true/false
       if (userVerified) {
-        return {id: id, email: userEmail };
+        return { id: id, email: userEmail, username: user_name };
       } else {
+        console.log('in controller login error');
         throw new Error("User Not Verified");
       }
     });
 
   };
 
-  module.signup = function (email, password) {
+
+//save new user data to the db
+//-------------------------------------
+  module.signup = function (username, email, password) {
     
     return bcrypt.genSaltAsync(10)
     .then(function(salt) {
@@ -95,14 +101,16 @@ module.exports = function (knex) {
     .then(function(hash) {
       return knex('users')
       .insert({
-        email: email,
-        password: hash
+        username: username,
+        password: hash,
+        email: email
       }, '*');
     })
     .then(function (insertedUser) {
-      return { id: insertedUser[0].u_id, email: insertedUser[0].email };
+      return { id: insertedUser[0].u_id, email: insertedUser[0].email, username: insertedUser[0].username };
     })
     .catch(function (err) {
+      console.log('in controller signup error', err);
       throw new Error("Email already exists");
     });
 

@@ -1,36 +1,53 @@
 var rp = require('request-promise');
 var AppDispatcher = require('./../dispatchers/appDispatcher.js');
 var constants = require('../constants.js');
-var $ = require('jquery');
+var requestHelper = require('./requestHelper.js');
 
 var authActions = {
 
   sendLogin: function (email, password) {
 
-    console.log('ACTIONS login!!',email, password);
-
-    $.post('/api/users/login',{email: email, password: password}, function () {
-      console.log(arguments);
+    requestHelper
+    .post('users/login', {email: email, password: password})
+    .then(function(userData){
+      if (userData.data) {
+        return userData.data;
+      }
+    })
+    .then(function (userData) {
+      AppDispatcher.handleServerAction({
+        actionType: "USER_LOGIN",
+        id: userData.id,
+        email: userData.email,
+        username: userData.username
+      });
+    })
+    .catch(function (err) {
+      console.log('err login', err);
     });
 
   },
 
-  sendSignup: function (email, password) {
-
-    console.log('ACTIONS Signup!!',email, password);
-    var options = {
-        method: 'POST',
-        uri: "http://localhost:3000/api/users/signup",
-
-    };
-
-    rp(options)
-      .then(function (data) {
-        console.log('data success',data);
-      })
-      .catch(function (err) {
-        console.log('err',err);
+  sendSignup: function (username, email, password) {
+    
+    requestHelper
+    .post('users/signup', {username: username, email: email, password: password})
+    .then(function(userData){
+      if (userData.data) {
+        return userData.data;
+      }
+    })
+    .then(function (userData) {
+      AppDispatcher.handleServerAction({
+        actionType: "USER_SIGNUP",
+        id: userData.id,
+        email: userData.email,
+        username: userData.username
       });
+    })
+    .catch(function (err) {
+      console.log('err signup', err);
+    });
 
   }
 
@@ -40,14 +57,7 @@ var authActions = {
 module.exports = authActions;
 
 
-    // AppDispatcher.handleServerAction({ //serverAction
-    //   actionType: "USER_SIGNUP",//descript what happened CAPS
-    //   id: res.id,
-    // });
+ 
 
-    // AppDispatcher.handleServerAction({ //serverAction
-    //   actionType: "USER_LOGIN",//descript what happened CAPS
-    //   id: res.id,
-    // });
 
 

@@ -54,7 +54,9 @@ module.exports = function (knex) {
         });
       })
       .catch(function(err){
-        res.status(400).json({msg: err});
+        res.status(404).json({
+            message: err[0]
+        });
       });
 
     });
@@ -64,19 +66,21 @@ module.exports = function (knex) {
   router.route('/signup')
     .post(function (req, res) {
 
-      console.log('------->',req.body);
-
+      var username = req.body.username;
       var email = req.body.email;
       var password = req.body.password;
 
-      usersCtrl.signup(email, password)
+      usersCtrl.signup(username, email, password)
       .then(function (response) {
         res.json({
           data: response
         });
       })
       .catch(function(err){
-        res.status(400).json({msg: err});
+        console.log(err);
+        res.status(404).json({
+            message: err
+        });
       });
 
     });

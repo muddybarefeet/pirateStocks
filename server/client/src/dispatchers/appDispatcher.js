@@ -12,6 +12,7 @@ var AppDispatcher = Object.assign(new Dispatcher(), {
    //tells us/store where the action originated e.g.user/server
 
    handleServerAction: function (action) {
+    console.log('in server dispatch', action);
     this.dispatch({
       source: 'SERVER_ACTION',
       action: action
@@ -19,6 +20,7 @@ var AppDispatcher = Object.assign(new Dispatcher(), {
    },
 
    handleClientAction: function (action) {
+    console.log('in client dispatch', action);
     this.dispatch({
       source: 'CLIENT_ACTION',
       action: action

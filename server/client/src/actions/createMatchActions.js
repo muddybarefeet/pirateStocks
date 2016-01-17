@@ -1,13 +1,15 @@
 var rp = require('request-promise');
 var AppDispatcher = require('./../dispatchers/appDispatcher.js');
 var constants = require('../constants.js');
-var $ = require('jquery');
+var requestHelper = require('./requestHelper.js');
 
 var CreateMatchActions = {
 
-  createMatch: function (state) {
+  createMatch: function (title, type, funds, start, end) {
 
-    console.log('ACTIONS create!!',state);
+    console.log('ACTIONS create!!',title, type, funds, start, end);
+
+
 
   }
 

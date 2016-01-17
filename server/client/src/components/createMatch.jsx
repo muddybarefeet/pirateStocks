@@ -28,8 +28,7 @@ var Create = React.createClass({
   handleClick: function (action) {
     var start = this.refs.startDate.value;
     var end = this.refs.finishDate.value;
-    console.log('here', start, end, this.state)
-    createMatchActions.createMatch(this.state, start, end)
+    createMatchActions.createMatch(this.state.matchTitle, this.state.typeOfMatch, this.state.funds, start, end)
   },
 
   render: function () {

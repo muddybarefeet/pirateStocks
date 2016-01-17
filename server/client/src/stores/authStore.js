@@ -1,53 +1,58 @@
 
-// var AppDispatcher = require('./../dispatchers/AppDispatcher');
-// var EventEmitter = require('events').EventEmitter;
-// // var merge = require('react-addons-update');
+var AppDispatcher = require('./../dispatchers/appDispatcher.js');
+var EventEmitter = require('events').EventEmitter;
+// require('events').EventEmitter.prototype._maxListeners = 10;
+var CHANGE_EVENT = "change";
+var merge = require('merge');
 
-// var CHANGE_EVENT = 'change';
+var _userDetails = {
+  userId: null,
+  userEmail: null,
+  username: null
+};
 
-// var _data = {
-
-// };
-
-// var AppStore = Object.assign(EventEmitter.prototype, {
+var AuthStore = merge(EventEmitter.prototype, {
   
-//   getData: function(){
-//     return _data;
-//   },
+  getUserData: function(){
+    return {};
+  },
 
-//   init: function() {
-//   },
+  emitChange: function (){
+    this.emit(CHANGE_EVENT);
+  },
 
-//   emitChange: function(){
-//     this.emit(CHANGE_EVENT);
-//   },
+  addChangeListener: function(callback){
+    this.on(CHANGE_EVENT, callback);
+  },
 
-//   addChangeListener: function(callback){
-//     this.on(CHANGE_EVENT, callback);
-//   },
+  removeChangeListener: function(callback){
+    this.removeListener(CHANGE_EVENT, callback);
+  }
 
-//   removeChangeListener: function(callback){
-//     this.removeListener(CHANGE_EVENT, callback);
-//   }
+});
 
-// });
+AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. Store wants to know if it does anything. Payload 
+  var action = payload.action;//payload is the object of data coming from dispactcher //action is the object passed from the actions file
 
-// AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. Store wants to know if it does anything. Payload 
-//   var action = payload.action;//payload is the object of data coming from dispactcher //action is the object passed from the actions file
+  if(action.actionType === "USER_SIGNUP") {
+    console.log('in user signup store', action);
+    _userDetails.userId = action.id;
+    _userDetails.userEmail = action.email;
+    _userDetails.username = action.username;
+    AuthStore.emitChange();
+  }
 
-//   if(action.actionType === "USER_LOGIN") {
-//     console.log('in user login store')
-//     // AppStore.emitChange();//emit change event PUT AFTER EACH IF!!
-//   }
-
-//   if(action.actionType === "USER_SIGNUP") {
-//     console.log('in user signup store');
-//     // AppStore.emitChange();
-//   }
+  if (action.actionType === "USER_LOGIN") {
+    _userDetails.userId = action.id;
+    _userDetails.userEmail = action.email;
+    _userDetails.username = action.username;
+    console.log('in user login store', _userDetails);
+    AuthStore.emitChange();
+  }
 
 
-// });
+});
 
 
-// module.exports = AppStore;
+module.exports = AuthStore;
 
