@@ -1,4 +1,4 @@
-var rp = require('request-promise');
+
 var AppDispatcher = require('./../dispatchers/appDispatcher.js');
 var constants = require('../constants.js');
 var requestHelper = require('./requestHelper.js');
@@ -9,9 +9,9 @@ var authActions = {
     
     requestHelper
     .post('users/login', {email: email, password: password})
-    .then(function(userData){
-      console.log('action response recieved.');
-      userData = userData.data;
+    .end(function(err, userData){
+      console.log('action response recieved.', userData);
+      userData = userData.body.data;
       if (userData) {
         AppDispatcher.handleServerAction({
           actionType: "USER_LOGIN",
@@ -20,9 +20,6 @@ var authActions = {
           username: userData.username
         });
       }
-    })
-    .catch(function (err) {
-      console.log('err login', err);
     });
 
   },
@@ -31,19 +28,14 @@ var authActions = {
     
     requestHelper
     .post('users/signup', {username: username, email: email, password: password})
-    .then(function(userData){
-      userData = userData.data;
-      if (userData) {
-        AppDispatcher.handleServerAction({
-          actionType: "USER_SIGNUP",
-          id: userData.id,
-          email: userData.email,
-          username: userData.username
-        });
-      }
-    })
-    .catch(function (err) {
-      console.log('err signup', err);
+    .end(function(err, userData){
+      userData = userData.body.data;
+      AppDispatcher.handleServerAction({
+        actionType: "USER_SIGNUP",
+        id: userData.id,
+        email: userData.email,
+        username: userData.username
+      });
     });
 
   }

@@ -1,4 +1,3 @@
-var rp = require('request-promise');
 var AppDispatcher = require('./../dispatchers/appDispatcher.js');
 var constants = require('../constants.js');
 var requestHelper = require('./requestHelper.js');
@@ -9,7 +8,7 @@ var matchActions = {
 
     requestHelper
     .get('matches/user/'+ userId)
-    .then(function(matches){
+    .end(function(err, matches){
 
       matches = matches.data;
       matches.forEach(function (match) {
@@ -29,9 +28,6 @@ var matchActions = {
         });
       });
 
-    })
-    .catch(function (err) {
-      console.log('err login', err);
     });
 
   }

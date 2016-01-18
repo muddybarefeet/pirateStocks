@@ -1,6 +1,6 @@
 var baseUrl = require('./../constants.js').BASE_URL;
 
-var rp = require('request-promise');
+var rp = require('superagent');
 
 var displayErrorMsg = function(msg){
   //display error message on screen
@@ -11,24 +11,15 @@ var requestHelper = {
   
   post: function(url, body){
 
-    var options = {
-      uri: baseUrl + url,
-      body: body || {},
-      json: true
-    };
-
-    return rp.post(options);
+    return rp
+      .post(baseUrl + url)
+      .send(body);
     
   },
 
   get: function(url){
 
-    var options = {
-      uri: baseUrl + url,
-      json: true
-    };
-
-    return rp(options);
+    return rp(baseUrl + url);
 
   }
 

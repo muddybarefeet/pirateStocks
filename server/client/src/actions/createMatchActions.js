@@ -1,4 +1,3 @@
-var rp = require('request-promise');
 var AppDispatcher = require('./../dispatchers/appDispatcher.js');
 var constants = require('../constants.js');
 var requestHelper = require('./requestHelper.js');
@@ -9,7 +8,7 @@ var CreateMatchActions = {
 
     requestHelper
     .post('matches/', {userId: 13, title: title, type: type, funds: funds, start: start, end: end})
-    .then(function(userMatch){
+    .end(function(err, userMatch){
       console.log('userData create', userMatch);
       userMatch = userMatch.data;
       AppDispatcher.handleServerAction({
@@ -26,9 +25,6 @@ var CreateMatchActions = {
         winner: userMatch.winner,
         created_at: userMatch.created_at
       });
-    })
-    .catch(function (err) {
-      console.log('creatematch err', err);
     });
 
   }

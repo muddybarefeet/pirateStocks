@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/muddybarefeet/pirateStocks#readme",
   "dependencies": {
+    "babel-core": "^6.4.0",
+    "babel-loader": "^6.2.1",
+    "babel-preset-react": "^6.3.13",
     "bcrypt": "^0.8.5",
     "bluebird": "^3.1.1",
     "body-parser": "^1.14.2",
@@ -30,6 +33,7 @@
     "flux": "^2.1.1",
     "gulp": "^3.9.0",
     "history": "^1.17.0",
+    "json-loader": "^0.5.4",
     "knex": "^0.9.0",
     "morgan": "^1.6.1",
     "passport": "^0.3.2",
@@ -39,7 +43,8 @@
     "react-dom": "^0.14.6",
     "react-router": "^1.0.3",
     "reactify": "^1.1.1",
-    "request-promise": "^2.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "superagent": "^1.6.1",
+    "vinyl-source-stream": "^1.1.0",
+    "webpack": "^1.12.11"
   }
 }
