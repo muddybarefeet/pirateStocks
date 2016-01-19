@@ -26874,6 +26874,7 @@
 	    _userDetails.userId = action.id;
 	    _userDetails.userEmail = action.email;
 	    _userDetails.username = action.username;
+	    localStorage.setItem("userId", action.id);
 	    authStore.emitChange();
 	  }
 
@@ -26881,7 +26882,7 @@
 	    _userDetails.userId = action.id;
 	    _userDetails.userEmail = action.email;
 	    _userDetails.username = action.username;
-	    console.log('in user login store', _userDetails);
+	    localStorage.setItem("userId", action.id);
 	    authStore.emitChange();
 	  }
 	});
@@ -28201,6 +28202,7 @@
 
 	    _userMatches.matches.push(match);
 	    match = [];
+	    localStorage.setItem("matchId", action.matchId);
 	    matchesStore.emitChange();
 	  }
 	});
@@ -41130,15 +41132,30 @@
 	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
 
 	  if (action.actionType === "GET_USER_MATCH") {
-	    var match = [];
-	    console.log('in portfolio actions', action);
-	    match.push(action.matchId);
-	    match.push(action.availableCash);
-	    match.push(action.totalValue);
-	    match.push(action.stocks);
 
-	    _currentMatch.match = match;
-	    match = [];
+	    var stocksOne = action.stocks;
+
+	    if (stocks !== undefined) {
+	      _currentMatch.stocks = stocksOne.map(function (stock) {
+	        return [stock.ask, stock.gain_loss, stock.marketValue, stock.name, stock.percent_change, stock.price, stock.shares];
+	      });
+	    }
+
+	    _currentMatch.matchId = action.matchId;
+	    _currentMatch.totalValue = action.totalValue;
+
+	    portfolioStore.emitChange();
+	  }
+
+	  if (action.actionType === "BUY_STOCK") {
+
+	    var stocks = action.data.portfolio.stocks;
+	    _currentMatch.stocks = stocks.map(function (stock) {
+	      return [stock.ask, stock.gain_loss, stock.marketValue, stock.name, stock.percent_change, stock.price, stock.shares];
+	    });
+
+	    _currentMatch.totalValue = action.data.portfolio.totalValue;
+	    _currentMatch.availableCash = action.data.portfolio.available_cash;
 	    portfolioStore.emitChange();
 	  }
 	});
@@ -41213,10 +41230,9 @@
 	  },
 
 	  handleBuyClick: function (event) {
-	    //trigger action to trades and return data stored
-	    //on return to the page render the portfolio we are in with the stock in
-	    console.log('symbol', this.state.oneStock[1]);
-	    searchActions.buyStock(this.state.qtyBuy, this.state.oneStock[1]);
+	    //trigger action to trades and return new portfolio to the portfolio store
+	    searchActions.buyStock(localStorage.userId, localStorage.matchId, this.state.qtyBuy, this.state.oneStock[0][1]);
+	    window.location.hash = "#/portfolio";
 	  },
 
 	  render: function () {
@@ -41378,7 +41394,6 @@
 
 	  getOneStocksDetails: function (symbol) {
 	    requestHelper.get('stocks/' + symbol).end(function (err, response) {
-	      console.log('response', response, err);
 	      if (!err) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -41391,12 +41406,17 @@
 	    });
 	  },
 
-	  buyStock: function (userId, matchId, qty, symbol, action) {
-	    requestHelper.post('trades/', { userId: userId, matchId: matchId, qty: qty, symbol: symbol, action: 'buy' }) // /matchId/userId
+	  buyStock: function (userId, matchId, qty, symbol) {
+	    console.log('symbol', symbol);
+	    requestHelper.post('trades/' + matchId + '/' + userId, { userId: userId, matchId: matchId, numShares: qty, symbol: symbol, action: 'buy' }) // /matchId/userId
 	    .end(function (err, response) {
+	      console.log('response buy', response);
 	      if (!err) {
 	        response = response.body.data;
-	        console.log('response buy', response);
+	        AppDispatcher.handleServerAction({
+	          actionType: "BUY_STOCK",
+	          data: response
+	        });
 	      } else {
 	        console.log('err', err);
 	      }
@@ -41545,7 +41565,6 @@
 
 	  render: function () {
 
-	    console.log('this.state', this.state);
 	    var arrayOfMatches = [];
 
 	    var matchTable = React.createElement(

@@ -30,15 +30,48 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
   var action = payload.action;//payload is the object of data coming from dispactcher //action is the object passed from the actions file
   
   if(action.actionType === "GET_USER_MATCH") {
-    var match = [];
-    console.log('in portfolio actions', action);
-    match.push(action.matchId);
-    match.push(action.availableCash);
-    match.push(action.totalValue);
-    match.push(action.stocks);
 
-    _currentMatch.match = match;
-    match = [];
+    var stocksOne = action.stocks;
+
+    if (stocks !== undefined) {
+      _currentMatch.stocks = stocksOne.map(function (stock) {
+        return [
+          stock.ask,
+          stock.gain_loss,
+          stock.marketValue,
+          stock.name,
+          stock.percent_change,
+          stock.price,
+          stock.shares
+        ];
+      });
+    }
+
+    _currentMatch.matchId = action.matchId;
+    _currentMatch.totalValue = action.totalValue;
+
+
+    portfolioStore.emitChange();
+
+  }
+
+  if(action.actionType === "BUY_STOCK") {
+
+    var stocks = action.data.portfolio.stocks;
+    _currentMatch.stocks = stocks.map(function (stock) {
+      return [
+        stock.ask,
+        stock.gain_loss,
+        stock.marketValue,
+        stock.name,
+        stock.percent_change,
+        stock.price,
+        stock.shares
+      ];
+    });
+
+    _currentMatch.totalValue = action.data.portfolio.totalValue;
+    _currentMatch.availableCash = action.data.portfolio.available_cash;
     portfolioStore.emitChange();
 
   }

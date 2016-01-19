@@ -37,7 +37,6 @@ var Matches = React.createClass({
 
   render: function () {
 
-    console.log('this.state', this.state)
     var arrayOfMatches = [];
 
     var matchTable = 

@@ -61,10 +61,9 @@ var Search = React.createClass({
   },
 
   handleBuyClick: function (event) {
-    //trigger action to trades and return data stored
-    //on return to the page render the portfolio we are in with the stock in
-    console.log('symbol',this.state.oneStock[1]);
-    searchActions.buyStock(this.state.qtyBuy, this.state.oneStock[1]);
+    //trigger action to trades and return new portfolio to the portfolio store
+    searchActions.buyStock(localStorage.userId, localStorage.matchId, this.state.qtyBuy, this.state.oneStock[0][1]);
+    window.location.hash = "#/portfolio";
   },
 
   render: function () {

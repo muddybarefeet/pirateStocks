@@ -54,6 +54,7 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
 
     _userMatches.matches.push(match);
     match = [];
+    localStorage.setItem("matchId", action.matchId);
     matchesStore.emitChange();
 
   }

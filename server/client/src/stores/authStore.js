@@ -39,6 +39,7 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
     _userDetails.userId = action.id;
     _userDetails.userEmail = action.email;
     _userDetails.username = action.username;
+    localStorage.setItem("userId", action.id);
     authStore.emitChange();
   }
 
@@ -46,7 +47,7 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
     _userDetails.userId = action.id;
     _userDetails.userEmail = action.email;
     _userDetails.username = action.username;
-    console.log('in user login store', _userDetails);
+    localStorage.setItem("userId", action.id);
     authStore.emitChange();
   }
 
