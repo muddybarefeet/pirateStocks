@@ -9,16 +9,6 @@ var Portfolio = React.createClass({
     return {};
   },
 
-  componentWillMount: function () {
-    //send off a request to actions to get the match details but need the match wanted details..?
-    var match = portfolioStore.getMatchData().match; //return array of the detals of the current match
-    return this.setState({
-      match: match 
-    });
-    console.log('portfolio',this.state);
-  },
-
-  //not sure if the below three methods relevent
   componentDidMount: function () {
     portfolioStore.addChangeListener(this._onChangeEvent);
   },
@@ -32,6 +22,7 @@ var Portfolio = React.createClass({
     this.setState({
       match: match
     });
+    console.log('portfolio',this.state);
   },
 
 
@@ -41,7 +32,12 @@ var Portfolio = React.createClass({
       <div className="container">
 
         <h2>Portfolio Page</h2>
-        <Link to="/about">Return to Main Menu</Link>
+        <div>
+          <Link to="/about">Return to Main Menu</Link>
+        </div>
+        <div>
+          <Link to="/search">Check out yer pieces o{"'"} Eight</Link>
+        </div>
 
 
 

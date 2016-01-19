@@ -4,13 +4,17 @@ var Link = require('react-router').Link;
 
 var Home = React.createClass({
 
+  handleLoginClick: function () {
+    window.location.hash = '#/login';
+  },
+
   render: function () {
 
     return (
       <div className="container headerPaddingTop">
         <div className="centreTitle marginUnder">
           <h2>Pirate Stocks</h2>
-          <h6>Fantasy Stock Trading</h6>
+          <h6>Fantasy Stock Trading for Pirates and Penguins: because every pirate has an inner penguin</h6>
         </div>
         <div className="container">
           <div>
@@ -29,7 +33,7 @@ var Home = React.createClass({
           <a href="http://localhost:3000/api/auth/facebook"><img className="imgWidth" src='./../../assets/images/login.png' alt="facebook login button" /></a>
         </div>
         <div className="centreTitle" >
-          <button type="button" className="btn btn-warning" onClick={this.handleLoginClick}><Link to="login">Signup/ Login</Link></button>
+          <button type="button" className="btn btn-warning" onClick={this.handleLoginClick}>Signup/ Login</button>
         </div>
 
       </div>
@@ -39,6 +43,3 @@ var Home = React.createClass({
 });
 
 module.exports = Home;
-
-//image to be added
-//<img className="homeLogo" src="../assets/images/logo.png" alt="stockSuel logo black" />

@@ -56,11 +56,11 @@
 
 	// var App = require('./components/index.jsx');
 	var Home = __webpack_require__(217);
-	var Login = __webpack_require__(218);
+	var Login = __webpack_require__(341);
 
 	var Create = __webpack_require__(232);
 	var Portfolio = __webpack_require__(236);
-	var Search = __webpack_require__(237);
+	var Search = __webpack_require__(340);
 	var Join = __webpack_require__(238);
 	var Matches = __webpack_require__(239);
 
@@ -134,15 +134,6 @@
 	          null,
 	          React.createElement(
 	            Link,
-	            { to: '/search' },
-	            'Stocks'
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          null,
-	          React.createElement(
-	            Link,
 	            { to: '/join' },
 	            'Join a New Match'
 	          )
@@ -179,8 +170,11 @@
 	    React.createElement(Route, { path: 'home', component: Home }),
 	    React.createElement(Route, { path: 'about', component: About }),
 	    React.createElement(Route, { path: 'create', component: Create }),
-	    React.createElement(Route, { path: 'search', component: Search }),
-	    React.createElement(Route, { path: 'portfolio', component: Portfolio }),
+	    React.createElement(
+	      Route,
+	      { path: 'portfolio', component: Portfolio },
+	      React.createElement(Route, { path: 'search', component: Search })
+	    ),
 	    React.createElement(Route, { path: 'join', component: Join }),
 	    React.createElement(Route, { path: 'matches', component: Matches }),
 	    React.createElement(Route, { path: 'login', component: Login })
@@ -24751,6 +24745,10 @@
 	var Home = React.createClass({
 	  displayName: 'Home',
 
+	  handleLoginClick: function () {
+	    window.location.hash = '#/login';
+	  },
+
 	  render: function () {
 
 	    return React.createElement(
@@ -24767,7 +24765,7 @@
 	        React.createElement(
 	          'h6',
 	          null,
-	          'Fantasy Stock Trading'
+	          'Fantasy Stock Trading for Pirates and Penguins: because every pirate has an inner penguin'
 	        )
 	      ),
 	      React.createElement(
@@ -24808,11 +24806,7 @@
 	        React.createElement(
 	          'button',
 	          { type: 'button', className: 'btn btn-warning', onClick: this.handleLoginClick },
-	          React.createElement(
-	            Link,
-	            { to: 'login' },
-	            'Signup/ Login'
-	          )
+	          'Signup/ Login'
 	        )
 	      )
 	    );
@@ -24822,188 +24816,8 @@
 
 	module.exports = Home;
 
-	//image to be added
-	//<img className="homeLogo" src="../assets/images/logo.png" alt="stockSuel logo black" />
-
 /***/ },
-/* 218 */
-/***/ function(module, exports, __webpack_require__) {
-
-	//TODO: relace get data with refs so i can empty the text fields??
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var authActions = __webpack_require__(219);
-	var authStore = __webpack_require__(229);
-	var matchActions = __webpack_require__(231);
-
-	var Login = React.createClass({
-	  displayName: 'Login',
-
-	  getInitialState: function () {
-	    return authStore.getUserData();
-	  },
-
-	  componentDidMount: function () {
-	    authStore.addChangeListener(this._onChangeEvent);
-	  },
-
-	  componentWillUnmount: function () {
-	    authStore.removeChangeListener(this._onChangeEvent);
-	  },
-
-	  _onChangeEvent: function () {
-	    var user = authStore.getUserData().userId;
-	    var userEmail = authStore.getUserData().userEmail;
-	    var username = authStore.getUserData().username;
-	    this.setState({ userId: user, userEmail: userEmail, username: username });
-	    //tigger action to go and get all the users matches and update the matches store
-	    matchActions.getUserMatches(this.state.userId);
-	    //Make this location route properly!!
-	    if (username && user && userEmail) {
-	      window.location.hash = "#/about";
-	    }
-	  },
-
-	  //-------methods for login-------
-	  handleLoginEmailChange: function (event) {
-	    this.setState({ emailLogin: event.target.value });
-	  },
-
-	  handleLoginPasswordChange: function (event) {
-	    this.setState({ passLogin: event.target.value });
-	  },
-
-	  handleLoginClick: function (i) {
-	    authActions.sendLogin(this.state.emailLogin, this.state.passLogin);
-	    this.setState({ emailLogin: "", passLogin: "" });
-	    //want to empty the text box
-	  },
-
-	  //-------methods for signup-------
-	  handleSignupUsernameChange: function (event) {
-	    this.setState({ usernameSignup: event.target.value });
-	  },
-
-	  handleSignupEmailChange: function (event) {
-	    var that = this;
-	    this.setState({ emailSignup: event.target.value });
-	  },
-
-	  handleSignupPasswordChange: function (event) {
-	    var that = this;
-	    this.setState({ passSignup: event.target.value });
-	  },
-
-	  handleSignupClick: function (i) {
-	    authActions.sendSignup(this.state.usernameSignup, this.state.emailSignup, this.state.passSignup);
-	    this.setState({ usernameSignup: "", emailSignup: "", passSignup: "" });
-	    //want to empty the text box
-	  },
-
-	  render: function () {
-
-	    return React.createElement(
-	      'div',
-	      { className: 'container' },
-	      React.createElement(
-	        'div',
-	        { className: 'row' },
-	        React.createElement(
-	          'div',
-	          { className: 'col-md-6' },
-	          React.createElement(
-	            'h2',
-	            null,
-	            'Login'
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'form-group' },
-	            React.createElement(
-	              'label',
-	              { htmlFor: 'email' },
-	              'Email:'
-	            ),
-	            React.createElement('input', { type: 'email', className: 'form-control', id: 'usr', onChange: this.handleLoginEmailChange })
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'form-group' },
-	            React.createElement(
-	              'label',
-	              { htmlFor: 'usr' },
-	              'Password:'
-	            ),
-	            React.createElement('input', { type: 'password', className: 'form-control', id: 'pwd', onChange: this.handleLoginPasswordChange })
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            React.createElement(
-	              'button',
-	              { type: 'button', className: 'btn btn-warning', onClick: this.handleLoginClick },
-	              'Login'
-	            )
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'col-md-6' },
-	          React.createElement(
-	            'h2',
-	            null,
-	            'Signup'
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'form-group' },
-	            React.createElement(
-	              'label',
-	              { htmlFor: 'userName' },
-	              'Username:'
-	            ),
-	            React.createElement('input', { type: 'userName', className: 'form-control', id: 'usrname', onChange: this.handleSignupUsernameChange })
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'form-group' },
-	            React.createElement(
-	              'label',
-	              { htmlFor: 'usr' },
-	              'Email:'
-	            ),
-	            React.createElement('input', { type: 'text', className: 'form-control', id: 'usr', onChange: this.handleSignupEmailChange })
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'form-group' },
-	            React.createElement(
-	              'label',
-	              { htmlFor: 'pwd' },
-	              'Password:'
-	            ),
-	            React.createElement('input', { type: 'password', className: 'form-control', id: 'pwd', onChange: this.handleSignupPasswordChange })
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'centreTitle' },
-	            React.createElement(
-	              'button',
-	              { type: 'button', className: 'btn btn-warning', onClick: this.handleSignupClick },
-	              'Signup'
-	            )
-	          )
-	        )
-	      )
-	    );
-	  }
-
-	});
-
-	module.exports = Login;
-
-/***/ },
+/* 218 */,
 /* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -28243,16 +28057,6 @@
 	    return {};
 	  },
 
-	  componentWillMount: function () {
-	    //send off a request to actions to get the match details but need the match wanted details..?
-	    var match = portfolioStore.getMatchData().match; //return array of the detals of the current match
-	    return this.setState({
-	      match: match
-	    });
-	    console.log('portfolio', this.state);
-	  },
-
-	  //not sure if the below three methods relevent
 	  componentDidMount: function () {
 	    portfolioStore.addChangeListener(this._onChangeEvent);
 	  },
@@ -28266,6 +28070,7 @@
 	    this.setState({
 	      match: match
 	    });
+	    console.log('portfolio', this.state);
 	  },
 
 	  render: function () {
@@ -28279,9 +28084,24 @@
 	        'Portfolio Page'
 	      ),
 	      React.createElement(
-	        Link,
-	        { to: '/about' },
-	        'Return to Main Menu'
+	        'div',
+	        null,
+	        React.createElement(
+	          Link,
+	          { to: '/about' },
+	          'Return to Main Menu'
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          Link,
+	          { to: '/search' },
+	          'Check out yer pieces o',
+	          "'",
+	          ' Eight'
+	        )
 	      )
 	    );
 	  }
@@ -28291,39 +28111,7 @@
 	module.exports = Portfolio;
 
 /***/ },
-/* 237 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-
-	var Search = React.createClass({
-	  displayName: 'Search',
-
-	  render: function () {
-
-	    return React.createElement(
-	      'div',
-	      { className: 'container' },
-	      React.createElement(
-	        'h2',
-	        null,
-	        'Search Stocks Page'
-	      ),
-	      React.createElement(
-	        Link,
-	        { to: '/about' },
-	        'Return to Main Menu'
-	      )
-	    );
-	  }
-
-	});
-
-	module.exports = Search;
-
-/***/ },
+/* 237 */,
 /* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -41428,6 +41216,229 @@
 	});
 
 	module.exports = portfolioStore;
+
+/***/ },
+/* 340 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+
+	var Search = React.createClass({
+	  displayName: 'Search',
+
+	  render: function () {
+
+	    return React.createElement(
+	      'div',
+	      { className: 'container' },
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Search Stocks Page'
+	      ),
+	      React.createElement(
+	        Link,
+	        { to: '/about' },
+	        'Return to Main Menu'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'form-group' },
+	        React.createElement(
+	          'label',
+	          { htmlFor: 'email' },
+	          'Oggle th',
+	          "'",
+	          ' stocks ye can lay yer dirty hands on:'
+	        ),
+	        React.createElement('input', { type: 'email', className: 'form-control', id: 'usr', onChange: this.handleLoginEmailChange })
+	      )
+	    );
+	  }
+
+	});
+
+	module.exports = Search;
+
+/***/ },
+/* 341 */
+/***/ function(module, exports, __webpack_require__) {
+
+	//TODO: relace get data with refs so i can empty the text fields??
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var authActions = __webpack_require__(219);
+	var authStore = __webpack_require__(229);
+	var matchActions = __webpack_require__(231);
+
+	var Login = React.createClass({
+	  displayName: 'Login',
+
+	  getInitialState: function () {
+	    return authStore.getUserData();
+	  },
+
+	  componentDidMount: function () {
+	    authStore.addChangeListener(this._onChangeEvent);
+	  },
+
+	  componentWillUnmount: function () {
+	    authStore.removeChangeListener(this._onChangeEvent);
+	  },
+
+	  _onChangeEvent: function () {
+	    var user = authStore.getUserData().userId;
+	    var userEmail = authStore.getUserData().userEmail;
+	    var username = authStore.getUserData().username;
+	    this.setState({ userId: user, userEmail: userEmail, username: username });
+	    //tigger action to go and get all the users matches and update the matches store
+	    matchActions.getUserMatches(this.state.userId);
+	    //Make this location route properly!!
+	    if (username && user && userEmail) {
+	      window.location.hash = "#/about";
+	    }
+	  },
+
+	  //-------methods for login-------
+	  handleLoginEmailChange: function (event) {
+	    this.setState({ emailLogin: event.target.value });
+	  },
+
+	  handleLoginPasswordChange: function (event) {
+	    this.setState({ passLogin: event.target.value });
+	  },
+
+	  handleLoginClick: function (i) {
+	    authActions.sendLogin(this.state.emailLogin, this.state.passLogin);
+	    this.setState({ emailLogin: "", passLogin: "" });
+	    //want to empty the text box
+	  },
+
+	  //-------methods for signup-------
+	  handleSignupUsernameChange: function (event) {
+	    this.setState({ usernameSignup: event.target.value });
+	  },
+
+	  handleSignupEmailChange: function (event) {
+	    var that = this;
+	    this.setState({ emailSignup: event.target.value });
+	  },
+
+	  handleSignupPasswordChange: function (event) {
+	    var that = this;
+	    this.setState({ passSignup: event.target.value });
+	  },
+
+	  handleSignupClick: function (i) {
+	    authActions.sendSignup(this.state.usernameSignup, this.state.emailSignup, this.state.passSignup);
+	    this.setState({ usernameSignup: "", emailSignup: "", passSignup: "" });
+	    //want to empty the text box
+	  },
+
+	  render: function () {
+
+	    return React.createElement(
+	      'div',
+	      { className: 'container' },
+	      React.createElement(
+	        'div',
+	        { className: 'row' },
+	        React.createElement(
+	          'div',
+	          { className: 'col-md-6' },
+	          React.createElement(
+	            'h2',
+	            null,
+	            'Login'
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'form-group' },
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'email' },
+	              'Email:'
+	            ),
+	            React.createElement('input', { type: 'email', className: 'form-control', id: 'usr', onChange: this.handleLoginEmailChange })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'form-group' },
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'usr' },
+	              'Password:'
+	            ),
+	            React.createElement('input', { type: 'password', className: 'form-control', id: 'pwd', onChange: this.handleLoginPasswordChange })
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            React.createElement(
+	              'button',
+	              { type: 'button', className: 'btn btn-warning', onClick: this.handleLoginClick },
+	              'Login'
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'col-md-6' },
+	          React.createElement(
+	            'h2',
+	            null,
+	            'Signup'
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'form-group' },
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'userName' },
+	              'Username:'
+	            ),
+	            React.createElement('input', { type: 'userName', className: 'form-control', id: 'usrname', onChange: this.handleSignupUsernameChange })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'form-group' },
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'usr' },
+	              'Email:'
+	            ),
+	            React.createElement('input', { type: 'text', className: 'form-control', id: 'usr', onChange: this.handleSignupEmailChange })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'form-group' },
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'pwd' },
+	              'Password:'
+	            ),
+	            React.createElement('input', { type: 'password', className: 'form-control', id: 'pwd', onChange: this.handleSignupPasswordChange })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'centreTitle' },
+	            React.createElement(
+	              'button',
+	              { type: 'button', className: 'btn btn-warning', onClick: this.handleSignupClick },
+	              'Signup'
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+
+	});
+
+	module.exports = Login;
 
 /***/ }
 /******/ ]);

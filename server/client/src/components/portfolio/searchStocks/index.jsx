@@ -12,6 +12,13 @@ var Search = React.createClass({
         <h2>Search Stocks Page</h2>
         <Link to="/about">Return to Main Menu</Link>
 
+        <div className="form-group">
+          <label htmlFor="email">Oggle th{"'"} stocks ye can lay yer dirty hands on:</label>
+          <input type="email" className="form-control" id="usr" onChange={this.handleLoginEmailChange} />
+        </div>
+
+        
+
       </div>
     );
   }

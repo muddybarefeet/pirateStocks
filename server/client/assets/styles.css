@@ -5,27 +5,8 @@ body {
   padding-top: 70px;
 }
 
-/*.navLogo {
-  width: 90px;
-}*/
-
-.logoTopPad {
-  padding-top: 6px;
-}
-
-.homeLogo {
-  width: 300px;
-  margin-top: -20px;
-  padding-left: 50px;
-}
-
 .headerPaddingTop {
   padding-top: 60px;
-}
-
-.headerPadCreateMatch {
-  margin-bottom: 40px;
-  margin-top: 70px;
 }
 
 .centreTitle {

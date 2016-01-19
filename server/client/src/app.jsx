@@ -10,11 +10,11 @@ var IndexRoute = require('react-router').IndexRoute;
 
 // var App = require('./components/index.jsx');
 var Home = require('./components/home.jsx');
-var Login = require('./components/auth/login.jsx');
+var Login = require('./components/login.jsx');
 
 var Create = require('./components/createMatch.jsx');
 var Portfolio = require('./components/portfolio/index.jsx');
-var Search = require('./components/searchStocks/index.jsx');
+var Search = require('./components/portfolio/searchStocks/index.jsx');
 var Join = require('./components/toJoin/index.jsx');
 var Matches = require('./components/matches/index.jsx');
 
@@ -57,9 +57,6 @@ var About = React.createClass({
             <Link to="/create">Create Match</Link>
           </div>
           <div>
-            <Link to="/search">Stocks</Link>
-          </div>
-          <div>
             <Link to="/join">Join a New Match</Link>
           </div>
           <div>
@@ -80,8 +77,9 @@ ReactDOM.render(
       <Route path="home" component={Home} />
       <Route path="about" component={About} />
         <Route path="create" component={Create} />
-        <Route path="search" component={Search} />
-        <Route path="portfolio" component={Portfolio} />
+        <Route path="portfolio" component={Portfolio}>
+          <Route path="search" component={Search} />
+        </Route>
         <Route path="join" component={Join} />
         <Route path="matches" component={Matches} />
       <Route path="login" component={Login} />
