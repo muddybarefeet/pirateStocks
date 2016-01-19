@@ -23,14 +23,6 @@ var requestHelper = {
 
   }
 
-  // put: function(url, body){
-
-  // },
-
-  // delete: function(url, body){
-
-  // }
-
 };
 
 module.exports = requestHelper;

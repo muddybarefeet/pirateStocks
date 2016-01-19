@@ -25419,14 +25419,6 @@
 	    return rp(baseUrl + url);
 	  }
 
-	  // put: function(url, body){
-
-	  // },
-
-	  // delete: function(url, body){
-
-	  // }
-
 	};
 
 	module.exports = requestHelper;
@@ -41195,9 +41187,10 @@
 	  },
 
 	  _onChangeEvent: function () {
-	    var stocks = searchStore.getStocksData().current;
+	    var stocks = searchStore.getStocksData();
 	    this.setState({
-	      currentSearch: stocks
+	      current: stocks.current,
+	      oneStock: stocks.oneStock
 	    });
 	    this.render();
 	  },
@@ -41205,7 +41198,7 @@
 	  handleClick: function (event) {
 	    var symbolClicked = event.target.parentElement.childNodes[1].innerHTML;
 	    var nameClicked = event.target.parentElement.childNodes[0].innerHTML;
-	    console.log('clicked', symbolClicked, nameClicked);
+	    searchActions.getOneStocksDetails(symbolClicked);
 	    this.refs.stockName.value = nameClicked;
 	    this.setState({
 	      clicked: true
@@ -41213,13 +41206,26 @@
 	    this.render();
 	  },
 
+	  handleBuyStocksChange: function (event) {
+	    this.setState({
+	      qtyBuy: event.target.value
+	    });
+	  },
+
+	  handleBuyClick: function (event) {
+	    //trigger action to trades and return data stored
+	    //on return to the page render the portfolio we are in with the stock in
+	    console.log('symbol', this.state.oneStock[1]);
+	    searchActions.buyStock(this.state.qtyBuy, this.state.oneStock[1]);
+	  },
+
 	  render: function () {
 
 	    var stocks = [];
 
-	    if (this.state.currentSearch && !this.state.clicked) {
+	    if (this.state.current && !this.state.clicked) {
 	      var that = this;
-	      stocks = this.state.currentSearch.map(function (stock, index) {
+	      stocks = this.state.current.map(function (stock, index) {
 	        return React.createElement(
 	          'div',
 	          { key: index, onClick: that.handleClick },
@@ -41227,6 +41233,82 @@
 	            'li',
 	            null,
 	            stock
+	          )
+	        );
+	      });
+	    }
+
+	    var stockInfo;
+
+	    if (this.state.oneStock) {
+	      var that = this;
+	      stockInfo = this.state.oneStock.map(function (stock, index) {
+	        return React.createElement(
+	          'div',
+	          { key: index },
+	          React.createElement(
+	            'div',
+	            { className: 'card card-block' },
+	            React.createElement(
+	              'h4',
+	              { className: 'card-title' },
+	              stock[0]
+	            ),
+	            React.createElement(
+	              'span',
+	              { className: 'card-text' },
+	              stock[1]
+	            ),
+	            React.createElement(
+	              'span',
+	              { className: 'card-text' },
+	              stock[2]
+	            ),
+	            React.createElement(
+	              'span',
+	              { className: 'card-text' },
+	              stock[3]
+	            ),
+	            React.createElement(
+	              'span',
+	              { className: 'card-text' },
+	              stock[4]
+	            ),
+	            React.createElement(
+	              'span',
+	              { className: 'card-text' },
+	              stock[5]
+	            ),
+	            React.createElement(
+	              'span',
+	              { className: 'card-text' },
+	              stock[6]
+	            ),
+	            React.createElement(
+	              'span',
+	              { className: 'card-text' },
+	              stock[7]
+	            ),
+	            React.createElement(
+	              'span',
+	              { className: 'card-text' },
+	              stock[8]
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              React.createElement(
+	                'label',
+	                { htmlFor: 'amount' },
+	                'Qty:'
+	              ),
+	              React.createElement('input', { type: 'amount', className: 'form-control', onChange: that.handleBuyStocksChange })
+	            ),
+	            React.createElement(
+	              'button',
+	              { type: 'button', className: 'btn btn-primary', onClick: that.handleBuyClick },
+	              'Buy'
+	            )
 	          )
 	        );
 	      });
@@ -41261,7 +41343,8 @@
 	        'ul',
 	        null,
 	        stocks
-	      )
+	      ),
+	      stockInfo
 	    );
 	  }
 
@@ -41281,12 +41364,39 @@
 
 	  searchStockDb: function (queryStr) {
 	    requestHelper.get('stocks/?search=' + queryStr).end(function (err, response) {
-	      if (response) {
+	      if (!err) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "SEARCH_STOCK_DATA",
 	          data: response
 	        });
+	      } else {
+	        console.log('err', err);
+	      }
+	    });
+	  },
+
+	  getOneStocksDetails: function (symbol) {
+	    requestHelper.get('stocks/' + symbol).end(function (err, response) {
+	      console.log('response', response, err);
+	      if (!err) {
+	        response = response.body.data;
+	        AppDispatcher.handleServerAction({
+	          actionType: "GET_ONE_STOCK",
+	          data: response
+	        });
+	      } else {
+	        console.log('err', err);
+	      }
+	    });
+	  },
+
+	  buyStock: function (userId, matchId, qty, symbol, action) {
+	    requestHelper.post('trades/', { userId: userId, matchId: matchId, qty: qty, symbol: symbol, action: 'buy' }) // /matchId/userId
+	    .end(function (err, response) {
+	      if (!err) {
+	        response = response.body.data;
+	        console.log('response buy', response);
 	      } else {
 	        console.log('err', err);
 	      }
@@ -41306,9 +41416,12 @@
 	var EventEmitter = __webpack_require__(230).EventEmitter;
 	var CHANGE_EVENT = "change";
 
-	var _stocks = {};
+	var _stocks = {
+	  current: null,
+	  oneStock: []
+	};
 
-	var portfolioStore = Object.assign(new EventEmitter(), {
+	var searchStore = Object.assign(new EventEmitter(), {
 
 	  getStocksData: function () {
 	    return _stocks;
@@ -41338,11 +41451,19 @@
 	      return [data.name, data.symbol, data.ask];
 	    });
 	    _stocks.current = stocks;
-	    portfolioStore.emitChange();
+	    searchStore.emitChange();
+	  }
+
+	  if (action.actionType === "GET_ONE_STOCK") {
+
+	    var stock = [action.data.name, action.data.symbol, action.data.industry, action.data.sector, action.data.exchange, action.data.percentChange, action.data.yearHigh, action.data.yearLow, action.data.ask];
+
+	    _stocks.oneStock.push(stock);
+	    searchStore.emitChange();
 	  }
 	});
 
-	module.exports = portfolioStore;
+	module.exports = searchStore;
 
 /***/ },
 /* 340 */

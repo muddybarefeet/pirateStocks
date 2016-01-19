@@ -4,9 +4,11 @@ var EventEmitter = require('events').EventEmitter;
 var CHANGE_EVENT = "change";
 
 var _stocks = {
+  current: null,
+  oneStock:[]
 };
 
-var portfolioStore = Object.assign(new EventEmitter(), {
+var searchStore = Object.assign(new EventEmitter(), {
   
   getStocksData: function(){
     return _stocks;
@@ -35,13 +37,34 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
       return [data.name, data.symbol, data.ask];
     });
     _stocks.current = stocks;
-    portfolioStore.emitChange();
+    searchStore.emitChange();
+
+  }
+
+  if (action.actionType === "GET_ONE_STOCK") {
+
+    var stock = [
+      action.data.name,
+      action.data.symbol,
+      action.data.industry,
+      action.data.sector,
+      action.data.exchange,
+      action.data.percentChange,
+      action.data.yearHigh,
+      action.data.yearLow,
+      action.data.ask
+    ];
+
+    _stocks.oneStock.push(stock);
+    searchStore.emitChange();
 
   }
 
 });
 
 
-module.exports = portfolioStore;
+module.exports = searchStore;
+
+
 
 

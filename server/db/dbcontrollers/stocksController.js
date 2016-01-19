@@ -6,19 +6,22 @@ module.exports = function (knex) {
 //Get the stock of a certain symbol
 //-------------------------------------
   module.getStock = function (symbol) {
+    
     return knex('stocks')
-      .join('stock_prices', 'stocks.symbol', '=', 'stock_prices.symbol')
-      .where(knex.raw('stocks.symbol = UPPER(?)', [symbol]))
-      .then(function (response) {
-        if (response.length !== 1) {
-          throw new Error('unexepected response length: ' +
-            response.length);
-        }
-        return response[0];
-      })
-      .catch(function (err) {
-        return null;
-      });
+    .join('stock_prices', 'stocks.symbol', '=', 'stock_prices.symbol')
+    .where(knex.raw('stocks.symbol = UPPER(?)', [symbol]))
+    .then(function (response) {
+      console.log('response from DB', response);
+      if (response.length !== 1) {
+        throw new Error('unexepected response length: ' +
+          response.length);
+      }
+      res = response[0];
+      return new classes.SingleStock(res.name, res.symbol, res.industry, res.sector, res.exchange, res.ask, res.percent_change, res.year_high, res.year_low);
+    })
+    .catch(function (err) {
+      return null;
+    });
 
   };
 
