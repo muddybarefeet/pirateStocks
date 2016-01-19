@@ -1,13 +1,14 @@
 
 var AppDispatcher = require('./../dispatchers/appDispatcher.js');
 var EventEmitter = require('events').EventEmitter;
+var moment = require('moment');
 var CHANGE_EVENT = "change";
 
 var _userMatches = {
   matches: []
 };
 
-var MatchesStore = Object.assign(new EventEmitter(), {
+var matchesStore = Object.assign(new EventEmitter(), {
   
   getMatchData: function(){
     return _userMatches;
@@ -32,18 +33,35 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
   
   if(action.actionType === "CREATE_MATCH") {
     _userMatches.matches.push(action);
-    MatchesStore.emitChange();
+    matchesStore.emitChange();
   }
 
   if(action.actionType === "GET_USER_MATCHES") {
-   _userMatches.matches.push(action);
-    MatchesStore.emitChange();
+    var match = [];
+
+    match.push(action.title);
+    match.push(action.type);
+    match.push(moment(action.startDate).fromNow());
+    match.push(moment(action.endDate).fromNow());
+    match.push(action.startingFunds);
+    match.push(action.status);
+    
+    match.push(action.challengee);
+    match.push(action.creatorId);
+    match.push(action.winner);
+    match.push(action.createdAt);
+    match.push(action.matchId);
+
+    _userMatches.matches.push(match);
+    match = [];
+    matchesStore.emitChange();
+
   }
 
 });
 
 
-module.exports = MatchesStore;
+module.exports = matchesStore;
 
 
 

@@ -3,7 +3,7 @@ var React = require('react');
 var Link = require('react-router').Link;
 var createMatchActions = require('./../actions/createMatchActions.js');
 var numeral = require('numeral');
-var CreateMatchStore = require('./../stores/matchesStore.js');
+var matchesStore = require('./../stores/matchesStore.js');
 
 var Create = React.createClass({
 
@@ -12,11 +12,11 @@ var Create = React.createClass({
   },
 
   componentDidMount: function () {
-    CreateMatchStore.addChangeListener(this._onChangeEvent);
+    matchesStore.addChangeListener(this._onChangeEvent);
   },
 
   componentWillUnmount: function () {
-    CreateMatchStore.removeChangeListener(this._onChangeEvent);
+    matchesStore.removeChangeListener(this._onChangeEvent);
   },
 
   _onChangeEvent: function () {

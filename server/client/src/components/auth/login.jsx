@@ -3,33 +3,34 @@
 var React = require('react');
 var Link = require('react-router').Link;
 var authActions = require('./../../actions/authActions.js');
-var AuthStore = require('./../../stores/authStore.js');
+var authStore = require('./../../stores/authStore.js');
 var matchActions = require('./../../actions/matchActions.js');
 
 var Login = React.createClass({
 
   getInitialState: function() {
-    return AuthStore.getUserData();
+    return authStore.getUserData();
   },
 
   componentDidMount: function () {
-    AuthStore.addChangeListener(this._onChangeEvent);
+    authStore.addChangeListener(this._onChangeEvent);
   },
 
   componentWillUnmount: function () {
-    AuthStore.removeChangeListener(this._onChangeEvent);
+    authStore.removeChangeListener(this._onChangeEvent);
   },
 
   _onChangeEvent: function () {
-    var user = AuthStore.getUserData().userId;
-    var userEmail = AuthStore.getUserData().userEmail;
-    var username = AuthStore.getUserData().username;
+    var user = authStore.getUserData().userId;
+    var userEmail = authStore.getUserData().userEmail;
+    var username = authStore.getUserData().username;
     this.setState({userId: user, userEmail: userEmail, username: username});
-    console.log('component',this.state);
     //tigger action to go and get all the users matches and update the matches store
     matchActions.getUserMatches(this.state.userId);
     //Make this location route properly!!
-    window.location.hash="#/about";
+    if (username && user && userEmail) {
+      window.location.hash="#/about";
+    }
   },
 
   //-------methods for login-------
@@ -65,7 +66,6 @@ var Login = React.createClass({
   handleSignupClick: function (i) {
     authActions.sendSignup(this.state.usernameSignup, this.state.emailSignup, this.state.passSignup);
     this.setState({usernameSignup: "", emailSignup: "", passSignup: ""});
-    console.log('yoooo')
     //want to empty the text box
   },
 

@@ -21,6 +21,7 @@ module.exports = function (knex) {
     .get(function (req, res) {
       tradesController.getPortfolio(req.userId, req.matchId)
         .then(function (portfolio) {
+          console.log('portfolio', portfolio);
           res.status(200).json({
             data: portfolio
           });

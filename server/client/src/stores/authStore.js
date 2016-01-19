@@ -11,7 +11,7 @@ var _userDetails = {
   username: null
 };
 
-var AuthStore = Object.assign(new EventEmitter(), {
+var authStore = Object.assign(new EventEmitter (), {
   
   getUserData: function(){
     return _userDetails;
@@ -39,7 +39,7 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
     _userDetails.userId = action.id;
     _userDetails.userEmail = action.email;
     _userDetails.username = action.username;
-    AuthStore.emitChange();
+    authStore.emitChange();
   }
 
   if (action.actionType === "USER_LOGIN") {
@@ -47,11 +47,11 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
     _userDetails.userEmail = action.email;
     _userDetails.username = action.username;
     console.log('in user login store', _userDetails);
-    AuthStore.emitChange();
+    authStore.emitChange();
   }
 
 });
 
 
-module.exports = AuthStore;
+module.exports = authStore;
 
