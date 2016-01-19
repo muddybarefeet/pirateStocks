@@ -1,3 +1,5 @@
+var classes = require('./classes.js');
+
 module.exports = function (knex) {
   var module = {};
 
@@ -24,10 +26,22 @@ module.exports = function (knex) {
 //------------------------------------------------------------------------------------------
   module.searchStock = function (search) {
     var searchLike = search + '%';
-    return knex('stocks')
-      .where(knex.raw('stocks.symbol like UPPER(?)', [searchLike]))
-      .orWhere(knex.raw('UPPER(stocks.name) like UPPER(?)', [searchLike]))
-      .join('stock_prices', 'stocks.symbol', '=', 'stock_prices.symbol');
+    return knex('stocks').where(function() {
+        this.where(knex.raw('stocks.symbol like UPPER(?)', [searchLike]))
+            .orWhere(knex.raw('UPPER(stocks.name) like UPPER(?)', [searchLike]))
+      })
+      .whereNotNull('ask')
+      .join('stock_prices', 'stocks.symbol', '=', 'stock_prices.symbol')
+      .limit(20)
+      .orderBy('name', 'asc')
+    .then(function(stocks) {
+      return stocks.map(function (stock) {
+        return new classes.Search(stock.name, stock.symbol, stock.ask);
+      });
+    })
+    .then(function (formattedStocks) {
+      return formattedStocks;
+    });
   };
 
 //Update Prices Controller. Deprecated.

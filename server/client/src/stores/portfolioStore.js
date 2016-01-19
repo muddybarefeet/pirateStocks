@@ -1,7 +1,6 @@
 
 var AppDispatcher = require('./../dispatchers/appDispatcher.js');
 var EventEmitter = require('events').EventEmitter;
-var moment = require('moment');
 var CHANGE_EVENT = "change";
 
 var _currentMatch = {
