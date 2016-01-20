@@ -62,7 +62,7 @@
 	var Create = __webpack_require__(232);
 	var Portfolio = __webpack_require__(335);
 	var Search = __webpack_require__(337);
-	var Join = __webpack_require__(342);
+	var Join = __webpack_require__(338);
 	var Matches = __webpack_require__(341);
 
 	var App = React.createClass({
@@ -27275,22 +27275,28 @@
 	  },
 
 	  _onChangeEvent: function () {
-	    // this.setState({userId: user, userEmail: userEmail, username: username});
 	    console.log('component', this.state);
+	    window.location.hash = "#/portfolio";
 	  },
 
 	  //methods to add form fields data to the state
 	  handleTitleChange: function (event) {
-	    this.setState({ matchTitle: event.target.value });
+	    this.setState({
+	      matchTitle: event.target.value
+	    });
 	  },
 
 	  handleTypeChange: function (event) {
-	    this.setState({ typeOfMatch: event.target.value });
+	    this.setState({
+	      typeOfMatch: event.target.value
+	    });
 	  },
 
 	  handleFundsChange: function (event) {
 	    var funds = numeral().unformat(event.target.value);
-	    this.setState({ totalFunds: funds });
+	    this.setState({
+	      totalFunds: funds
+	    });
 	  },
 
 	  //get the date with refs can I add them on the state? Would be neater REVISIT!
@@ -28166,7 +28172,8 @@
 
 	  if (action.actionType === "CREATE_MATCH") {
 
-	    _userMatches.matches.push([action.data.title, action.data.type, moment(match.startdate).fromNow(), moment(match.enddate).fromNow(), action.data.starting_funds, action.data.status, action.data.challengee, action.data.creator_id, action.data.winner, action.data.created_at, action.data.m_id]);
+	    _userMatches.matches.push([action.data.title, action.data.type, moment(action.data.startdate).fromNow(), moment(action.data.enddate).fromNow(), action.data.starting_funds, action.data.status, action.data.challengee, action.data.creator_id, action.data.winner, action.data.created_at, action.data.m_id]);
+	    console.log('create match store', _userMatches.matches);
 	    matchesStore.emitChange();
 	  }
 
@@ -41039,7 +41046,6 @@
 	      stocks: portfolioStore.getMatchData().stocks,
 	      matchTitle: portfolioStore.getMatchData().matchTitle
 	    });
-	    console.log('stocks In UPDATED PORTFOLIO', this.state);
 	    this.render();
 	  },
 
@@ -41255,7 +41261,7 @@
 	    _currentMatch.totalValue = action.data.portfolio.totalValue;
 	    _currentMatch.availableCash = action.data.portfolio.available_cash;
 	    _currentMatch.matchTitle = action.data.portfolio.title;
-	    console.log('store sell made', _currentMatch);
+
 	    portfolioStore.emitChange();
 	  }
 	});
@@ -41269,8 +41275,8 @@
 	
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var searchActions = __webpack_require__(338);
-	var searchStore = __webpack_require__(339);
+	var searchActions = __webpack_require__(342);
+	var searchStore = __webpack_require__(343);
 	var matchActions = __webpack_require__(231);
 
 	var Search = React.createClass({
@@ -41283,6 +41289,14 @@
 	  },
 
 	  search: function (event) {
+
+	    if (this.state.clicked) {
+	      this.state.clicked = false;
+	      this.state.oneStock = null;
+	      this.state.current = null;
+	      this.render();
+	    }
+
 	    var input = event.target.value;
 
 	    var oncePerSec = function () {
@@ -41326,8 +41340,11 @@
 
 	  handleBuyStocksChange: function (event) {
 	    this.setState({
-	      qtyBuy: event.target.value
+	      qtyBuy: parseFloat(event.target.value),
+	      total: (parseFloat(event.target.parentElement.previousSibling.children[1].innerHTML) * parseFloat(event.target.value)).toFixed(2)
 	    });
+	    console.log('state updated', parseFloat(event.target.parentElement.previousSibling.children[1].innerHTML), parseFloat(event.target.value));
+	    this.render();
 	  },
 
 	  handleBuyClick: function (event) {
@@ -41339,6 +41356,8 @@
 	  render: function () {
 
 	    var stocks = [];
+	    var stockInfo;
+	    var totalCost;
 
 	    if (this.state.current && !this.state.clicked) {
 	      var that = this;
@@ -41355,9 +41374,23 @@
 	      });
 	    }
 
-	    var stockInfo;
+	    console.log('render', this.state);
+	    //to be implemented when know how to get the ask price!! :( )
+	    if (this.setState.total > 0) {
+	      totalCost = React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'p',
+	          { className: 'card-text' },
+	          'Total Cost: ',
+	          this.state.total
+	        )
+	      );
+	    }
+	    console.log('total', totalCost);
 
-	    if (this.state.oneStock) {
+	    if (this.state.oneStock && this.state.clicked) {
 	      var that = this;
 	      stockInfo = this.state.oneStock.map(function (stock, index) {
 	        return React.createElement(
@@ -41374,41 +41407,49 @@
 	            React.createElement(
 	              'span',
 	              { className: 'card-text' },
+	              'Symbol: ',
 	              stock[1]
 	            ),
 	            React.createElement(
 	              'span',
 	              { className: 'card-text' },
+	              'Industry: ',
 	              stock[2]
 	            ),
 	            React.createElement(
 	              'span',
 	              { className: 'card-text' },
+	              'Sector: ',
 	              stock[3]
 	            ),
 	            React.createElement(
 	              'span',
 	              { className: 'card-text' },
+	              'Exchange:',
 	              stock[4]
 	            ),
 	            React.createElement(
 	              'span',
 	              { className: 'card-text' },
+	              'Percentage High: ',
 	              stock[5]
 	            ),
 	            React.createElement(
 	              'span',
 	              { className: 'card-text' },
+	              'Year High: ',
 	              stock[6]
 	            ),
 	            React.createElement(
 	              'span',
 	              { className: 'card-text' },
+	              'Year Low: ',
 	              stock[7]
 	            ),
 	            React.createElement(
 	              'span',
 	              { className: 'card-text' },
+	              'Ask: ',
 	              stock[8]
 	            ),
 	            React.createElement(
@@ -41419,6 +41460,7 @@
 	                { htmlFor: 'number' },
 	                'Qty:'
 	              ),
+	              totalCost,
 	              React.createElement('input', { className: 'form-control', onChange: that.handleBuyStocksChange })
 	            ),
 	            React.createElement(
@@ -41473,43 +41515,204 @@
 /* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AppDispatcher = __webpack_require__(220);
-	var constants = __webpack_require__(224);
-	var requestHelper = __webpack_require__(225);
+	//TODO: relace get data with refs so i can empty the text fields??
 
-	var searchActions = {
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var authActions = __webpack_require__(219);
+	var joinMatchStore = __webpack_require__(339);
+	var joinMatchActions = __webpack_require__(340);
+	var matchActions = __webpack_require__(231);
 
-	  searchStockDb: function (queryStr) {
-	    requestHelper.get('stocks/?search=' + queryStr).end(function (err, response) {
-	      if (!err) {
-	        response = response.body.data;
-	        AppDispatcher.handleServerAction({
-	          actionType: "SEARCH_STOCK_DATA",
-	          data: response
-	        });
-	      } else {
-	        console.log('err', err);
-	      }
+	var MatchesToJoin = React.createClass({
+	  displayName: 'MatchesToJoin',
+
+	  getInitialState: function () {
+	    return joinMatchStore.getMatchData();
+	  },
+
+	  componentWillMount: function () {
+	    //trigger action to get the data from the db
+	    joinMatchActions.getJoinableMatches(localStorage.userId);
+	  },
+
+	  componentDidMount: function () {
+	    joinMatchStore.addChangeListener(this._onChangeEvent);
+	  },
+
+	  componentWillUnmount: function () {
+	    joinMatchStore.removeChangeListener(this._onChangeEvent);
+	  },
+
+	  _onChangeEvent: function () {
+	    console.log('changed store');
+	    this.setState({
+	      matches: joinMatchStore.getMatchData().matches
 	    });
 	  },
 
-	  getOneStocksDetails: function (symbol) {
-	    requestHelper.get('stocks/' + symbol).end(function (err, response) {
-	      if (!err) {
-	        response = response.body.data;
-	        AppDispatcher.handleServerAction({
-	          actionType: "GET_ONE_STOCK",
-	          data: response
-	        });
-	      } else {
-	        console.log('err', err);
-	      }
-	    });
+	  handleJoinClick: function (event) {
+	    var match = event.target.value.split(',');
+	    var matchId = match[match.length - 1];
+	    localStorage.setItem("matchId", matchId);
+	    //trigger the store to get the correct match
+	    matchActions.getMatchPortfolio(localStorage.userId, localStorage.matchId);
+	    window.location.hash = "#/portfolio";
+	  },
+
+	  render: function () {
+
+	    var toDisplay;
+	    var arrayOfMatches = [];
+
+	    var matchTable = React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Matches'
+	      ),
+	      React.createElement(
+	        'table',
+	        { className: 'table' },
+	        React.createElement(
+	          'thead',
+	          null,
+	          React.createElement(
+	            'tr',
+	            null,
+	            React.createElement(
+	              'th',
+	              null,
+	              'Title'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Type'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Start Date'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'End Date'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Start Funds'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Status'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'My Portfolio Value'
+	            ),
+	            React.createElement('th', null)
+	          )
+	        ),
+	        React.createElement(
+	          'tbody',
+	          null,
+	          arrayOfMatches
+	        )
+	      )
+	    );
+
+	    if (!this.state.matches) {
+	      toDisplay = React.createElement(
+	        'p',
+	        { key: 0 },
+	        'Oh arr! There aint nah any battles to be joined, get t',
+	        "'",
+	        ' t',
+	        "'",
+	        ' it handsomely and make yer own!'
+	      );
+	    } else {
+	      var that = this;
+	      this.state.matches.map(function (match, index) {
+	        arrayOfMatches.push(React.createElement(
+	          'tr',
+	          { key: index },
+	          React.createElement(
+	            'td',
+	            null,
+	            match[0]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[1]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[2]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[3]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[4]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[5]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            'To be worked out'
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            React.createElement(
+	              'button',
+	              { value: match, type: 'button', className: 'btn btn-primary', onClick: that.handleJoinClick },
+	              'To Portfolio'
+	            )
+	          )
+	        ));
+	      });
+	      toDisplay = matchTable;
+	    }
+
+	    return React.createElement(
+	      'div',
+	      { className: 'container' },
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Matches To Join'
+	      ),
+	      React.createElement(
+	        Link,
+	        { to: '/about' },
+	        'Return to Main Menu'
+	      ),
+	      toDisplay
+	    );
 	  }
 
-	};
+	});
 
-	module.exports = searchActions;
+	module.exports = MatchesToJoin;
 
 /***/ },
 /* 339 */
@@ -41518,17 +41721,17 @@
 	
 	var AppDispatcher = __webpack_require__(220);
 	var EventEmitter = __webpack_require__(230).EventEmitter;
+	var moment = __webpack_require__(236);
 	var CHANGE_EVENT = "change";
 
-	var _stocks = {
-	  current: null,
-	  oneStock: []
+	var _joinableMatches = {
+	  matches: null
 	};
 
-	var searchStore = Object.assign(new EventEmitter(), {
+	var joinMatchStore = Object.assign(new EventEmitter(), {
 
-	  getStocksData: function () {
-	    return _stocks;
+	  getMatchData: function () {
+	    return _joinableMatches;
 	  },
 
 	  emitChange: function () {
@@ -41549,28 +41752,49 @@
 	  //'subscribes' to the dispatcher. Store wants to know if it does anything. Payload
 	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
 
-	  if (action.actionType === "SEARCH_STOCK_DATA") {
+	  if (action.actionType === "GET_JOINABLE_MATCHES") {
 
-	    var stocks = action.data.map(function (data) {
-	      return [data.name, data.symbol, data.ask];
+	    _joinableMatches.matches = action.data.map(function (match) {
+	      return [match.title, match.type, moment(match.startdate).fromNow(), moment(match.enddate).fromNow(), match.starting_funds, match.status, match.challengee, match.creator_id, match.winner, match.created_at, match.m_id];
 	    });
-	    _stocks.current = stocks;
-	    searchStore.emitChange();
-	  }
 
-	  if (action.actionType === "GET_ONE_STOCK") {
-
-	    var stock = [action.data.name, action.data.symbol, action.data.industry, action.data.sector, action.data.exchange, action.data.percentChange, action.data.yearHigh, action.data.yearLow, action.data.ask];
-
-	    _stocks.oneStock.push(stock);
-	    searchStore.emitChange();
+	    joinMatchStore.emitChange();
 	  }
 	});
 
-	module.exports = searchStore;
+	module.exports = joinMatchStore;
 
 /***/ },
-/* 340 */,
+/* 340 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	var AppDispatcher = __webpack_require__(220);
+	var constants = __webpack_require__(224);
+	var requestHelper = __webpack_require__(225);
+
+	var joinMatchActions = {
+
+	  getJoinableMatches: function (userId) {
+
+	    requestHelper.get('matches/' + userId).end(function (err, response) {
+	      if (!err) {
+	        response = response.body.data;
+	        AppDispatcher.handleServerAction({
+	          actionType: "GET_JOINABLE_MATCHES",
+	          data: response
+	        });
+	      } else {
+	        console.log('err', err);
+	      }
+	    });
+	  }
+
+	};
+
+	module.exports = joinMatchActions;
+
+/***/ },
 /* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -41774,204 +41998,43 @@
 /* 342 */
 /***/ function(module, exports, __webpack_require__) {
 
-	//TODO: relace get data with refs so i can empty the text fields??
+	var AppDispatcher = __webpack_require__(220);
+	var constants = __webpack_require__(224);
+	var requestHelper = __webpack_require__(225);
 
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var authActions = __webpack_require__(219);
-	var joinMatchStore = __webpack_require__(343);
-	var joinMatchActions = __webpack_require__(344);
-	var matchActions = __webpack_require__(231);
+	var searchActions = {
 
-	var MatchesToJoin = React.createClass({
-	  displayName: 'MatchesToJoin',
-
-	  getInitialState: function () {
-	    return joinMatchStore.getMatchData();
-	  },
-
-	  componentWillMount: function () {
-	    //trigger action to get the data from the db
-	    joinMatchActions.getJoinableMatches(localStorage.userId);
-	  },
-
-	  componentDidMount: function () {
-	    joinMatchStore.addChangeListener(this._onChangeEvent);
-	  },
-
-	  componentWillUnmount: function () {
-	    joinMatchStore.removeChangeListener(this._onChangeEvent);
-	  },
-
-	  _onChangeEvent: function () {
-	    console.log('changed store');
-	    this.setState({
-	      matches: joinMatchStore.getMatchData().matches
+	  searchStockDb: function (queryStr) {
+	    requestHelper.get('stocks/?search=' + queryStr).end(function (err, response) {
+	      if (!err) {
+	        response = response.body.data;
+	        AppDispatcher.handleServerAction({
+	          actionType: "SEARCH_STOCK_DATA",
+	          data: response
+	        });
+	      } else {
+	        console.log('err', err);
+	      }
 	    });
 	  },
 
-	  handleJoinClick: function (event) {
-	    var match = event.target.value.split(',');
-	    var matchId = match[match.length - 1];
-	    localStorage.setItem("matchId", matchId);
-	    //trigger the store to get the correct match
-	    matchActions.getMatchPortfolio(localStorage.userId, localStorage.matchId);
-	    window.location.hash = "#/portfolio";
-	  },
-
-	  render: function () {
-
-	    var toDisplay;
-	    var arrayOfMatches = [];
-
-	    var matchTable = React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h2',
-	        null,
-	        'Matches'
-	      ),
-	      React.createElement(
-	        'table',
-	        { className: 'table' },
-	        React.createElement(
-	          'thead',
-	          null,
-	          React.createElement(
-	            'tr',
-	            null,
-	            React.createElement(
-	              'th',
-	              null,
-	              'Title'
-	            ),
-	            React.createElement(
-	              'th',
-	              null,
-	              'Type'
-	            ),
-	            React.createElement(
-	              'th',
-	              null,
-	              'Start Date'
-	            ),
-	            React.createElement(
-	              'th',
-	              null,
-	              'End Date'
-	            ),
-	            React.createElement(
-	              'th',
-	              null,
-	              'Start Funds'
-	            ),
-	            React.createElement(
-	              'th',
-	              null,
-	              'Status'
-	            ),
-	            React.createElement(
-	              'th',
-	              null,
-	              'My Portfolio Value'
-	            ),
-	            React.createElement('th', null)
-	          )
-	        ),
-	        React.createElement(
-	          'tbody',
-	          null,
-	          arrayOfMatches
-	        )
-	      )
-	    );
-
-	    if (!this.state.matches) {
-	      toDisplay = React.createElement(
-	        'p',
-	        { key: 0 },
-	        'Oh arr! There aint nah any battles to be joined, get t',
-	        "'",
-	        ' t',
-	        "'",
-	        ' it handsomely and make yer own!'
-	      );
-	    } else {
-	      var that = this;
-	      this.state.matches.map(function (match, index) {
-	        arrayOfMatches.push(React.createElement(
-	          'tr',
-	          { key: index },
-	          React.createElement(
-	            'td',
-	            null,
-	            match[0]
-	          ),
-	          React.createElement(
-	            'td',
-	            null,
-	            match[1]
-	          ),
-	          React.createElement(
-	            'td',
-	            null,
-	            match[2]
-	          ),
-	          React.createElement(
-	            'td',
-	            null,
-	            match[3]
-	          ),
-	          React.createElement(
-	            'td',
-	            null,
-	            match[4]
-	          ),
-	          React.createElement(
-	            'td',
-	            null,
-	            match[5]
-	          ),
-	          React.createElement(
-	            'td',
-	            null,
-	            'To be worked out'
-	          ),
-	          React.createElement(
-	            'td',
-	            null,
-	            React.createElement(
-	              'button',
-	              { value: match, type: 'button', className: 'btn btn-primary', onClick: that.handleJoinClick },
-	              'To Portfolio'
-	            )
-	          )
-	        ));
-	      });
-	      toDisplay = matchTable;
-	    }
-
-	    return React.createElement(
-	      'div',
-	      { className: 'container' },
-	      React.createElement(
-	        'h2',
-	        null,
-	        'Matches To Join'
-	      ),
-	      React.createElement(
-	        Link,
-	        { to: '/about' },
-	        'Return to Main Menu'
-	      ),
-	      toDisplay
-	    );
+	  getOneStocksDetails: function (symbol) {
+	    requestHelper.get('stocks/' + symbol).end(function (err, response) {
+	      if (!err) {
+	        response = response.body.data;
+	        AppDispatcher.handleServerAction({
+	          actionType: "GET_ONE_STOCK",
+	          data: response
+	        });
+	      } else {
+	        console.log('err', err);
+	      }
+	    });
 	  }
 
-	});
+	};
 
-	module.exports = MatchesToJoin;
+	module.exports = searchActions;
 
 /***/ },
 /* 343 */
@@ -41980,17 +42043,17 @@
 	
 	var AppDispatcher = __webpack_require__(220);
 	var EventEmitter = __webpack_require__(230).EventEmitter;
-	var moment = __webpack_require__(236);
 	var CHANGE_EVENT = "change";
 
-	var _joinableMatches = {
-	  matches: null
+	var _stocks = {
+	  current: null,
+	  oneStock: null
 	};
 
-	var joinMatchStore = Object.assign(new EventEmitter(), {
+	var searchStore = Object.assign(new EventEmitter(), {
 
-	  getMatchData: function () {
-	    return _joinableMatches;
+	  getStocksData: function () {
+	    return _stocks;
 	  },
 
 	  emitChange: function () {
@@ -42011,47 +42074,25 @@
 	  //'subscribes' to the dispatcher. Store wants to know if it does anything. Payload
 	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
 
-	  if (action.actionType === "GET_JOINABLE_MATCHES") {
+	  if (action.actionType === "SEARCH_STOCK_DATA") {
 
-	    _joinableMatches.matches = action.data.map(function (match) {
-	      return [match.title, match.type, moment(match.startdate).fromNow(), moment(match.enddate).fromNow(), match.starting_funds, match.status, match.challengee, match.creator_id, match.winner, match.created_at, match.m_id];
+	    var stocks = action.data.map(function (data) {
+	      return [data.name, data.symbol, data.ask];
 	    });
+	    _stocks.current = stocks;
+	    searchStore.emitChange();
+	  }
 
-	    joinMatchStore.emitChange();
+	  if (action.actionType === "GET_ONE_STOCK") {
+
+	    var stock = [action.data.name, action.data.symbol, action.data.industry, action.data.sector, action.data.exchange, action.data.percentChange, action.data.yearHigh, action.data.yearLow, action.data.ask];
+
+	    _stocks.oneStock = [stock];
+	    searchStore.emitChange();
 	  }
 	});
 
-	module.exports = joinMatchStore;
-
-/***/ },
-/* 344 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	var AppDispatcher = __webpack_require__(220);
-	var constants = __webpack_require__(224);
-	var requestHelper = __webpack_require__(225);
-
-	var joinMatchActions = {
-
-	  getJoinableMatches: function (userId) {
-
-	    requestHelper.get('matches/' + userId).end(function (err, response) {
-	      if (!err) {
-	        response = response.body.data;
-	        AppDispatcher.handleServerAction({
-	          actionType: "GET_JOINABLE_MATCHES",
-	          data: response
-	        });
-	      } else {
-	        console.log('err', err);
-	      }
-	    });
-	  }
-
-	};
-
-	module.exports = joinMatchActions;
+	module.exports = searchStore;
 
 /***/ }
 /******/ ]);

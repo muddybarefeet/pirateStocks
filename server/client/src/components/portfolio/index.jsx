@@ -32,7 +32,6 @@ var Portfolio = React.createClass({
       stocks: portfolioStore.getMatchData().stocks,
       matchTitle: portfolioStore.getMatchData().matchTitle
     })
-    console.log('stocks In UPDATED PORTFOLIO', this.state)
     this.render();
   },
 

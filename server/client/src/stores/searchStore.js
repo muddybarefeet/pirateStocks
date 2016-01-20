@@ -5,7 +5,7 @@ var CHANGE_EVENT = "change";
 
 var _stocks = {
   current: null,
-  oneStock:[]
+  oneStock: null
 };
 
 var searchStore = Object.assign(new EventEmitter(), {
@@ -55,7 +55,7 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
       action.data.ask
     ];
 
-    _stocks.oneStock.push(stock);
+    _stocks.oneStock = [stock];
     searchStore.emitChange();
 
   }

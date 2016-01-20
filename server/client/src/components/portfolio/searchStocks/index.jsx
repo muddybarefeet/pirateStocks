@@ -14,6 +14,14 @@ var Search = React.createClass({
   },
 
   search: function (event) {
+
+    if (this.state.clicked) {
+      this.state.clicked = false;
+      this.state.oneStock = null;
+      this.state.current = null;
+      this.render();
+    }
+
     var input = event.target.value;
 
     var oncePerSec = function () {
@@ -57,8 +65,11 @@ var Search = React.createClass({
 
   handleBuyStocksChange: function (event) {
     this.setState({
-      qtyBuy: event.target.value
+      qtyBuy: parseFloat(event.target.value),
+      total: (parseFloat(event.target.parentElement.previousSibling.children[1].innerHTML) * parseFloat(event.target.value)).toFixed(2)
     });
+    console.log('state updated', parseFloat(event.target.parentElement.previousSibling.children[1].innerHTML), parseFloat(event.target.value))
+    this.render();
   },
 
   handleBuyClick: function (event) {
@@ -70,6 +81,8 @@ var Search = React.createClass({
   render: function () {
 
     var stocks = [];
+    var stockInfo;
+    var totalCost;
 
     if (this.state.current && !this.state.clicked) {
       var that = this;
@@ -78,26 +91,33 @@ var Search = React.createClass({
       });
     }
 
-    var stockInfo;
+    console.log('render', this.state);
+    //to be implemented when know how to get the ask price!! :( )
+    if (this.setState.total > 0) {
+      totalCost = (<div>
+        <p className="card-text">Total Cost: {this.state.total}</p>
+      </div>);
+    }
+    console.log('total', totalCost)
 
-    if (this.state.oneStock) {
+    if (this.state.oneStock && this.state.clicked) {
       var that = this;
       stockInfo = this.state.oneStock.map(function (stock, index) {
         return (
           <div key={index}>
             <div className="card card-block">
               <h4 className="card-title">{stock[0]}</h4>
-              <span className="card-text">{stock[1]}</span>
-              <span className="card-text">{stock[2]}</span>
-              <span className="card-text">{stock[3]}</span>
-              <span className="card-text">{stock[4]}</span>
-              <span className="card-text">{stock[5]}</span>
-              <span className="card-text">{stock[6]}</span>
-              <span className="card-text">{stock[7]}</span>
-              <span className="card-text">{stock[8]}</span>
-            {/*div to show cost of the stocks you want to buy*/}
+              <span className="card-text">Symbol: {stock[1]}</span>
+              <span className="card-text">Industry: {stock[2]}</span>
+              <span className="card-text">Sector: {stock[3]}</span>
+              <span className="card-text">Exchange:{stock[4]}</span>
+              <span className="card-text">Percentage High: {stock[5]}</span>
+              <span className="card-text">Year High: {stock[6]}</span>
+              <span className="card-text">Year Low: {stock[7]}</span>
+              <span className="card-text">Ask: {stock[8]}</span>
               <div className="form-group">
                 <label htmlFor="number">Qty:</label>
+                {totalCost}
                 <input className="form-control" onChange={that.handleBuyStocksChange} />
               </div>
               <button type="button" className="btn btn-primary" onClick={that.handleBuyClick} >Buy</button>
@@ -121,7 +141,7 @@ var Search = React.createClass({
         <ul>{stocks}</ul>
 
         {stockInfo}
-      
+
 
       </div>
     );

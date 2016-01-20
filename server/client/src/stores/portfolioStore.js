@@ -74,7 +74,7 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
     _currentMatch.totalValue = action.data.portfolio.totalValue;
     _currentMatch.availableCash = action.data.portfolio.available_cash;
     _currentMatch.matchTitle = action.data.portfolio.title;
-    console.log('store sell made', _currentMatch);
+    
     portfolioStore.emitChange();
   }
 

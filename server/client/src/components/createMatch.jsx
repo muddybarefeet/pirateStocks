@@ -20,22 +20,28 @@ var Create = React.createClass({
   },
 
   _onChangeEvent: function () {
-    // this.setState({userId: user, userEmail: userEmail, username: username});
     console.log('component',this.state);
+    window.location.hash="#/portfolio";
   },
 
   //methods to add form fields data to the state
   handleTitleChange: function(event) {
-    this.setState({matchTitle: event.target.value});
+    this.setState({
+      matchTitle: event.target.value
+    });
   },
 
   handleTypeChange: function (event) {
-    this.setState({typeOfMatch: event.target.value});
+    this.setState({
+      typeOfMatch: event.target.value
+    });
   },
 
   handleFundsChange: function (event) {
     var funds = numeral().unformat(event.target.value);
-    this.setState({totalFunds: funds});
+    this.setState({
+      totalFunds: funds
+    });
   },
 
   //get the date with refs can I add them on the state? Would be neater REVISIT!

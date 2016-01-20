@@ -37,8 +37,8 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
     _userMatches.matches.push([
       action.data.title,
       action.data.type,
-      moment(match.startdate).fromNow(),
-      moment(match.enddate).fromNow(),
+      moment(action.data.startdate).fromNow(),
+      moment(action.data.enddate).fromNow(),
       action.data.starting_funds,
       action.data.status,
       action.data.challengee,
@@ -47,6 +47,7 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
       action.data.created_at,
       action.data.m_id
     ]);
+    console.log('create match store', _userMatches.matches);
     matchesStore.emitChange();
   }
 
