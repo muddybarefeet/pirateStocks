@@ -16,7 +16,7 @@ var Login = require('./components/login.jsx');
 var Create = require('./components/createMatch.jsx');
 var Portfolio = require('./components/portfolio/index.jsx');
 var Search = require('./components/portfolio/searchStocks/index.jsx');
-var Join = require('./components/toJoin/index.jsx');
+var Join = require('./components/matchesToJoin.jsx');
 var Matches = require('./components/matches/index.jsx');
 
 

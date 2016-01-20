@@ -8,22 +8,13 @@ var CreateMatchActions = {
 
     requestHelper
     .post('matches/', {userId: 13, title: title, type: type, funds: funds, start: start, end: end})
-    .end(function(err, userMatch){
-      if (userMatch) {
-        userMatch = userMatch.body.data;
+    .end(function(err, response){
+      if (response) {
+        console.log('response', response)
+        response = response.body.data;
         AppDispatcher.handleServerAction({
           actionType: "CREATE_MATCH",
-          matchId: userMatch.m_id,
-          title: userMatch.title,
-          type: userMatch.type,
-          challengee: userMatch.challengee,
-          creatorId: userMatch.creator_id,
-          startDate: userMatch.startdate,
-          endDate: userMatch.enddate,
-          startingFunds: userMatch.starting_funds,
-          status: userMatch.status,
-          winner: userMatch.winner,
-          createdAt: userMatch.created_at
+          data: response
         });
       } else {
         console.log('err', err);

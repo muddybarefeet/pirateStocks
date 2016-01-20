@@ -15,13 +15,12 @@ module.exports = function (knex) {
       next();
     });
 
-  router.route('/')
-
+  router.route('/:userId')
 //Get All Joinable Matches
 //-------------------------
   .get(function (req, res) {
 
-    matchesController.getAllJoinableMatches(req.user.u_id)
+    matchesController.getAllJoinableMatches(req.userId)
       .then(function (matches) {
         res.status(200).json({
           data: matches
@@ -33,8 +32,9 @@ module.exports = function (knex) {
         });
       });
 
-  })
-
+  });
+  
+router.route('/')
 //Post New Match Details
 //----------------------
   .post(function (req, res) {

@@ -62,7 +62,7 @@
 	var Create = __webpack_require__(232);
 	var Portfolio = __webpack_require__(335);
 	var Search = __webpack_require__(337);
-	var Join = __webpack_require__(340);
+	var Join = __webpack_require__(342);
 	var Matches = __webpack_require__(341);
 
 	var App = React.createClass({
@@ -24836,9 +24836,12 @@
 	    var user = authStore.getUserData().userId;
 	    var userEmail = authStore.getUserData().userEmail;
 	    var username = authStore.getUserData().username;
-	    this.setState({ userId: user, userEmail: userEmail, username: username });
+	    this.setState({
+	      userId: user,
+	      userEmail: userEmail,
+	      username: username
+	    });
 	    //tigger action to go and get all the users matches and update the matches store
-	    matchActions.getUserMatches(this.state.userId);
 	    //Make this location route properly!!
 	    if (username && user && userEmail) {
 	      window.location.hash = "#/about";
@@ -27420,22 +27423,13 @@
 
 	  createMatch: function (title, type, funds, start, end) {
 
-	    requestHelper.post('matches/', { userId: 13, title: title, type: type, funds: funds, start: start, end: end }).end(function (err, userMatch) {
-	      if (userMatch) {
-	        userMatch = userMatch.body.data;
+	    requestHelper.post('matches/', { userId: 13, title: title, type: type, funds: funds, start: start, end: end }).end(function (err, response) {
+	      if (response) {
+	        console.log('response', response);
+	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "CREATE_MATCH",
-	          matchId: userMatch.m_id,
-	          title: userMatch.title,
-	          type: userMatch.type,
-	          challengee: userMatch.challengee,
-	          creatorId: userMatch.creator_id,
-	          startDate: userMatch.startdate,
-	          endDate: userMatch.enddate,
-	          startingFunds: userMatch.starting_funds,
-	          status: userMatch.status,
-	          winner: userMatch.winner,
-	          createdAt: userMatch.created_at
+	          data: response
 	        });
 	      } else {
 	        console.log('err', err);
@@ -28143,7 +28137,7 @@
 	var CHANGE_EVENT = "change";
 
 	var _userMatches = {
-	  matches: null
+	  matches: []
 	};
 
 	var matchesStore = Object.assign(new EventEmitter(), {
@@ -28171,17 +28165,15 @@
 	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
 
 	  if (action.actionType === "CREATE_MATCH") {
-	    _userMatches.matches.push(action);
+
+	    _userMatches.matches.push([action.data.title, action.data.type, moment(match.startdate).fromNow(), moment(match.enddate).fromNow(), action.data.starting_funds, action.data.status, action.data.challengee, action.data.creator_id, action.data.winner, action.data.created_at, action.data.m_id]);
 	    matchesStore.emitChange();
 	  }
 
 	  if (action.actionType === "GET_USER_MATCHES") {
 
-	    var start = moment(action.startdate).fromNow();
-	    var end = moment(action.enddate).fromNow();
-
-	    _userMatches.matches = action.data.map(function (match) {
-	      return [match.title, match.type, start, end, match.starting_funds, match.status, match.challengee, match.creator_id, match.winner, match.created_at, match.m_id];
+	    var matches = action.data.forEach(function (match) {
+	      _userMatches.matches.push([match.title, match.type, moment(match.startdate).fromNow(), moment(match.enddate).fromNow(), match.starting_funds, match.status, match.challengee, match.creator_id, match.winner, match.created_at, match.m_id]);
 	    });
 
 	    matchesStore.emitChange();
@@ -41027,13 +41019,7 @@
 	  },
 
 	  componentDidMount: function () {
-	    portfolioStore.addChangeListener(this._onChangeEvent);
-	    this.setState({
-	      totalValue: portfolioStore.getMatchData().totalValue,
-	      availableCash: portfolioStore.getMatchData().availableCash,
-	      stocks: portfolioStore.getMatchData().stocks,
-	      matchTitle: portfolioStore.getMatchData().matchTitle
-	    });
+	    portfolioStore.getMatchData().totalValue, portfolioStore.addChangeListener(this._onChangeEvent);
 	  },
 
 	  componentWillUnmount: function () {
@@ -41579,49 +41565,13 @@
 	module.exports = searchStore;
 
 /***/ },
-/* 340 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-
-	var Join = React.createClass({
-	  displayName: 'Join',
-
-	  render: function () {
-
-	    return React.createElement(
-	      'div',
-	      { className: 'container' },
-	      React.createElement(
-	        'h2',
-	        null,
-	        'Join Matches'
-	      ),
-	      React.createElement(
-	        Link,
-	        { to: '/about' },
-	        'Return to Main Menu'
-	      )
-	    );
-	  }
-
-	});
-
-	module.exports = Join;
-
-	//image to be added
-	//<img className="JoinLogo" src="../assets/images/logo.png" alt="stockSuel logo black" />
-
-/***/ },
+/* 340 */,
 /* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var authStore = __webpack_require__(229);
 	var matchActions = __webpack_require__(231);
 	var matchesStore = __webpack_require__(235);
 
@@ -41630,6 +41580,10 @@
 
 	  getInitialState: function () {
 	    return matchesStore.getMatchData();
+	  },
+
+	  componentWillMount: function () {
+	    matchActions.getUserMatches(localStorage.userId);
 	  },
 
 	  componentDidMount: function () {
@@ -41641,9 +41595,8 @@
 	  },
 
 	  _onChangeEvent: function () {
-	    var matches = matchesStore.getMatchData();
 	    this.setState({
-	      matches: matches
+	      matches: matchesStore.getMatchData().matches
 	    });
 	  },
 
@@ -41652,14 +41605,14 @@
 	    var matchId = match[match.length - 1];
 	    localStorage.setItem("matchId", matchId);
 	    //trigger the store to get the correct match
-	    var userId = authStore.getUserData().userId;
-	    matchActions.getMatchPortfolio(userId, localStorage.matchId);
+	    matchActions.getMatchPortfolio(localStorage.userId, localStorage.matchId);
 	    window.location.hash = "#/portfolio";
 	  },
 
 	  render: function () {
 
 	    var arrayOfMatches = [];
+	    var toDisplay;
 
 	    var matchTable = React.createElement(
 	      'div',
@@ -41723,8 +41676,6 @@
 	        )
 	      )
 	    );
-
-	    var toDisplay;
 
 	    if (!this.state.matches) {
 	      toDisplay = React.createElement(
@@ -41813,6 +41764,289 @@
 	});
 
 	module.exports = Matches;
+
+/***/ },
+/* 342 */
+/***/ function(module, exports, __webpack_require__) {
+
+	//TODO: relace get data with refs so i can empty the text fields??
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var authActions = __webpack_require__(219);
+	var joinMatchStore = __webpack_require__(343);
+	var joinMatchActions = __webpack_require__(344);
+	var matchActions = __webpack_require__(231);
+
+	var MatchesToJoin = React.createClass({
+	  displayName: 'MatchesToJoin',
+
+	  getInitialState: function () {
+	    return joinMatchStore.getMatchData();
+	  },
+
+	  componentWillMount: function () {
+	    //trigger action to get the data from the db
+	    joinMatchActions.getJoinableMatches(localStorage.userId);
+	  },
+
+	  componentDidMount: function () {
+	    joinMatchStore.addChangeListener(this._onChangeEvent);
+	  },
+
+	  componentWillUnmount: function () {
+	    joinMatchStore.removeChangeListener(this._onChangeEvent);
+	  },
+
+	  _onChangeEvent: function () {
+	    console.log('changed store');
+	    this.setState({
+	      matches: joinMatchStore.getMatchData().matches
+	    });
+	  },
+
+	  handleJoinClick: function (event) {
+	    var match = event.target.value.split(',');
+	    var matchId = match[match.length - 1];
+	    localStorage.setItem("matchId", matchId);
+	    //trigger the store to get the correct match
+	    matchActions.getMatchPortfolio(localStorage.userId, localStorage.matchId);
+	    window.location.hash = "#/portfolio";
+	  },
+
+	  render: function () {
+
+	    var toDisplay;
+	    var arrayOfMatches = [];
+
+	    var matchTable = React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Matches'
+	      ),
+	      React.createElement(
+	        'table',
+	        { className: 'table' },
+	        React.createElement(
+	          'thead',
+	          null,
+	          React.createElement(
+	            'tr',
+	            null,
+	            React.createElement(
+	              'th',
+	              null,
+	              'Title'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Type'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Start Date'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'End Date'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Start Funds'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Status'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'My Portfolio Value'
+	            ),
+	            React.createElement('th', null)
+	          )
+	        ),
+	        React.createElement(
+	          'tbody',
+	          null,
+	          arrayOfMatches
+	        )
+	      )
+	    );
+
+	    if (!this.state.matches) {
+	      toDisplay = React.createElement(
+	        'p',
+	        { key: 0 },
+	        'Oh arr! There aint nah any battles to be joined, get t',
+	        "'",
+	        ' t',
+	        "'",
+	        ' it handsomely and make yer own!'
+	      );
+	    } else {
+	      var that = this;
+	      this.state.matches.map(function (match, index) {
+	        arrayOfMatches.push(React.createElement(
+	          'tr',
+	          { key: index },
+	          React.createElement(
+	            'td',
+	            null,
+	            match[0]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[1]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[2]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[3]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[4]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[5]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            'To be worked out'
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            React.createElement(
+	              'button',
+	              { value: match, type: 'button', className: 'btn btn-primary', onClick: that.handleJoinClick },
+	              'To Portfolio'
+	            )
+	          )
+	        ));
+	      });
+	      toDisplay = matchTable;
+	    }
+
+	    return React.createElement(
+	      'div',
+	      { className: 'container' },
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Matches To Join'
+	      ),
+	      React.createElement(
+	        Link,
+	        { to: '/about' },
+	        'Return to Main Menu'
+	      ),
+	      toDisplay
+	    );
+	  }
+
+	});
+
+	module.exports = MatchesToJoin;
+
+/***/ },
+/* 343 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	var AppDispatcher = __webpack_require__(220);
+	var EventEmitter = __webpack_require__(230).EventEmitter;
+	var moment = __webpack_require__(236);
+	var CHANGE_EVENT = "change";
+
+	var _joinableMatches = {
+	  matches: null
+	};
+
+	var joinMatchStore = Object.assign(new EventEmitter(), {
+
+	  getMatchData: function () {
+	    return _joinableMatches;
+	  },
+
+	  emitChange: function () {
+	    this.emit(CHANGE_EVENT);
+	  },
+
+	  addChangeListener: function (callback) {
+	    this.addListener(CHANGE_EVENT, callback);
+	  },
+
+	  removeChangeListener: function (callback) {
+	    this.removeListener(CHANGE_EVENT, callback);
+	  }
+
+	});
+
+	AppDispatcher.register(function (payload) {
+	  //'subscribes' to the dispatcher. Store wants to know if it does anything. Payload
+	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
+
+	  if (action.actionType === "GET_JOINABLE_MATCHES") {
+
+	    _joinableMatches.matches = action.data.map(function (match) {
+	      return [match.title, match.type, moment(match.startdate).fromNow(), moment(match.enddate).fromNow(), match.starting_funds, match.status, match.challengee, match.creator_id, match.winner, match.created_at, match.m_id];
+	    });
+
+	    joinMatchStore.emitChange();
+	  }
+	});
+
+	module.exports = joinMatchStore;
+
+/***/ },
+/* 344 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	var AppDispatcher = __webpack_require__(220);
+	var constants = __webpack_require__(224);
+	var requestHelper = __webpack_require__(225);
+
+	var joinMatchActions = {
+
+	  getJoinableMatches: function (userId) {
+
+	    requestHelper.get('matches/' + userId).end(function (err, response) {
+	      if (!err) {
+	        response = response.body.data;
+	        AppDispatcher.handleServerAction({
+	          actionType: "GET_JOINABLE_MATCHES",
+	          data: response
+	        });
+	      } else {
+	        console.log('err', err);
+	      }
+	    });
+	  }
+
+	};
+
+	module.exports = joinMatchActions;
 
 /***/ }
 /******/ ]);

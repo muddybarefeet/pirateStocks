@@ -24,9 +24,12 @@ var Login = React.createClass({
     var user = authStore.getUserData().userId;
     var userEmail = authStore.getUserData().userEmail;
     var username = authStore.getUserData().username;
-    this.setState({userId: user, userEmail: userEmail, username: username});
+    this.setState({
+      userId: user, 
+      userEmail: userEmail, 
+      username: username
+    });
     //tigger action to go and get all the users matches and update the matches store
-    matchActions.getUserMatches(this.state.userId);
     //Make this location route properly!!
     if (username && user && userEmail) {
       window.location.hash="#/about";

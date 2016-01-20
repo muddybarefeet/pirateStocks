@@ -1,7 +1,6 @@
 
 var React = require('react');
 var Link = require('react-router').Link;
-var authStore = require('./../../stores/authStore.js');
 var matchActions = require('./../../actions/matchActions.js');
 var matchesStore = require('./../../stores/matchesStore.js');
 
@@ -9,6 +8,10 @@ var Matches = React.createClass({
 
   getInitialState: function () {
     return matchesStore.getMatchData();
+  },
+
+  componentWillMount: function () {
+    matchActions.getUserMatches(localStorage.userId);
   },
 
   componentDidMount: function () {
@@ -20,9 +23,8 @@ var Matches = React.createClass({
   },
 
   _onChangeEvent: function () {
-    var matches = matchesStore.getMatchData();
     this.setState({
-      matches: matches
+      matches: matchesStore.getMatchData().matches
     });
   },
 
@@ -31,14 +33,14 @@ var Matches = React.createClass({
     var matchId = match[match.length-1];
     localStorage.setItem("matchId", matchId);
     //trigger the store to get the correct match
-    var userId = authStore.getUserData().userId;
-    matchActions.getMatchPortfolio(userId, localStorage.matchId);
+    matchActions.getMatchPortfolio(localStorage.userId, localStorage.matchId);
     window.location.hash="#/portfolio";
   },
 
   render: function () {
 
     var arrayOfMatches = [];
+    var toDisplay;
 
     var matchTable = 
       (<div>
@@ -62,8 +64,6 @@ var Matches = React.createClass({
             </tbody>
           </table>
         </div>);
-
-      var toDisplay;
 
       if (!(this.state.matches)) {
         toDisplay = (<p key={0}>Oh arr! Ye {"'"}ave nah created or joined any matches yet, get t{"'"} t{"'"} it handsomely!</p>);

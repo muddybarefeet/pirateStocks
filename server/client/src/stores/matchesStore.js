@@ -5,7 +5,7 @@ var moment = require('moment');
 var CHANGE_EVENT = "change";
 
 var _userMatches = {
-  matches: null
+  matches: []
 };
 
 var matchesStore = Object.assign(new EventEmitter(), {
@@ -31,22 +31,33 @@ var matchesStore = Object.assign(new EventEmitter(), {
 AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. Store wants to know if it does anything. Payload 
   var action = payload.action;//payload is the object of data coming from dispactcher //action is the object passed from the actions file
   
+
   if(action.actionType === "CREATE_MATCH") {
-    _userMatches.matches.push(action);
+
+    _userMatches.matches.push([
+      action.data.title,
+      action.data.type,
+      moment(match.startdate).fromNow(),
+      moment(match.enddate).fromNow(),
+      action.data.starting_funds,
+      action.data.status,
+      action.data.challengee,
+      action.data.creator_id,
+      action.data.winner,
+      action.data.created_at,
+      action.data.m_id
+    ]);
     matchesStore.emitChange();
   }
 
   if(action.actionType === "GET_USER_MATCHES") {
 
-    var start = moment(action.startdate).fromNow();
-    var end = moment(action.enddate).fromNow();
-
-    _userMatches.matches = action.data.map(function (match) {
-      return [
+    var matches = action.data.forEach(function (match) {
+      _userMatches.matches.push([
         match.title,
         match.type,
-        start,
-        end,
+        moment(match.startdate).fromNow(),
+        moment(match.enddate).fromNow(),
         match.starting_funds,
         match.status,
         match.challengee,
@@ -54,7 +65,7 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
         match.winner,
         match.created_at,
         match.m_id
-      ];
+      ]);
     });
 
     matchesStore.emitChange();
