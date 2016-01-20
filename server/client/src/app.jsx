@@ -60,9 +60,6 @@ var About = React.createClass({
             <Link to="/join">Join a New Match</Link>
           </div>
           <div>
-            <Link to="/portfolio">Your Portfolio</Link>
-          </div>
-          <div>
             <Link to="/matches">Your Matches</Link>
           </div>
         </div>
@@ -75,13 +72,13 @@ ReactDOM.render(
   <Router>
     <Route path="/" component={App}>
       <Route path="home" component={Home} />
-      <Route path="about" component={About} />
-        <Route path="create" component={Create} />
-        <Route path="portfolio" component={Portfolio}/>
-          <Route path="search" component={Search} />
-        <Route path="join" component={Join} />
-        <Route path="matches" component={Matches} />
       <Route path="login" component={Login} />
+        <Route path="about" component={About} />
+        <Route path="create" component={Create} />
+        <Route path="matches" component={Matches} />
+          <Route path="portfolio" component={Portfolio}/>
+            <Route path="search" component={Search} />
+        <Route path="join" component={Join} />
     </Route>
   </Router>
 , document.getElementById('app'));

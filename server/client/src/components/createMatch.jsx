@@ -20,7 +20,6 @@ var Create = React.createClass({
   },
 
   _onChangeEvent: function () {
-    console.log('change got!!!');
     // this.setState({userId: user, userEmail: userEmail, username: username});
     console.log('component',this.state);
   },

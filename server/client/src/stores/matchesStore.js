@@ -5,7 +5,7 @@ var moment = require('moment');
 var CHANGE_EVENT = "change";
 
 var _userMatches = {
-  matches: []
+  matches: null
 };
 
 var matchesStore = Object.assign(new EventEmitter(), {
@@ -37,24 +37,26 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
   }
 
   if(action.actionType === "GET_USER_MATCHES") {
-    var match = [];
 
-    match.push(action.title);
-    match.push(action.type);
-    match.push(moment(action.startDate).fromNow());
-    match.push(moment(action.endDate).fromNow());
-    match.push(action.startingFunds);
-    match.push(action.status);
-    
-    match.push(action.challengee);
-    match.push(action.creatorId);
-    match.push(action.winner);
-    match.push(action.createdAt);
-    match.push(action.matchId);
+    var start = moment(action.startdate).fromNow();
+    var end = moment(action.enddate).fromNow();
 
-    _userMatches.matches.push(match);
-    match = [];
-    localStorage.setItem("matchId", action.matchId);
+    _userMatches.matches = action.data.map(function (match) {
+      return [
+        match.title,
+        match.type,
+        start,
+        end,
+        match.starting_funds,
+        match.status,
+        match.challengee,
+        match.creator_id,
+        match.winner,
+        match.created_at,
+        match.m_id
+      ];
+    });
+
     matchesStore.emitChange();
 
   }

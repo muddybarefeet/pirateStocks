@@ -143,15 +143,6 @@
 	          null,
 	          React.createElement(
 	            Link,
-	            { to: '/portfolio' },
-	            'Your Portfolio'
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          null,
-	          React.createElement(
-	            Link,
 	            { to: '/matches' },
 	            'Your Matches'
 	          )
@@ -168,13 +159,13 @@
 	    Route,
 	    { path: '/', component: App },
 	    React.createElement(Route, { path: 'home', component: Home }),
+	    React.createElement(Route, { path: 'login', component: Login }),
 	    React.createElement(Route, { path: 'about', component: About }),
 	    React.createElement(Route, { path: 'create', component: Create }),
+	    React.createElement(Route, { path: 'matches', component: Matches }),
 	    React.createElement(Route, { path: 'portfolio', component: Portfolio }),
 	    React.createElement(Route, { path: 'search', component: Search }),
-	    React.createElement(Route, { path: 'join', component: Join }),
-	    React.createElement(Route, { path: 'matches', component: Matches }),
-	    React.createElement(Route, { path: 'login', component: Login })
+	    React.createElement(Route, { path: 'join', component: Join })
 	  )
 	), document.getElementById('app'));
 
@@ -26870,7 +26861,6 @@
 	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
 
 	  if (action.actionType === "USER_SIGNUP") {
-	    console.log('in user signup store', action);
 	    _userDetails.userId = action.id;
 	    _userDetails.userEmail = action.email;
 	    _userDetails.username = action.username;
@@ -27205,24 +27195,12 @@
 
 	  getUserMatches: function (userId) {
 
-	    requestHelper.get('matches/user/' + userId).end(function (err, matches) {
-	      if (matches) {
-	        matches = matches.body.data;
-	        matches.forEach(function (match) {
-	          AppDispatcher.handleServerAction({
-	            actionType: "GET_USER_MATCHES",
-	            matchId: match.m_id,
-	            title: match.title,
-	            type: match.type,
-	            challengee: match.challengee,
-	            creatorId: match.creator_id,
-	            startDate: match.startdate,
-	            endDate: match.enddate,
-	            startingFunds: match.starting_funds,
-	            status: match.status,
-	            winner: match.winner,
-	            createdAt: match.created_at
-	          });
+	    requestHelper.get('matches/user/' + userId).end(function (err, response) {
+	      if (!err) {
+	        response = response.body.data;
+	        AppDispatcher.handleServerAction({
+	          actionType: "GET_USER_MATCHES",
+	          data: response
 	        });
 	      } else {
 	        console.log('err', err);
@@ -27231,17 +27209,30 @@
 	  },
 
 	  getMatchPortfolio: function (userId, matchId) {
-	    console.log('in actions', userId, matchId);
-	    requestHelper.get('trades/' + matchId + '/' + userId).end(function (err, match) {
-	      console.log('back from server', match);
-	      if (match) {
-	        match = match.body.data;
+
+	    requestHelper.get('trades/' + matchId + '/' + userId).end(function (err, response) {
+	      if (response) {
+	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "GET_USER_MATCH",
-	          matchId: matchId,
-	          availableCash: match.available_cash,
-	          totalValue: match.totalValue,
-	          stocks: match.stocks
+	          data: response
+	        });
+	      } else {
+	        console.log('err', err);
+	      }
+	    });
+	  },
+
+	  makeTrade: function (userId, matchId, qty, symbol, action) {
+
+	    requestHelper.post('trades/' + matchId + '/' + userId, { userId: userId, matchId: matchId, numShares: qty, symbol: symbol, action: action }) // /matchId/userId
+	    .end(function (err, response) {
+	      console.log('response buy', response);
+	      if (!err) {
+	        response = response.body.data;
+	        AppDispatcher.handleServerAction({
+	          actionType: "MAKE_TRADE",
+	          data: response
 	        });
 	      } else {
 	        console.log('err', err);
@@ -27280,7 +27271,6 @@
 	  },
 
 	  _onChangeEvent: function () {
-	    console.log('change got!!!');
 	    // this.setState({userId: user, userEmail: userEmail, username: username});
 	    console.log('component', this.state);
 	  },
@@ -28152,7 +28142,7 @@
 	var CHANGE_EVENT = "change";
 
 	var _userMatches = {
-	  matches: []
+	  matches: null
 	};
 
 	var matchesStore = Object.assign(new EventEmitter(), {
@@ -28185,24 +28175,14 @@
 	  }
 
 	  if (action.actionType === "GET_USER_MATCHES") {
-	    var match = [];
 
-	    match.push(action.title);
-	    match.push(action.type);
-	    match.push(moment(action.startDate).fromNow());
-	    match.push(moment(action.endDate).fromNow());
-	    match.push(action.startingFunds);
-	    match.push(action.status);
+	    var start = moment(action.startdate).fromNow();
+	    var end = moment(action.enddate).fromNow();
 
-	    match.push(action.challengee);
-	    match.push(action.creatorId);
-	    match.push(action.winner);
-	    match.push(action.createdAt);
-	    match.push(action.matchId);
+	    _userMatches.matches = action.data.map(function (match) {
+	      return [match.title, match.type, start, end, match.starting_funds, match.status, match.challengee, match.creator_id, match.winner, match.created_at, match.m_id];
+	    });
 
-	    _userMatches.matches.push(match);
-	    match = [];
-	    localStorage.setItem("matchId", action.matchId);
 	    matchesStore.emitChange();
 	  }
 	});
@@ -41035,12 +41015,14 @@
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var portfolioStore = __webpack_require__(336);
+	// var PortfolioCard = require('./portfolioCard.jsx');
+	var matchActions = __webpack_require__(231);
 
 	var Portfolio = React.createClass({
 	  displayName: 'Portfolio',
 
 	  getInitialState: function () {
-	    return {};
+	    return portfolioStore.getMatchData();
 	  },
 
 	  componentDidMount: function () {
@@ -41054,12 +41036,108 @@
 	  _onChangeEvent: function () {
 	    var match = portfolioStore.getMatchData();
 	    this.setState({
-	      match: match
+	      totalValue: portfolioStore.getMatchData().totalValue,
+	      availableCash: portfolioStore.getMatchData().availableCash,
+	      stocks: portfolioStore.getMatchData().stocks,
+	      matchTitle: portfolioStore.getMatchData().matchTitle
 	    });
-	    console.log('portfolio', this.state);
+	    console.log('stocks In UPDATED PORTFOLIO', this.state);
+	    this.render();
+	  },
+
+	  handleSellStocksChange: function (event) {
+	    this.setState({
+	      qtySell: event.target.value
+	    });
+	  },
+
+	  handleSellStocksClick: function (event) {
+	    var symbol = event.target.parentElement.childNodes[1].textContent.split(':')[1];
+	    matchActions.makeTrade(localStorage.userId, localStorage.matchId, this.state.qtySell, symbol, 'sell');
+	    this.setState({
+	      qtySell: ""
+	    });
 	  },
 
 	  render: function () {
+
+	    var arrayOfStocks;
+
+	    if (this.state.stocks) {
+	      var that = this;
+	      arrayOfStocks = this.state.stocks.map(function (stock, index) {
+	        return React.createElement(
+	          'div',
+	          { key: index },
+	          React.createElement(
+	            'div',
+	            { className: 'card card-block container' },
+	            React.createElement(
+	              'h3',
+	              { className: 'card-title' },
+	              stock[0]
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'card-text' },
+	              'Symbol:',
+	              stock[1]
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'card-text' },
+	              'Ask: $',
+	              stock[2]
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'card-text' },
+	              'Gain/Loss: $',
+	              stock[3]
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'card-text' },
+	              'Market Value: $',
+	              stock[4]
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'card-text' },
+	              'Percentage Change: ',
+	              stock[5]
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'card-text' },
+	              'Price: $',
+	              stock[6]
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'card-text' },
+	              'Number of Stocks: ',
+	              stock[7]
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              React.createElement(
+	                'label',
+	                { htmlFor: 'number' },
+	                'Qty:'
+	              ),
+	              React.createElement('input', { type: 'number', ref: 'qtySell', className: 'form-control', onChange: that.handleSellStocksChange })
+	            ),
+	            React.createElement(
+	              'button',
+	              { type: 'button', className: 'btn btn-primary', onClick: that.handleSellStocksClick },
+	              'Sell'
+	            )
+	          )
+	        );
+	      });
+	    }
 
 	    return React.createElement(
 	      'div',
@@ -41067,7 +41145,10 @@
 	      React.createElement(
 	        'h2',
 	        null,
-	        'Portfolio Page'
+	        'Ye be dabblin',
+	        "'",
+	        ' in ',
+	        this.state.matchTitle
 	      ),
 	      React.createElement(
 	        'div',
@@ -41088,7 +41169,25 @@
 	          "'",
 	          ' Eight'
 	        )
-	      )
+	      ),
+	      React.createElement(
+	        'h4',
+	        null,
+	        'Yer ',
+	        "'",
+	        'ave $',
+	        this.state.availableCash,
+	        ' gold ter spend'
+	      ),
+	      React.createElement(
+	        'h4',
+	        null,
+	        'Yer current chest o',
+	        "'",
+	        ' gold values $',
+	        this.state.totalValue
+	      ),
+	      arrayOfStocks
 	    );
 	  }
 
@@ -41105,7 +41204,12 @@
 	var EventEmitter = __webpack_require__(230).EventEmitter;
 	var CHANGE_EVENT = "change";
 
-	var _currentMatch = {};
+	var _currentMatch = {
+	  totalValue: null,
+	  availableCash: null,
+	  stocks: null,
+	  matchTitle: null
+	};
 
 	var portfolioStore = Object.assign(new EventEmitter(), {
 
@@ -41133,29 +41237,27 @@
 
 	  if (action.actionType === "GET_USER_MATCH") {
 
-	    var stocksOne = action.stocks;
+	    _currentMatch.stocks = action.data.stocks.map(function (stock) {
+	      return [stock.name, stock.symbol, stock.ask, stock.gain_loss, stock.marketValue, stock.percent_change, stock.price, stock.shares];
+	    });
 
-	    if (stocks !== undefined) {
-	      _currentMatch.stocks = stocksOne.map(function (stock) {
-	        return [stock.ask, stock.gain_loss, stock.marketValue, stock.name, stock.percent_change, stock.price, stock.shares];
-	      });
-	    }
-
-	    _currentMatch.matchId = action.matchId;
-	    _currentMatch.totalValue = action.totalValue;
+	    _currentMatch.totalValue = action.data.totalValue;
+	    _currentMatch.availableCash = action.data.available_cash;
 
 	    portfolioStore.emitChange();
 	  }
 
-	  if (action.actionType === "BUY_STOCK") {
+	  if (action.actionType === "MAKE_TRADE") {
 
 	    var stocks = action.data.portfolio.stocks;
 	    _currentMatch.stocks = stocks.map(function (stock) {
-	      return [stock.ask, stock.gain_loss, stock.marketValue, stock.name, stock.percent_change, stock.price, stock.shares];
+	      return [stock.name, stock.symbol, stock.ask, stock.gain_loss, stock.marketValue, stock.percent_change, stock.price, stock.shares];
 	    });
 
 	    _currentMatch.totalValue = action.data.portfolio.totalValue;
 	    _currentMatch.availableCash = action.data.portfolio.available_cash;
+	    _currentMatch.matchTitle = action.data.portfolio.title;
+	    console.log('store sell made', _currentMatch);
 	    portfolioStore.emitChange();
 	  }
 	});
@@ -41171,6 +41273,7 @@
 	var Link = __webpack_require__(159).Link;
 	var searchActions = __webpack_require__(338);
 	var searchStore = __webpack_require__(339);
+	var matchActions = __webpack_require__(231);
 
 	var Search = React.createClass({
 	  displayName: 'Search',
@@ -41231,7 +41334,7 @@
 
 	  handleBuyClick: function (event) {
 	    //trigger action to trades and return new portfolio to the portfolio store
-	    searchActions.buyStock(localStorage.userId, localStorage.matchId, this.state.qtyBuy, this.state.oneStock[0][1]);
+	    matchActions.makeTrade(localStorage.userId, localStorage.matchId, this.state.qtyBuy, this.state.oneStock[0][1], 'buy');
 	    window.location.hash = "#/portfolio";
 	  },
 
@@ -41315,10 +41418,10 @@
 	              { className: 'form-group' },
 	              React.createElement(
 	                'label',
-	                { htmlFor: 'amount' },
+	                { htmlFor: 'number' },
 	                'Qty:'
 	              ),
-	              React.createElement('input', { type: 'amount', className: 'form-control', onChange: that.handleBuyStocksChange })
+	              React.createElement('input', { className: 'form-control', onChange: that.handleBuyStocksChange })
 	            ),
 	            React.createElement(
 	              'button',
@@ -41398,23 +41501,6 @@
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "GET_ONE_STOCK",
-	          data: response
-	        });
-	      } else {
-	        console.log('err', err);
-	      }
-	    });
-	  },
-
-	  buyStock: function (userId, matchId, qty, symbol) {
-	    console.log('symbol', symbol);
-	    requestHelper.post('trades/' + matchId + '/' + userId, { userId: userId, matchId: matchId, numShares: qty, symbol: symbol, action: 'buy' }) // /matchId/userId
-	    .end(function (err, response) {
-	      console.log('response buy', response);
-	      if (!err) {
-	        response = response.body.data;
-	        AppDispatcher.handleServerAction({
-	          actionType: "BUY_STOCK",
 	          data: response
 	        });
 	      } else {
@@ -41557,9 +41643,10 @@
 	  handleClick: function (event) {
 	    var match = event.target.value.split(',');
 	    var matchId = match[match.length - 1];
+	    localStorage.setItem("matchId", matchId);
 	    //trigger the store to get the correct match
 	    var userId = authStore.getUserData().userId;
-	    matchActions.getMatchPortfolio(userId, matchId);
+	    matchActions.getMatchPortfolio(userId, localStorage.matchId);
 	    window.location.hash = "#/portfolio";
 	  },
 
@@ -41632,7 +41719,7 @@
 
 	    var toDisplay;
 
-	    if (Object.keys(this.state.matches).length === 0) {
+	    if (!this.state.matches) {
 	      toDisplay = React.createElement(
 	        'p',
 	        { key: 0 },

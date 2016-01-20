@@ -53,6 +53,7 @@ module.exports = function (knex) {
         }
 
         if (stock.ask * numShares > available_cash) {
+          console.log('available Cash', available_cash);
           throw new Error('insufficent funds');
         }
 
@@ -81,7 +82,7 @@ module.exports = function (knex) {
         };
       })
       .catch(function (err) {
-        console.log(err);
+        console.log('err in buy',err);
         return null;
       });
   };
@@ -89,7 +90,7 @@ module.exports = function (knex) {
 //Buy Controller. userId {string} matchId {string} numShares {int} stockTicker {stockTicker}
 //--------------------------------------------------------------------------------------------
   module.sell = function (userId, matchId, numShares, stockTicker) {
-
+    console.log('in trades controller', userId, matchId, numShares, stockTicker);
     var trade;
 
     return Promise.all([
@@ -134,12 +135,14 @@ module.exports = function (knex) {
       })
       .then(function(port){
         //trade and portfolio sent back to the user
+        console.log('port');
         return {
           trade: trade,
           portfolio: port
         };
       })
       .catch(function (err) {
+        console.log('err in trade', err);
         return null;
       });
   };
@@ -162,8 +165,9 @@ module.exports = function (knex) {
   };
 
 //Rolls up the users trades for a specific match into a portfolio
-  module.reduceTradesToPortfolio = function (trades, startingFunds) {
+  module.reduceTradesToPortfolio = function (trades, startingFunds,title) {
     var availableCash = startingFunds;
+    var matchTitle = title;
 
     var stocks = trades.reduce(function (portfolio, trade) {
 
@@ -203,7 +207,8 @@ module.exports = function (knex) {
 
     return {
       available_cash: availableCash,
-      stocks: stocks
+      stocks: stocks,
+      title: matchTitle
     };
 
   };
@@ -212,6 +217,7 @@ module.exports = function (knex) {
   var generatePortfolioMetrics = function (portfolio) {
     var portfolioValue = 0;
     var availableCash = portfolio.available_cash;
+    var title = portfolio.title;
 
     var stocks = Object.keys(portfolio.stocks).map(function (stockSymbol) {
       var stockData = portfolio.stocks[stockSymbol];
@@ -224,7 +230,8 @@ module.exports = function (knex) {
     return {
       totalValue: portfolioValue + availableCash,
       available_cash: availableCash,
-      stocks: stocks
+      stocks: stocks,
+      title: title
     };
 
   };
@@ -254,9 +261,11 @@ module.exports = function (knex) {
       ])
       //pass the results from above to the reduceTradesToPortfolio which returns a users portfolio for the match in
       .then(function (tuple) {
+        //WHAT TO RETURN THE MATCH TITLE IN THIS ROUTE!!!
+        var matchTitle = tuple[0].title;
         var match = tuple[0];
         var trades = tuple[1];
-        return module.reduceTradesToPortfolio(trades, match.starting_funds);
+        return module.reduceTradesToPortfolio(trades, match.starting_funds, matchTitle);
       })
       .catch(function (err) {
         console.error(err);

@@ -11,7 +11,6 @@ module.exports = function (knex) {
     .join('stock_prices', 'stocks.symbol', '=', 'stock_prices.symbol')
     .where(knex.raw('stocks.symbol = UPPER(?)', [symbol]))
     .then(function (response) {
-      console.log('response from DB', response);
       if (response.length !== 1) {
         throw new Error('unexepected response length: ' +
           response.length);

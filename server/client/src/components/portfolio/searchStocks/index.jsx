@@ -3,6 +3,7 @@ var React = require('react');
 var Link = require('react-router').Link;
 var searchActions = require('./../../../actions/searchActions.js');
 var searchStore = require('./../../../stores/searchStore.js');
+var matchActions = require('./../../../actions/matchActions.js');
 
 var Search = React.createClass({
 
@@ -62,7 +63,7 @@ var Search = React.createClass({
 
   handleBuyClick: function (event) {
     //trigger action to trades and return new portfolio to the portfolio store
-    searchActions.buyStock(localStorage.userId, localStorage.matchId, this.state.qtyBuy, this.state.oneStock[0][1]);
+    matchActions.makeTrade(localStorage.userId, localStorage.matchId, this.state.qtyBuy, this.state.oneStock[0][1], 'buy');
     window.location.hash = "#/portfolio";
   },
 
@@ -96,8 +97,8 @@ var Search = React.createClass({
               <span className="card-text">{stock[8]}</span>
             {/*div to show cost of the stocks you want to buy*/}
               <div className="form-group">
-                <label htmlFor="amount">Qty:</label>
-                <input type="amount" className="form-control" onChange={that.handleBuyStocksChange} />
+                <label htmlFor="number">Qty:</label>
+                <input className="form-control" onChange={that.handleBuyStocksChange} />
               </div>
               <button type="button" className="btn btn-primary" onClick={that.handleBuyClick} >Buy</button>
             </div>

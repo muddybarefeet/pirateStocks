@@ -4,6 +4,10 @@ var EventEmitter = require('events').EventEmitter;
 var CHANGE_EVENT = "change";
 
 var _currentMatch = {
+  totalValue: null,
+  availableCash: null,
+  stocks: null,
+  matchTitle: null
 };
 
 var portfolioStore = Object.assign(new EventEmitter(), {
@@ -31,39 +35,36 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
   
   if(action.actionType === "GET_USER_MATCH") {
 
-    var stocksOne = action.stocks;
+    _currentMatch.stocks = action.data.stocks.map(function (stock) {
+      return [
+        stock.name,
+        stock.symbol,
+        stock.ask,
+        stock.gain_loss,
+        stock.marketValue,
+        stock.percent_change,
+        stock.price,
+        stock.shares
+      ];
+    });
 
-    if (stocks !== undefined) {
-      _currentMatch.stocks = stocksOne.map(function (stock) {
-        return [
-          stock.ask,
-          stock.gain_loss,
-          stock.marketValue,
-          stock.name,
-          stock.percent_change,
-          stock.price,
-          stock.shares
-        ];
-      });
-    }
-
-    _currentMatch.matchId = action.matchId;
-    _currentMatch.totalValue = action.totalValue;
-
+    _currentMatch.totalValue = action.data.totalValue;
+    _currentMatch.availableCash = action.data.available_cash;
 
     portfolioStore.emitChange();
 
   }
 
-  if(action.actionType === "BUY_STOCK") {
+  if(action.actionType === "MAKE_TRADE") {
 
     var stocks = action.data.portfolio.stocks;
     _currentMatch.stocks = stocks.map(function (stock) {
       return [
+        stock.name,
+        stock.symbol,
         stock.ask,
         stock.gain_loss,
         stock.marketValue,
-        stock.name,
         stock.percent_change,
         stock.price,
         stock.shares
@@ -72,8 +73,9 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
 
     _currentMatch.totalValue = action.data.portfolio.totalValue;
     _currentMatch.availableCash = action.data.portfolio.available_cash;
+    _currentMatch.matchTitle = action.data.portfolio.title;
+    console.log('store sell made', _currentMatch);
     portfolioStore.emitChange();
-
   }
 
 });

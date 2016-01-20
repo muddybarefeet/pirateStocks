@@ -35,7 +35,6 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
   var action = payload.action;//payload is the object of data coming from dispactcher //action is the object passed from the actions file
 
   if(action.actionType === "USER_SIGNUP") {
-    console.log('in user signup store', action);
     _userDetails.userId = action.id;
     _userDetails.userEmail = action.email;
     _userDetails.username = action.username;

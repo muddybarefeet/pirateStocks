@@ -82,7 +82,6 @@ module.exports = function (knex) {
       if (userVerified) {
         return { id: id, email: userEmail, username: user_name };
       } else {
-        console.log('in controller login error');
         throw new Error("User Not Verified");
       }
     });
@@ -110,7 +109,6 @@ module.exports = function (knex) {
       return { id: insertedUser[0].u_id, email: insertedUser[0].email, username: insertedUser[0].username };
     })
     .catch(function (err) {
-      console.log('in controller signup error', err);
       throw new Error("Email already exists");
     });
 

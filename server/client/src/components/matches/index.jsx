@@ -29,9 +29,10 @@ var Matches = React.createClass({
   handleClick: function (event) {
     var match = event.target.value.split(',');
     var matchId = match[match.length-1];
+    localStorage.setItem("matchId", matchId);
     //trigger the store to get the correct match
     var userId = authStore.getUserData().userId;
-    matchActions.getMatchPortfolio(userId, matchId);
+    matchActions.getMatchPortfolio(userId, localStorage.matchId);
     window.location.hash="#/portfolio";
   },
 
@@ -64,7 +65,7 @@ var Matches = React.createClass({
 
       var toDisplay;
 
-      if (Object.keys(this.state.matches).length === 0) {
+      if (!(this.state.matches)) {
         toDisplay = (<p key={0}>Oh arr! Ye {"'"}ave nah created or joined any matches yet, get t{"'"} t{"'"} it handsomely!</p>);
       } else {
         var that = this;
