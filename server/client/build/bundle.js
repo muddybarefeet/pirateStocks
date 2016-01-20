@@ -27323,13 +27323,13 @@
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: 'container' },
+	        { className: 'form-group' },
 	        React.createElement(
 	          'label',
 	          { htmlFor: 'title' },
 	          'Match Title:'
 	        ),
-	        React.createElement('input', { type: 'title', id: 'email', onChange: this.handleTitleChange })
+	        React.createElement('input', { type: 'email', className: 'form-control', onChange: this.handleTitleChange })
 	      ),
 	      React.createElement(
 	        'div',
@@ -27370,7 +27370,7 @@
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: 'container' },
+	        { className: 'form-group' },
 	        React.createElement(
 	          'label',
 	          { htmlFor: 'Funds' },
@@ -27378,7 +27378,7 @@
 	        ),
 	        React.createElement(
 	          'select',
-	          { onChange: this.handleFundsChange },
+	          { className: 'form-control', onChange: this.handleFundsChange },
 	          React.createElement(
 	            'option',
 	            null,
@@ -41374,21 +41374,19 @@
 	      });
 	    }
 
-	    console.log('render', this.state);
 	    //to be implemented when know how to get the ask price!! :( )
-	    if (this.setState.total > 0) {
+	    if (this.state.total > 0) {
 	      totalCost = React.createElement(
 	        'div',
 	        null,
 	        React.createElement(
 	          'p',
 	          { className: 'card-text' },
-	          'Total Cost: ',
+	          'Total Cost: $',
 	          this.state.total
 	        )
 	      );
 	    }
-	    console.log('total', totalCost);
 
 	    if (this.state.oneStock && this.state.clicked) {
 	      var that = this;

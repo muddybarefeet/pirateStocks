@@ -59,10 +59,9 @@ var Create = React.createClass({
         <h2>Create Match</h2>
         <Link to="/about">Return to Main Menu</Link>
         
-
-        <div className="container">
+        <div className="form-group">
           <label htmlFor="title">Match Title:</label>
-          <input type="title" id="email" onChange={this.handleTitleChange}/>
+          <input type="email" className="form-control" onChange={this.handleTitleChange} />
         </div>
 
         <div className="container">
@@ -83,9 +82,9 @@ var Create = React.createClass({
           </label>
         </div>
 
-        <div className="container">
+        <div className="form-group">
           <label htmlFor="Funds">Funds:</label>
-          <select onChange={this.handleFundsChange}>
+          <select className="form-control" onChange={this.handleFundsChange}>
             <option>Pick Your Start Funds</option>
             <option>$500</option>
             <option>$1,000</option>

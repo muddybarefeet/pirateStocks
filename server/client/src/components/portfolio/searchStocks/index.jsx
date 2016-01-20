@@ -91,14 +91,12 @@ var Search = React.createClass({
       });
     }
 
-    console.log('render', this.state);
     //to be implemented when know how to get the ask price!! :( )
-    if (this.setState.total > 0) {
+    if (this.state.total > 0) {
       totalCost = (<div>
-        <p className="card-text">Total Cost: {this.state.total}</p>
+        <p className="card-text">Total Cost: ${this.state.total}</p>
       </div>);
     }
-    console.log('total', totalCost)
 
     if (this.state.oneStock && this.state.clicked) {
       var that = this;
