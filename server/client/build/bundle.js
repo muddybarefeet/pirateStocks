@@ -41018,8 +41018,13 @@
 	    return portfolioStore.getMatchData();
 	  },
 
+	  componentWillMount: function () {
+	    //get the matchId and trigger update
+	    matchActions.getMatchPortfolio(localStorage.userId, localStorage.matchId);
+	  },
+
 	  componentDidMount: function () {
-	    portfolioStore.getMatchData().totalValue, portfolioStore.addChangeListener(this._onChangeEvent);
+	    portfolioStore.addChangeListener(this._onChangeEvent);
 	  },
 
 	  componentWillUnmount: function () {
@@ -41605,7 +41610,7 @@
 	    var matchId = match[match.length - 1];
 	    localStorage.setItem("matchId", matchId);
 	    //trigger the store to get the correct match
-	    matchActions.getMatchPortfolio(localStorage.userId, localStorage.matchId);
+
 	    window.location.hash = "#/portfolio";
 	  },
 

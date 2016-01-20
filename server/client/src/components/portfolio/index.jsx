@@ -11,8 +11,12 @@ var Portfolio = React.createClass({
     return portfolioStore.getMatchData();
   },
 
+  componentWillMount: function () {
+    //get the matchId and trigger update
+    matchActions.getMatchPortfolio(localStorage.userId, localStorage.matchId); 
+  },
+
   componentDidMount: function () {
-    portfolioStore.getMatchData().totalValue,
     portfolioStore.addChangeListener(this._onChangeEvent);
   },
 
