@@ -8,7 +8,14 @@ var matchActions = require('./../../actions/matchActions.js');
 var Portfolio = React.createClass({
 
   getInitialState: function () {
-    return portfolioStore.getMatchData();
+    return {
+      totalValue: portfolioStore.getMatchData().totalValue,
+      availableCash: portfolioStore.getMatchData().availableCash,
+      stocks: portfolioStore.getMatchData().stocks,
+      matchTitle: portfolioStore.getMatchData().matchTitle,
+      qtySell: "",
+      total: null
+    }
   },
 
   componentWillMount: function () {
@@ -42,11 +49,12 @@ var Portfolio = React.createClass({
   },
 
   handleSellStocksClick: function (event) {
-    var symbol = event.target.parentElement.childNodes[1].textContent.split(':')[1];
-    matchActions.makeTrade(localStorage.userId, localStorage.matchId, this.state.qtySell, symbol, 'sell');
     this.setState({
       qtySell: ""
     })
+    this.refs.amountSell.value = "";
+    var symbol = event.target.parentElement.childNodes[1].textContent.split(':')[1];
+    matchActions.makeTrade(localStorage.userId, localStorage.matchId, this.state.qtySell, symbol, 'sell');
   },
 
   render: function () {
@@ -72,7 +80,7 @@ var Portfolio = React.createClass({
 
                     <div className="form-group">
                       <label htmlFor="number">Qty:</label>
-                      <input type="number" ref="qtySell" className="form-control" onChange={that.handleSellStocksChange} />
+                      <input type="number" ref="amountSell" className="form-control" onChange={that.handleSellStocksChange} />
                     </div>
                     <button type="button" className="btn btn-primary" onClick={that.handleSellStocksClick} >Sell</button>
                   </div>

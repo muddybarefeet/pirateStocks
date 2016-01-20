@@ -46,7 +46,6 @@ var matchActions = {
     requestHelper
     .post('trades/' + matchId + '/' + userId, {userId: userId, matchId: matchId, numShares: qty, symbol: symbol, action: action })// /matchId/userId
     .end(function (err, response) {
-      console.log('response buy', response);
       if (!err) {
         response = response.body.data;
         AppDispatcher.handleServerAction({

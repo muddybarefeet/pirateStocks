@@ -68,7 +68,6 @@ var Search = React.createClass({
       qtyBuy: parseFloat(event.target.value),
       total: (parseFloat(event.target.parentElement.previousSibling.children[1].innerHTML) * parseFloat(event.target.value)).toFixed(2)
     });
-    console.log('state updated', parseFloat(event.target.parentElement.previousSibling.children[1].innerHTML), parseFloat(event.target.value))
     this.render();
   },
 

@@ -27,7 +27,6 @@ var MatchesToJoin = React.createClass({
   },
 
   _onChangeEvent: function () {
-    console.log('changed store');
     this.setState({
       matches: joinMatchStore.getMatchData().matches
     });

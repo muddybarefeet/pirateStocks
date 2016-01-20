@@ -62,8 +62,8 @@
 	var Create = __webpack_require__(232);
 	var Portfolio = __webpack_require__(335);
 	var Search = __webpack_require__(337);
-	var Join = __webpack_require__(338);
-	var Matches = __webpack_require__(341);
+	var Join = __webpack_require__(340);
+	var Matches = __webpack_require__(343);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -27231,7 +27231,6 @@
 
 	    requestHelper.post('trades/' + matchId + '/' + userId, { userId: userId, matchId: matchId, numShares: qty, symbol: symbol, action: action }) // /matchId/userId
 	    .end(function (err, response) {
-	      console.log('response buy', response);
 	      if (!err) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -41022,7 +41021,14 @@
 	  displayName: 'Portfolio',
 
 	  getInitialState: function () {
-	    return portfolioStore.getMatchData();
+	    return {
+	      totalValue: portfolioStore.getMatchData().totalValue,
+	      availableCash: portfolioStore.getMatchData().availableCash,
+	      stocks: portfolioStore.getMatchData().stocks,
+	      matchTitle: portfolioStore.getMatchData().matchTitle,
+	      qtySell: "",
+	      total: null
+	    };
 	  },
 
 	  componentWillMount: function () {
@@ -41056,11 +41062,12 @@
 	  },
 
 	  handleSellStocksClick: function (event) {
-	    var symbol = event.target.parentElement.childNodes[1].textContent.split(':')[1];
-	    matchActions.makeTrade(localStorage.userId, localStorage.matchId, this.state.qtySell, symbol, 'sell');
 	    this.setState({
 	      qtySell: ""
 	    });
+	    this.refs.amountSell.value = "";
+	    var symbol = event.target.parentElement.childNodes[1].textContent.split(':')[1];
+	    matchActions.makeTrade(localStorage.userId, localStorage.matchId, this.state.qtySell, symbol, 'sell');
 	  },
 
 	  render: function () {
@@ -41131,7 +41138,7 @@
 	                { htmlFor: 'number' },
 	                'Qty:'
 	              ),
-	              React.createElement('input', { type: 'number', ref: 'qtySell', className: 'form-control', onChange: that.handleSellStocksChange })
+	              React.createElement('input', { type: 'number', ref: 'amountSell', className: 'form-control', onChange: that.handleSellStocksChange })
 	            ),
 	            React.createElement(
 	              'button',
@@ -41275,8 +41282,8 @@
 	
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var searchActions = __webpack_require__(342);
-	var searchStore = __webpack_require__(343);
+	var searchActions = __webpack_require__(338);
+	var searchStore = __webpack_require__(339);
 	var matchActions = __webpack_require__(231);
 
 	var Search = React.createClass({
@@ -41343,7 +41350,6 @@
 	      qtyBuy: parseFloat(event.target.value),
 	      total: (parseFloat(event.target.parentElement.previousSibling.children[1].innerHTML) * parseFloat(event.target.value)).toFixed(2)
 	    });
-	    console.log('state updated', parseFloat(event.target.parentElement.previousSibling.children[1].innerHTML), parseFloat(event.target.value));
 	    this.render();
 	  },
 
@@ -41513,13 +41519,113 @@
 /* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var AppDispatcher = __webpack_require__(220);
+	var constants = __webpack_require__(224);
+	var requestHelper = __webpack_require__(225);
+
+	var searchActions = {
+
+	  searchStockDb: function (queryStr) {
+	    requestHelper.get('stocks/?search=' + queryStr).end(function (err, response) {
+	      if (!err) {
+	        response = response.body.data;
+	        AppDispatcher.handleServerAction({
+	          actionType: "SEARCH_STOCK_DATA",
+	          data: response
+	        });
+	      } else {
+	        console.log('err', err);
+	      }
+	    });
+	  },
+
+	  getOneStocksDetails: function (symbol) {
+	    requestHelper.get('stocks/' + symbol).end(function (err, response) {
+	      if (!err) {
+	        response = response.body.data;
+	        AppDispatcher.handleServerAction({
+	          actionType: "GET_ONE_STOCK",
+	          data: response
+	        });
+	      } else {
+	        console.log('err', err);
+	      }
+	    });
+	  }
+
+	};
+
+	module.exports = searchActions;
+
+/***/ },
+/* 339 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	var AppDispatcher = __webpack_require__(220);
+	var EventEmitter = __webpack_require__(230).EventEmitter;
+	var CHANGE_EVENT = "change";
+
+	var _stocks = {
+	  current: null,
+	  oneStock: null
+	};
+
+	var searchStore = Object.assign(new EventEmitter(), {
+
+	  getStocksData: function () {
+	    return _stocks;
+	  },
+
+	  emitChange: function () {
+	    this.emit(CHANGE_EVENT);
+	  },
+
+	  addChangeListener: function (callback) {
+	    this.addListener(CHANGE_EVENT, callback);
+	  },
+
+	  removeChangeListener: function (callback) {
+	    this.removeListener(CHANGE_EVENT, callback);
+	  }
+
+	});
+
+	AppDispatcher.register(function (payload) {
+	  //'subscribes' to the dispatcher. Store wants to know if it does anything. Payload
+	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
+
+	  if (action.actionType === "SEARCH_STOCK_DATA") {
+
+	    var stocks = action.data.map(function (data) {
+	      return [data.name, data.symbol, data.ask];
+	    });
+	    _stocks.current = stocks;
+	    searchStore.emitChange();
+	  }
+
+	  if (action.actionType === "GET_ONE_STOCK") {
+
+	    var stock = [action.data.name, action.data.symbol, action.data.industry, action.data.sector, action.data.exchange, action.data.percentChange, action.data.yearHigh, action.data.yearLow, action.data.ask];
+
+	    _stocks.oneStock = [stock];
+	    searchStore.emitChange();
+	  }
+	});
+
+	module.exports = searchStore;
+
+/***/ },
+/* 340 */
+/***/ function(module, exports, __webpack_require__) {
+
 	//TODO: relace get data with refs so i can empty the text fields??
 
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var authActions = __webpack_require__(219);
-	var joinMatchStore = __webpack_require__(339);
-	var joinMatchActions = __webpack_require__(340);
+	var joinMatchStore = __webpack_require__(341);
+	var joinMatchActions = __webpack_require__(342);
 	var matchActions = __webpack_require__(231);
 
 	var MatchesToJoin = React.createClass({
@@ -41543,7 +41649,6 @@
 	  },
 
 	  _onChangeEvent: function () {
-	    console.log('changed store');
 	    this.setState({
 	      matches: joinMatchStore.getMatchData().matches
 	    });
@@ -41713,7 +41818,7 @@
 	module.exports = MatchesToJoin;
 
 /***/ },
-/* 339 */
+/* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -41763,7 +41868,7 @@
 	module.exports = joinMatchStore;
 
 /***/ },
-/* 340 */
+/* 342 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -41793,7 +41898,7 @@
 	module.exports = joinMatchActions;
 
 /***/ },
-/* 341 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -41991,106 +42096,6 @@
 	});
 
 	module.exports = Matches;
-
-/***/ },
-/* 342 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(220);
-	var constants = __webpack_require__(224);
-	var requestHelper = __webpack_require__(225);
-
-	var searchActions = {
-
-	  searchStockDb: function (queryStr) {
-	    requestHelper.get('stocks/?search=' + queryStr).end(function (err, response) {
-	      if (!err) {
-	        response = response.body.data;
-	        AppDispatcher.handleServerAction({
-	          actionType: "SEARCH_STOCK_DATA",
-	          data: response
-	        });
-	      } else {
-	        console.log('err', err);
-	      }
-	    });
-	  },
-
-	  getOneStocksDetails: function (symbol) {
-	    requestHelper.get('stocks/' + symbol).end(function (err, response) {
-	      if (!err) {
-	        response = response.body.data;
-	        AppDispatcher.handleServerAction({
-	          actionType: "GET_ONE_STOCK",
-	          data: response
-	        });
-	      } else {
-	        console.log('err', err);
-	      }
-	    });
-	  }
-
-	};
-
-	module.exports = searchActions;
-
-/***/ },
-/* 343 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	var AppDispatcher = __webpack_require__(220);
-	var EventEmitter = __webpack_require__(230).EventEmitter;
-	var CHANGE_EVENT = "change";
-
-	var _stocks = {
-	  current: null,
-	  oneStock: null
-	};
-
-	var searchStore = Object.assign(new EventEmitter(), {
-
-	  getStocksData: function () {
-	    return _stocks;
-	  },
-
-	  emitChange: function () {
-	    this.emit(CHANGE_EVENT);
-	  },
-
-	  addChangeListener: function (callback) {
-	    this.addListener(CHANGE_EVENT, callback);
-	  },
-
-	  removeChangeListener: function (callback) {
-	    this.removeListener(CHANGE_EVENT, callback);
-	  }
-
-	});
-
-	AppDispatcher.register(function (payload) {
-	  //'subscribes' to the dispatcher. Store wants to know if it does anything. Payload
-	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
-
-	  if (action.actionType === "SEARCH_STOCK_DATA") {
-
-	    var stocks = action.data.map(function (data) {
-	      return [data.name, data.symbol, data.ask];
-	    });
-	    _stocks.current = stocks;
-	    searchStore.emitChange();
-	  }
-
-	  if (action.actionType === "GET_ONE_STOCK") {
-
-	    var stock = [action.data.name, action.data.symbol, action.data.industry, action.data.sector, action.data.exchange, action.data.percentChange, action.data.yearHigh, action.data.yearLow, action.data.ask];
-
-	    _stocks.oneStock = [stock];
-	    searchStore.emitChange();
-	  }
-	});
-
-	module.exports = searchStore;
 
 /***/ }
 /******/ ]);
