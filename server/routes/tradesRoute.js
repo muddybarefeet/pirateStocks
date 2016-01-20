@@ -41,7 +41,7 @@ module.exports = function (knex) {
     var numShares = req.body.numShares;
     var action = req.body.action;
     var stockTicker = req.body.symbol;
-    console.log('symbol in router', stockTicker);
+
     var actions = {
       'buy': tradesController.buy,
       'sell': tradesController.sell
@@ -55,7 +55,6 @@ module.exports = function (knex) {
 
     actions[action](userId, matchId, numShares, stockTicker)
       .then(function (data) {
-        console.log('data in route returning sell', data);
         res.status(200).json({
           data: data
         });

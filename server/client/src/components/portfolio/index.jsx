@@ -13,6 +13,12 @@ var Portfolio = React.createClass({
 
   componentDidMount: function () {
     portfolioStore.addChangeListener(this._onChangeEvent);
+    this.setState({
+      totalValue: portfolioStore.getMatchData().totalValue,
+      availableCash: portfolioStore.getMatchData().availableCash,
+      stocks: portfolioStore.getMatchData().stocks,
+      matchTitle: portfolioStore.getMatchData().matchTitle
+    })
   },
 
   componentWillUnmount: function () {

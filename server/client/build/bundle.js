@@ -50,6 +50,7 @@
 	var reactRouter = __webpack_require__(159);
 	var Route = __webpack_require__(159).Route;
 	var Router = __webpack_require__(159).Router;
+	var hashHistory = __webpack_require__(159).hashHistory;
 
 	var Link = __webpack_require__(159).Link;
 	var IndexRoute = __webpack_require__(159).IndexRoute;
@@ -154,7 +155,7 @@
 
 	ReactDOM.render(React.createElement(
 	  Router,
-	  null,
+	  { history: hashHistory },
 	  React.createElement(
 	    Route,
 	    { path: '/', component: App },
@@ -41027,6 +41028,12 @@
 
 	  componentDidMount: function () {
 	    portfolioStore.addChangeListener(this._onChangeEvent);
+	    this.setState({
+	      totalValue: portfolioStore.getMatchData().totalValue,
+	      availableCash: portfolioStore.getMatchData().availableCash,
+	      stocks: portfolioStore.getMatchData().stocks,
+	      matchTitle: portfolioStore.getMatchData().matchTitle
+	    });
 	  },
 
 	  componentWillUnmount: function () {

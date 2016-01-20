@@ -90,7 +90,7 @@ module.exports = function (knex) {
 //Buy Controller. userId {string} matchId {string} numShares {int} stockTicker {stockTicker}
 //--------------------------------------------------------------------------------------------
   module.sell = function (userId, matchId, numShares, stockTicker) {
-    console.log('in trades controller', userId, matchId, numShares, stockTicker);
+
     var trade;
 
     return Promise.all([
@@ -135,7 +135,7 @@ module.exports = function (knex) {
       })
       .then(function(port){
         //trade and portfolio sent back to the user
-        console.log('port');
+
         return {
           trade: trade,
           portfolio: port

@@ -4,6 +4,7 @@ var ReactDOM = require('react-dom');
 var reactRouter = require('react-router');
 var Route = require('react-router').Route;
 var Router = require('react-router').Router;
+var hashHistory = require('react-router').hashHistory;
 
 var Link = require('react-router').Link;
 var IndexRoute = require('react-router').IndexRoute;
@@ -69,7 +70,7 @@ var About = React.createClass({
 });
 
 ReactDOM.render(
-  <Router>
+  <Router history={hashHistory}>
     <Route path="/" component={App}>
       <Route path="home" component={Home} />
       <Route path="login" component={Login} />
