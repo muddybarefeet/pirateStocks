@@ -75,6 +75,58 @@
 	  },
 
 	  render: function render() {
+
+	    var toShowNav;
+	    //WAY TO NOT SHOW NAV WHEN SIGNED IN JOTS??
+	    var pills = React.createElement(
+	      'div',
+	      { className: 'container' },
+	      React.createElement(
+	        'ul',
+	        { className: 'nav nav-pills' },
+	        React.createElement(
+	          'li',
+	          { className: 'active' },
+	          React.createElement(
+	            Link,
+	            { to: '/matches' },
+	            'Yer Battles'
+	          )
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            Link,
+	            { to: '/join' },
+	            'Join a New Battle'
+	          )
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            Link,
+	            { to: '/create' },
+	            'Design a Battle'
+	          )
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'a',
+	            { href: '#' },
+	            'Past Battles'
+	          )
+	        )
+	      )
+	    );
+
+	    if (localStorage.userId) {
+	      toShowNav = pills;
+	    }
+
 	    return React.createElement(
 	      'div',
 	      null,
@@ -95,6 +147,7 @@
 	          )
 	        )
 	      ),
+	      toShowNav,
 	      this.props.children
 	    );
 	  }
@@ -24735,7 +24788,7 @@
 
 	    return React.createElement(
 	      'div',
-	      { className: 'container headerPaddingTop' },
+	      { className: 'container' },
 	      React.createElement(
 	        'div',
 	        { className: 'centreTitle marginUnder' },
@@ -27193,6 +27246,7 @@
 	  getUserMatches: function (userId) {
 
 	    requestHelper.get('matches/user/' + userId).end(function (err, response) {
+	      console.log('res', response);
 	      if (!err) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -27269,7 +27323,6 @@
 	  },
 
 	  _onChangeEvent: function () {
-	    console.log('component', this.state);
 	    window.location.hash = "#/portfolio";
 	  },
 
@@ -27293,18 +27346,11 @@
 	    });
 	  },
 
-	  handleDateChange: function () {
-	    console.log("newDate", newDate);
-	    return this.setState({
-	      date: newDate
-	    });
-	  },
-
 	  //get the date with refs can I add them on the state? Would be neater REVISIT!
 	  handleClick: function (action) {
 	    var start = this.refs.startDate.value;
 	    var end = this.refs.finishDate.value;
-	    createMatchActions.createMatch(this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, new Date(start), new Date(end));
+	    createMatchActions.createMatch(localStorage.userId, this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, new Date(start), new Date(end));
 	  },
 
 	  render: function () {
@@ -27428,11 +27474,10 @@
 
 	var CreateMatchActions = {
 
-	  createMatch: function (title, type, funds, start, end) {
+	  createMatch: function (userId, title, type, funds, start, end) {
 
-	    requestHelper.post('matches/', { userId: 13, title: title, type: type, funds: funds, start: start, end: end }).end(function (err, response) {
+	    requestHelper.post('matches/', { userId: userId, title: title, type: type, funds: funds, start: start, end: end }).end(function (err, response) {
 	      if (response) {
-	        console.log('response', response);
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "CREATE_MATCH",
@@ -28174,7 +28219,7 @@
 	  if (action.actionType === "CREATE_MATCH") {
 
 	    _userMatches.matches.push([action.data.title, action.data.type, moment(action.data.startdate).fromNow(), moment(action.data.enddate).fromNow(), action.data.starting_funds, action.data.status, action.data.challengee, action.data.creator_id, action.data.winner, action.data.created_at, action.data.m_id]);
-	    console.log('create match store', _userMatches.matches);
+	    localStorage.setItem('matchId', action.data.m_id);
 	    matchesStore.emitChange();
 	  }
 
@@ -60807,7 +60852,7 @@
 	      React.createElement(
 	        'h2',
 	        null,
-	        'Ye be dabblin',
+	        'Yer be dabblin',
 	        "'",
 	        ' in ',
 	        this.state.matchTitle
@@ -61612,13 +61657,13 @@
 
 	    var arrayOfMatches = [];
 	    var toDisplay;
-
+	    console.log(this.state, matchesStore.getMatchData());
 	    var matchTable = React.createElement(
 	      'div',
 	      null,
 	      React.createElement(
 	        'h2',
-	        null,
+	        { className: 'centreTitle' },
 	        'Matches'
 	      ),
 	      React.createElement(
@@ -61746,11 +61791,6 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'container' },
-	      React.createElement(
-	        'h2',
-	        null,
-	        'Matches Page'
-	      ),
 	      toDisplay
 	    );
 	  }

@@ -22,7 +22,6 @@ var Create = React.createClass({
   },
 
   _onChangeEvent: function () {
-    console.log('component',this.state);
     window.location.hash="#/portfolio";
   },
 
@@ -46,18 +45,11 @@ var Create = React.createClass({
     });
   },
 
-  handleDateChange: function () {
-    console.log("newDate", newDate);
-    return this.setState({
-      date: newDate
-    });
-  },
-
   //get the date with refs can I add them on the state? Would be neater REVISIT!
   handleClick: function (action) {
     var start = this.refs.startDate.value;
     var end = this.refs.finishDate.value;
-    createMatchActions.createMatch(this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, new Date(start), new Date(end));
+    createMatchActions.createMatch(localStorage.userId, this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, new Date(start), new Date(end));
   },
 
   render: function () {

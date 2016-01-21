@@ -47,7 +47,7 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
       action.data.created_at,
       action.data.m_id
     ]);
-    console.log('create match store', _userMatches.matches);
+    localStorage.setItem('matchId', action.data.m_id);
     matchesStore.emitChange();
   }
 

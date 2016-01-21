@@ -11,7 +11,7 @@ var Home = React.createClass({
   render: function () {
 
     return (
-      <div className="container headerPaddingTop">
+      <div className="container">
         <div className="centreTitle marginUnder">
           <h2>Pirate Stocks</h2>
           <h6>Fantasy Stock Trading for Pirates and Penguins: because every pirate has an inner penguin</h6>

@@ -133,12 +133,12 @@ module.exports = function (knex) {
 //----------------------------------------------
   module.getUsersMatches = function (userId) {
     return knex.select()
-      .table('matches')
-      .where('creator_id', userId)
-      .orWhere('challengee', userId)
-      .then(function (matches) {
-        return matches;
-      });
+    .table('matches')
+    .where('creator_id', userId)
+    .orWhere('challengee', userId)
+    .then(function (matches) {
+      return matches;
+    });
 
   };
 

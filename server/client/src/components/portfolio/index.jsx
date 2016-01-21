@@ -98,7 +98,7 @@ var Portfolio = React.createClass({
     return (
       <div className="container">
 
-        <h2>Ye be dabblin{"'"} in {this.state.matchTitle}</h2>
+        <h2>Yer be dabblin{"'"} in {this.state.matchTitle}</h2>
         <div>
           <Link to="/matches">Return to Yer Battles</Link>
         </div>

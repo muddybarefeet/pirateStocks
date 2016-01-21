@@ -29,6 +29,24 @@ var App = React.createClass({
   },
 
   render: function render() {
+
+    var toShowNav;
+    //WAY TO NOT SHOW NAV WHEN SIGNED IN JOTS??
+    var pills = (
+      <div className="container">
+        <ul className="nav nav-pills">
+          <li className="active"><Link to="/matches">Yer Battles</Link></li>
+          <li><Link to="/join">Join a New Battle</Link></li>
+          <li><Link to="/create">Design a Battle</Link></li>
+          <li><a href="#">Past Battles</a></li>
+        </ul>
+      </div>
+    )
+
+    if (localStorage.userId) {
+      toShowNav = pills;
+    }
+
     return (
 
       <div>
@@ -39,6 +57,7 @@ var App = React.createClass({
             </div>
           </div>
         </nav>
+        {toShowNav}
         {this.props.children}
       </div>
 
