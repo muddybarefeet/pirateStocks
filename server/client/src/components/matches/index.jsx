@@ -33,7 +33,7 @@ var Matches = React.createClass({
     var matchId = match[match.length-1];
     localStorage.setItem("matchId", matchId);
     //trigger the store to get the correct match
-    window.location.hash="#/portfolio";
+    // window.location.hash="#/matches/portfolio";
   },
 
   render: function () {
@@ -76,7 +76,7 @@ var Matches = React.createClass({
                                 <td>{match[4]}</td>
                                 <td>{match[5]}</td>
                                 <td>To be worked out</td>
-                                <td><button value={match} type="button" className="btn btn-primary" onClick={that.handleClick}>To Portfolio</button></td>
+                                <td><button value={match} type="button" className="btn btn-primary" ><Link to="matches/portfolio">To Portfolio</Link></button></td>
                               </tr>);
         });
         toDisplay = matchTable;

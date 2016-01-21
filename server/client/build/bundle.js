@@ -162,9 +162,15 @@
 	    { path: '/', component: App },
 	    React.createElement(Route, { path: 'login', component: Login }),
 	    React.createElement(Route, { path: 'home', component: Home }),
-	    React.createElement(Route, { path: 'matches', component: Matches }),
-	    React.createElement(Route, { path: 'portfolio', component: Portfolio }),
-	    React.createElement(Route, { path: 'search', component: Search }),
+	    React.createElement(
+	      Route,
+	      { path: 'matches', component: Matches },
+	      React.createElement(
+	        Route,
+	        { path: 'portfolio', component: Portfolio },
+	        React.createElement(Route, { path: 'search', component: Search })
+	      )
+	    ),
 	    React.createElement(Route, { path: 'create', component: Create }),
 	    React.createElement(Route, { path: 'join', component: Join })
 	  )
@@ -62386,7 +62392,7 @@
 	    var matchId = match[match.length - 1];
 	    localStorage.setItem("matchId", matchId);
 	    //trigger the store to get the correct match
-	    window.location.hash = "#/portfolio";
+	    // window.location.hash="#/matches/portfolio";
 	  },
 
 	  render: function () {
@@ -62514,8 +62520,12 @@
 	            null,
 	            React.createElement(
 	              'button',
-	              { value: match, type: 'button', className: 'btn btn-primary', onClick: that.handleClick },
-	              'To Portfolio'
+	              { value: match, type: 'button', className: 'btn btn-primary' },
+	              React.createElement(
+	                Link,
+	                { to: 'matches/portfolio' },
+	                'To Portfolio'
+	              )
 	            )
 	          )
 	        ));
