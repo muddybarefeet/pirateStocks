@@ -9,7 +9,7 @@ var displayErrorMsg = function(msg){
 
 var requestHelper = {
   
-  post: function(url, body){
+  post: function (url, body) {
 
     return rp
       .post(baseUrl + url)
@@ -17,9 +17,17 @@ var requestHelper = {
     
   },
 
-  get: function(url){
+  get: function (url) {
 
     return rp(baseUrl + url);
+
+  },
+
+  put: function(url, body) {
+
+    return rp
+      .put(baseUrl + url)
+      .send(body);
 
   }
 

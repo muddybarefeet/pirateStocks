@@ -77,21 +77,22 @@ module.exports = function (knex) {
 //Join a Match: insert a user into the previously null challengee matches table field. matchId {string}, userId {string}
 //-------------------------------------------------------------------------------------
   module.joinMatch = function (matchId, userId) {
-    return knex('matches').where({
-        challengee: null,
-        m_id: matchId,
-        status: 'pending',
-        type: 'head'
-      })
-      .update({
-        challengee: userId
-      }, '*')
-      .then(function (match) {
-        if (match.length < 1) {
-          return null;
-        }
-        return match[0];
-      });
+    return knex('matches')
+    .where({
+      challengee: null,
+      m_id: matchId,
+      status: 'pending',
+      type: 'head'
+    })
+    .update({
+      challengee: userId
+    }, '*')
+    .then(function (match) {
+      if (match.length < 1) {
+        return null;
+      }
+      return match[0];
+    });
   };
 
 //Return all joinable matches

@@ -37,7 +37,9 @@ var MatchesToJoin = React.createClass({
     var matchId = match[match.length-1];
     localStorage.setItem("matchId", matchId);
     //trigger the store to get the correct match
-    matchActions.getMatchPortfolio(localStorage.userId, localStorage.matchId);
+    // matchActions.getMatchPortfolio(localStorage.userId, localStorage.matchId);
+    joinMatchActions.joinMatch(localStorage.matchId, localStorage.userId);
+
     window.location.hash="#/portfolio";
   },
 
@@ -48,7 +50,7 @@ var MatchesToJoin = React.createClass({
 
     var matchTable = 
       (<div>
-        <h2>Matches</h2>           
+        <h2 className="centreTitle">Battles ter Join</h2>           
           <table className="table">
             <thead>
               <tr>
@@ -90,9 +92,6 @@ var MatchesToJoin = React.createClass({
 
     return (
       <div className="container">
-        
-        <h2>Matches To Join</h2>
-        <Link to="/matches">Return to Main Menu</Link>
 
         {toDisplay}
 

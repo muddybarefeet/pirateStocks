@@ -7,7 +7,7 @@ var matchesStore = require('./../../stores/matchesStore.js');
 var Matches = React.createClass({
 
   getInitialState: function () {
-    return matchesStore.getMatchData();
+    return {};
   },
 
   componentWillMount: function () {
@@ -33,7 +33,6 @@ var Matches = React.createClass({
     var matchId = match[match.length-1];
     localStorage.setItem("matchId", matchId);
     //trigger the store to get the correct match
-
     window.location.hash="#/portfolio";
   },
 
@@ -41,10 +40,9 @@ var Matches = React.createClass({
 
     var arrayOfMatches = [];
     var toDisplay;
-    console.log(this.state,matchesStore.getMatchData())
     var matchTable = 
       (<div>
-        <h2 className="centreTitle">Matches</h2>           
+        <h2 className="centreTitle">Battles</h2>           
           <table className="table">
             <thead>
               <tr>

@@ -9,7 +9,6 @@ var matchActions = {
     requestHelper
     .get('matches/user/'+ userId)
     .end(function(err, response){
-        console.log('res', response);
       if (!err) {
         response = response.body.data;
         AppDispatcher.handleServerAction({
@@ -22,7 +21,6 @@ var matchActions = {
 
     });
   },
-
 
   getMatchPortfolio: function (userId, matchId) {
 

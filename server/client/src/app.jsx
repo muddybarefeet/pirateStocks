@@ -66,19 +66,6 @@ var App = React.createClass({
 
 });
 
-var About = React.createClass({
-  render() {
-    return (
-      <div className="container">
-        <ul className="nav nav-pills">
-          <li className="active"><Link to="/matches">Your Matches</Link></li>
-          <li><Link to="/join">Join a New Match</Link></li>
-          <li><Link to="/create">Create Match</Link></li>
-        </ul>
-      </div>
-    )
-  }
-});
 
 ReactDOM.render(
   <Router history={hashHistory}>

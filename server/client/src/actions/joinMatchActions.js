@@ -21,6 +21,24 @@ var joinMatchActions = {
       }
 
     });
+  },
+
+  joinMatch: function (matchId, userId) {
+    console.log('joining action',matchId, userId);
+    requestHelper
+    .put('matches/join/' + matchId, {userId: userId})
+    .end(function (err, response) {
+      console.log('resp to join', response);
+      if (response) {
+        response = response.body.data;
+        AppDispatcher.handleServerAction({
+            actionType: "GET_USER_MATCH",
+            data: response
+          });
+      } else {
+        console.log('err', err);
+      }
+    });
   }
 
 };
