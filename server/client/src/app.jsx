@@ -51,19 +51,11 @@ var About = React.createClass({
   render() {
     return (
       <div className="container">
-        <h3>About</h3>
-        <p>Time to get this routing working</p>
-        <div>
-          <div>
-            <Link to="/create">Create Match</Link>
-          </div>
-          <div>
-            <Link to="/join">Join a New Match</Link>
-          </div>
-          <div>
-            <Link to="/matches">Your Matches</Link>
-          </div>
-        </div>
+        <ul className="nav nav-pills">
+          <li className="active"><Link to="/matches">Your Matches</Link></li>
+          <li><Link to="/join">Join a New Match</Link></li>
+          <li><Link to="/create">Create Match</Link></li>
+        </ul>
       </div>
     )
   }
@@ -72,18 +64,18 @@ var About = React.createClass({
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={App}>
-      <Route path="home" component={Home} />
       <Route path="login" component={Login} />
-        <Route path="about" component={About} />
-        <Route path="create" component={Create} />
-        <Route path="matches" component={Matches} />
-          <Route path="portfolio" component={Portfolio}/>
-            <Route path="search" component={Search} />
-        <Route path="join" component={Join} />
+      <Route path="home" component={Home} />
+      <Route path="matches" component={Matches} />
+      <Route path="portfolio" component={Portfolio} />
+      <Route path="search" component={Search} />
+      <Route path="create" component={Create} />
+      <Route path="join" component={Join}/>
     </Route>
   </Router>
 , document.getElementById('app'));
 
 
-
-
+//<Link to="/join">Join a New Match</Link>
+//<Link to="/matches">Your Matches</Link>
+//<Link to="/create">Create Match</Link>

@@ -3,7 +3,9 @@ var React = require('react');
 var Link = require('react-router').Link;
 var createMatchActions = require('./../actions/createMatchActions.js');
 var numeral = require('numeral');
+var moment = require('moment');
 var matchesStore = require('./../stores/matchesStore.js');
+var DayPicker = require("react-day-picker");
 
 var Create = React.createClass({
 
@@ -44,6 +46,13 @@ var Create = React.createClass({
     });
   },
 
+  handleDateChange: function () {
+    console.log("newDate", newDate);
+    return this.setState({
+      date: newDate
+    });
+  },
+
   //get the date with refs can I add them on the state? Would be neater REVISIT!
   handleClick: function (action) {
     var start = this.refs.startDate.value;
@@ -57,7 +66,7 @@ var Create = React.createClass({
       <div className="container">
 
         <h2>Create Match</h2>
-        <Link to="/about">Return to Main Menu</Link>
+        <Link to="/matches">Return to Yer Current Battles</Link>
         
         <div className="form-group">
           <label htmlFor="title">Match Title:</label>
@@ -82,6 +91,9 @@ var Create = React.createClass({
           </label>
         </div>
 
+         {/*<DayPicker className="DayPicker DayPicker-Month" onDayClick={ (e, day) => alert(day) } />*/}
+   
+
         <div className="form-group">
           <label htmlFor="Funds">Funds:</label>
           <select className="form-control" onChange={this.handleFundsChange}>
@@ -104,3 +116,4 @@ var Create = React.createClass({
 });
 
 module.exports = Create;
+

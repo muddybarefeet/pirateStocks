@@ -32,7 +32,7 @@ var Login = React.createClass({
     //tigger action to go and get all the users matches and update the matches store
     //Make this location route properly!!
     if (username && user && userEmail) {
-      window.location.hash="#/about";
+      window.location.hash="#/matches";
     }
   },
 

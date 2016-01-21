@@ -101,23 +101,32 @@ var Search = React.createClass({
       var that = this;
       stockInfo = this.state.oneStock.map(function (stock, index) {
         return (
-          <div key={index}>
-            <div className="card card-block">
-              <h4 className="card-title">{stock[0]}</h4>
-              <span className="card-text">Symbol: {stock[1]}</span>
-              <span className="card-text">Industry: {stock[2]}</span>
-              <span className="card-text">Sector: {stock[3]}</span>
-              <span className="card-text">Exchange:{stock[4]}</span>
-              <span className="card-text">Percentage High: {stock[5]}</span>
-              <span className="card-text">Year High: {stock[6]}</span>
-              <span className="card-text">Year Low: {stock[7]}</span>
-              <span className="card-text">Ask: {stock[8]}</span>
-              <div className="form-group">
-                <label htmlFor="number">Qty:</label>
-                {totalCost}
-                <input className="form-control" onChange={that.handleBuyStocksChange} />
-              </div>
-              <button type="button" className="btn btn-primary" onClick={that.handleBuyClick} >Buy</button>
+          <div className="card" key={index}>
+            <div className="card-block">
+              
+              <ul className="list-group list-group-flush">
+                <li className="list-group-item">
+                  <div>
+                    <h4 className="card-title centreTitle">{stock[0]}</h4>
+                    <h6 className="card-subtitle text-muted centreTitle">{stock[1]}</h6>
+                    <p className="card-text">Industry: {stock[2]}</p>
+                    <p className="card-text">Sector: {stock[3]}</p>
+                    <p className="card-text">Exchange:{stock[4]}</p>
+                    <p className="card-text">Percentage High: {stock[5]}</p>
+                    <p className="card-text">Year High: {stock[6]}</p>
+                    <p className="card-text">Year Low: {stock[7]}</p>
+                    <p className="card-text">Ask: {stock[8]}</p>
+
+                    <div className="form-group">
+                      <label htmlFor="number">Qty:</label>
+                      {totalCost}
+                      <input className="form-control" onChange={that.handleBuyStocksChange} />
+                    </div>
+                    <button type="button" className="btn btn-primary" onClick={that.handleBuyClick} >Buy</button>
+                  </div>
+                </li>
+              </ul>
+            
             </div>
           </div>
           );
@@ -128,7 +137,7 @@ var Search = React.createClass({
       <div className="container">
 
         <h2>Search Stocks Page</h2>
-        <Link to="/about">Return to Main Menu</Link>
+        <Link to="/portfolio">Return to Yer Gold</Link>
 
         <div className="form-group">
           <label htmlFor="search">Oggle th{"'"} stocks ye can lay yer dirty hands on:</label>

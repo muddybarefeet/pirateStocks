@@ -92,7 +92,7 @@ var MatchesToJoin = React.createClass({
       <div className="container">
         
         <h2>Matches To Join</h2>
-        <Link to="/about">Return to Main Menu</Link>
+        <Link to="/matches">Return to Main Menu</Link>
 
         {toDisplay}
 

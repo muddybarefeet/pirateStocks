@@ -88,7 +88,6 @@ var Matches = React.createClass({
       <div className="container">
 
         <h2>Matches Page</h2>
-        <Link to="/about">Return to Main Menu</Link>
 
         {toDisplay}
         

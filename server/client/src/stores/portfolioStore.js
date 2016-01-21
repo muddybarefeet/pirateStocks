@@ -35,6 +35,10 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
   
   if(action.actionType === "GET_USER_MATCH") {
 
+    var capFirstLetter  = function (matchTitle) {
+      return matchTitle.charAt(0).toUpperCase() + matchTitle.slice(1);
+    };
+
     _currentMatch.stocks = action.data.stocks.map(function (stock) {
       return [
         stock.name,
@@ -50,6 +54,7 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
 
     _currentMatch.totalValue = action.data.totalValue;
     _currentMatch.availableCash = action.data.available_cash;
+    _currentMatch.matchTitle = capFirstLetter(action.data.title);
 
     portfolioStore.emitChange();
 
