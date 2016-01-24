@@ -41,7 +41,6 @@
     "passport-facebook": "^2.0.0",
     "pg": "^4.4.3",
     "react": "^0.14.6",
-    "react-bootstrap-daterangepicker": "^1.0.6",
     "react-bootstrap-datetimepicker": "0.0.22",
     "react-day-picker": "^1.2.0",
     "react-dom": "^0.14.6",

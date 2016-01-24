@@ -3,10 +3,7 @@ body {
   padding: 0;
   margin: 0;
   padding-top: 70px;
-}
-
-.headerPaddingTop {
-  padding-top: 60px;
+  font-family: 'Raleway', sans-serif;
 }
 
 .centreTitle {
@@ -17,8 +14,20 @@ body {
   width: 200px;
 }
 
-.demo-card {
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto 100px;
+/*h1, h2 {
+  font-family: 'Jim Nightshade', cursive;
+  font-size: 50px;
+}*/
+p, div {
+  font-family: 'Raleway', sans-serif;
+  font-size: 14px;
+}
+
+.shiftRight {
+  float: right;
+}
+
+div h1 {
+  font-family: 'Jim Nightshade', cursive;
+  font-size: 60px;
 }
