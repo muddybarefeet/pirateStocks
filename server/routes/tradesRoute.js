@@ -15,7 +15,7 @@ module.exports = function (knex) {
       next();
     });
 
-//Get Portfolio
+//Get Portfolio :)
 //-----------------------------------
   router.route('/:matchId/:userId')
     .get(function (req, res) {
@@ -32,7 +32,7 @@ module.exports = function (knex) {
         });
     })
 
-//Buy and Sell Route
+//Buy and Sell Route :)
 //-----------------------------------
   .post(function (req, res) {
 

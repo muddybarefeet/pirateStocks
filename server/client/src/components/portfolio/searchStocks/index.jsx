@@ -136,7 +136,7 @@ var Search = React.createClass({
     return (
       <div className="container">
 
-        <h2>Search Stocks Page</h2>
+        <h1>Search Stocks Page</h1>
         <Link to="/portfolio">Return to Yer Gold</Link>
 
         <div className="form-group">

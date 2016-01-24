@@ -120,15 +120,15 @@ module.exports = function (knex) {
       });
   };
 
-// Return a specific match. matchId {string}
+// Return a specific match. matchId {string} DEprecated
 //----------------------------------------------
-  module.getMatch = function (matchId) {
-    return knex.select()
-      .table('matches').where('m_id', '=', matchId)
-      .then(function (match) {
-        return match[0];
-      });
-  };
+  // module.getMatch = function (matchId) {
+  //   return knex.select()
+  //     .table('matches').where('m_id', '=', matchId)
+  //     .then(function (match) {
+  //       return match[0];
+  //     });
+  // };
 
 // Get all matches for a user. userId {string}
 //----------------------------------------------

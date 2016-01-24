@@ -81,7 +81,7 @@ var Login = React.createClass({
 
           <div className="col-md-6">
 
-            <h2>Login</h2>
+            <h1>Login</h1>
 
             <div className="form-group">
               <label htmlFor="email">Email:</label>
@@ -100,7 +100,7 @@ var Login = React.createClass({
 
           <div className="col-md-6">
 
-            <h2>Signup</h2>
+            <h1>Signup</h1>
 
             <div className="form-group">
               <label htmlFor="userName">Username:</label>
@@ -115,7 +115,7 @@ var Login = React.createClass({
               <input type="password" className="form-control" id="pwd" onChange={this.handleSignupPasswordChange} />
             </div>
 
-            <div className="centreTitle" >
+            <div>
               <button type="button" className="btn btn-warning" onClick={this.handleSignupClick}>Signup</button>
             </div>
 

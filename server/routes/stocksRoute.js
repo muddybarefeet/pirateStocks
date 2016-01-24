@@ -17,7 +17,7 @@ module.exports = function (knex) {
       next();
     });
 
-//Stock Search Route
+//Stock Search Route :)
 //-----------------------------------
   router.route('/')
     .get(function (req, res) {
@@ -30,25 +30,25 @@ module.exports = function (knex) {
         });
     });
 
-//Update Prices Route
+//Update Prices Route DEPRECATED
 //-----------------------------------
-  router.route('/update')
-    .post(function (req, res) {
-      var list = req.body;
-      stocksController.updatePrices(list)
-        .then(function (stockArray) {
-          res.status(200).json({
-            data: stockArray
-          });
-        })
-        .catch(function (err) {
-          res.status(400).json({
-            message: err
-          });
-        });
-    });
+  // router.route('/update')
+  //   .post(function (req, res) {
+  //     var list = req.body;
+  //     stocksController.updatePrices(list)
+  //       .then(function (stockArray) {
+  //         res.status(200).json({
+  //           data: stockArray
+  //         });
+  //       })
+  //       .catch(function (err) {
+  //         res.status(400).json({
+  //           message: err
+  //         });
+  //       });
+  //   });
 
-//Get Stock Route
+//Get Stock Route :)
 //-----------------------------------
   router.route('/:symbol')
     .get(function (req, res) {

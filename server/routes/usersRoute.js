@@ -10,34 +10,34 @@ module.exports = function (knex) {
     next();
   });
 
-//Search Users
+//Search Users Deprecated
 //-----------------------------------
-  router.route('/')
-    .get(function (req, res) {
-      var search = req.query.search;
-      usersCtrl.searchUsers(search)
-        .then(function (response) {
-          res.json({
-            data: response
-          });
-        });
-    });
+  // router.route('/')
+  //   .get(function (req, res) {
+  //     var search = req.query.search;
+  //     usersCtrl.searchUsers(search)
+  //       .then(function (response) {
+  //         res.json({
+  //           data: response
+  //         });
+  //       });
+  //   });
   
-//Get Specific User
+//Get Specific User Deprecated
 //-----------------------------------
-  router.route('/:userId')
-    .get(function (req, res) {
-      var userId = req.userId;
-      usersCtrl.getUser(userId).then(function (response) {
-        if (response === null) {
-          res.sendStatus(404);
-        } else {
-          res.json({
-            data: response
-          });
-        }
-      });
-    });
+  // router.route('/:userId')
+  //   .get(function (req, res) {
+  //     var userId = req.userId;
+  //     usersCtrl.getUser(userId).then(function (response) {
+  //       if (response === null) {
+  //         res.sendStatus(404);
+  //       } else {
+  //         res.json({
+  //           data: response
+  //         });
+  //       }
+  //     });
+  //   });
 
 //Post user
 //-----------------------------------

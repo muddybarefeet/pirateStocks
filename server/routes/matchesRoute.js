@@ -16,7 +16,7 @@ module.exports = function (knex) {
     });
 
   router.route('/:userId')
-//Get All Joinable Matches
+//Get All Joinable Matches :)
 //-------------------------
   .get(function (req, res) {
 
@@ -35,7 +35,7 @@ module.exports = function (knex) {
   });
 
 router.route('/join/:matchId')
-//Join match
+//Join match :)
 //-------------------------
   .put(function (req, res) {
     console.log('in route');
@@ -56,8 +56,30 @@ router.route('/join/:matchId')
 
   });
   
+
+//Get all of a Users Matches :)
+//--------------------------
+router.route('/user/:userId')
+
+  .get(function (req, res) {
+    matchesController.getUsersMatches(req.userId)
+      .then(function (matches) {
+        console.log('returning matches', matches);
+        res.status(200).json({
+          data: matches
+        });
+      })
+      .catch(function (err) {
+        res.status(404).json({
+          message: err.message
+        });
+      });
+
+  });
+
 router.route('/')
-//Post New Match Details
+
+//Post New Match Details :)
 //----------------------
   .post(function (req, res) {
 
@@ -82,43 +104,24 @@ router.route('/')
 
   });
 
-//Get all of a Users Matches
-//--------------------------
-router.route('/user/:userId')
 
-  .get(function (req, res) {
-    matchesController.getUsersMatches(req.userId)
-      .then(function (matches) {
-        console.log('returning matches', matches);
-        res.status(200).json({
-          data: matches
-        });
-      })
-      .catch(function (err) {
-        res.status(404).json({
-          message: err.message
-        });
-      });
+  // router.route('/match/:matchId')
 
-  });
-
-  router.route('/match/:matchId')
-
-    //Get a certain match
+    //Get a certain match DEPRECATED
     //----------------------
-      .get(function (req, res) {
-        matchesController.getMatch(req.matchId)
-          .then(function (match) {
-            res.status(200).json({
-              data: match
-            });
-          })
-          .catch(function (err) {
-            res.status(404).json({
-              message: err
-            });
-          });
-      });
+//       .get(function (req, res) {
+//         matchesController.getMatch(req.matchId)
+//           .then(function (match) {
+//             res.status(200).json({
+//               data: match
+//             });
+//           })
+//           .catch(function (err) {
+//             res.status(404).json({
+//               message: err
+//             });
+//           });
+//       });
 
-  return router;
-};
+//   return router;
+// };

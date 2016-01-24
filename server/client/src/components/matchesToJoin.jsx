@@ -50,7 +50,7 @@ var MatchesToJoin = React.createClass({
 
     var matchTable = 
       (<div>
-        <h2 className="centreTitle">Battles ter Join</h2>           
+        <h1 className="centreTitle">Battles ter Join</h1>           
           <table className="table">
             <thead>
               <tr>

@@ -11,14 +11,14 @@ var Home = React.createClass({
   render: function () {
 
     return (
-      <div className="container">
+      <div className="container font">
         <div className="centreTitle marginUnder">
-          <h2>Pirate Stocks</h2>
+          <h1>Pirate Stocks</h1>
           <h6>Fantasy Stock Trading for Pirates and Penguins: because every pirate has an inner penguin</h6>
         </div>
         <div className="container">
-          <div>
-            <h5>
+          <div className="font">
+            <h5 className="font">
               1. Join or make a match
             </h5> 
             <h5>

@@ -50,10 +50,10 @@ var App = React.createClass({
     return (
 
       <div>
-        <nav className="navbar navbar-fixed-top navbar-inverse">
+        <nav className="navbar navbar-fixed-top" style={{backgroundImage: 'url('+'./../assets/images/woodHeader2.jpg'+')', height:"60px"}}>
           <div className="container-fluid">
             <div className="navbar-header">
-              <Link to="/home">Pirate Stocks</Link>
+              <Link to="/home" style={{fontSize: "22px", textDecoration: "none", color: "white"}}>Pirate Stocks</Link>
             </div>
           </div>
         </nav>

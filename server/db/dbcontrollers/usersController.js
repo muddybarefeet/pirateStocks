@@ -5,39 +5,39 @@ module.exports = function (knex) {
 
   var module = {};
 
-//Select all User Details
+//Select all User Details NOT SURE WHERE USED
 //---------------------------
-  module.getUsers = function () {
-    return knex.select().table('users')
-      .catch(function (err) {
-        return null;
-      });
-  };
+  // module.getUsers = function () {
+  //   return knex.select().table('users')
+  //     .catch(function (err) {
+  //       return null;
+  //     });
+  // };
 
-//Get a Specific Users Details
+//Get a Specific Users Details Deprecated
 //------------------------------
 
-  module.getUser = function (userId) {
-    return knex.select().table('users').where('u_id', '=', userId)
-      .then(function (response) {
-        if (response.length === 0) {
-          throw new Error('no user found');
-        }
-        return response[0];
-      })
-      .catch(function (err) {
-        return null;
-      });
-  };
+  // module.getUser = function (userId) {
+  //   return knex.select().table('users').where('u_id', '=', userId)
+  //     .then(function (response) {
+  //       if (response.length === 0) {
+  //         throw new Error('no user found');
+  //       }
+  //       return response[0];
+  //     })
+  //     .catch(function (err) {
+  //       return null;
+  //     });
+  // };
 
-//Search Users for anything to match input
+//Search Users for anything to match input Deprecated
 //-----------------------------------------
-  module.searchUsers = function (search) {
-    var searchLike = search + '%';
-    return knex('users')
-      .where(knex.raw('UPPER(username) like UPPER(?)', [searchLike]))
-      .orWhere(knex.raw('UPPER(name) like UPPER(?)', [searchLike]));
-  };
+  // module.searchUsers = function (search) {
+  //   var searchLike = search + '%';
+  //   return knex('users')
+  //     .where(knex.raw('UPPER(username) like UPPER(?)', [searchLike]))
+  //     .orWhere(knex.raw('UPPER(name) like UPPER(?)', [searchLike]));
+  // };
 
 //Creates/Check a Users Details used from facebook auth route
 //---------------------------------------------------------------
