@@ -33,7 +33,7 @@ var Matches = React.createClass({
     var matchId = match[match.length-1];
     localStorage.setItem("matchId", matchId);
     //trigger the store to get the correct match
-    window.location.hash="#/matches/portfolio";
+    window.location.hash="#/matches/portfolio/" + matchId;
   },
 
   render: function () {

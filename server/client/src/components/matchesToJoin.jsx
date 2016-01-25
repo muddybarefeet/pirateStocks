@@ -40,7 +40,7 @@ var MatchesToJoin = React.createClass({
     // matchActions.getMatchPortfolio(localStorage.userId, localStorage.matchId);
     joinMatchActions.joinMatch(localStorage.matchId, localStorage.userId);
 
-    window.location.hash="#/portfolio";
+    window.location.hash="#/matches/portfolio/" + matchId;
   },
 
   render: function () {

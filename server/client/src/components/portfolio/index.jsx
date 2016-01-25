@@ -102,7 +102,7 @@ var Portfolio = React.createClass({
           <Link to="/matches">Return to Yer Battles</Link>
         </div>
         <div>
-          <Link to="/search">Check out yer pieces o{"'"} Eight</Link>
+          <Link to={"/matches/portfolio/" + localStorage.matchId + "/search"}>Check out yer pieces o{"'"} Eight</Link>
         </div>
 
         <h4>Yer {"'"}ave ${this.state.availableCash} gold ter spend</h4>

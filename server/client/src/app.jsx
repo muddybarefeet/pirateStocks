@@ -70,13 +70,13 @@ var App = React.createClass({
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={App}>
-      <Route path="login" component={Login} />
-      <Route path="home" component={Home} />
-      <Route path="matches" component={Matches} />
-      <Route path="portfolio" component={Portfolio} />
-      <Route path="search" component={Search} />
-      <Route path="create" component={Create} />
+      <Route path="/login" component={Login} />
+      <Route path="/home" component={Home} />
+      <Route path="/matches" component={Matches} />
       <Route path="join" component={Join}/>
+      <Route path="/matches/portfolio/:id" component={Portfolio} />
+      <Route path="/matches/portfolio/:id/search" component={Search} />
+      <Route path="create" component={Create} />
     </Route>
   </Router>
 , document.getElementById('app'));
