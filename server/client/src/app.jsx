@@ -13,7 +13,7 @@ var IndexRoute = require('react-router').IndexRoute;
 var Home = require('./components/home.jsx');
 var Login = require('./components/login.jsx');
 
-var Create = require('./components/createMatch.jsx');
+var Create = require('./components/createMatch/createMatch.jsx');
 var Portfolio = require('./components/portfolio/index.jsx');
 var Search = require('./components/portfolio/searchStocks/index.jsx');
 var Join = require('./components/matchesToJoin.jsx');
@@ -72,11 +72,9 @@ ReactDOM.render(
     <Route path="/" component={App}>
       <Route path="login" component={Login} />
       <Route path="home" component={Home} />
-      <Route path="matches" component={Matches}>
-        <Route path="portfolio" component={Portfolio}>
-          <Route path="search" component={Search} />
-        </Route>
-      </Route>
+      <Route path="matches" component={Matches} />
+      <Route path="portfolio" component={Portfolio} />
+      <Route path="search" component={Search} />
       <Route path="create" component={Create} />
       <Route path="join" component={Join}/>
     </Route>

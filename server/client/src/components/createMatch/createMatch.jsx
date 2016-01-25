@@ -1,10 +1,10 @@
 
 var React = require('react');
 var Link = require('react-router').Link;
-var createMatchActions = require('./../actions/createMatchActions.js');
+var createMatchActions = require('./../../actions/createMatchActions.js');
 var numeral = require('numeral');
 var moment = require('moment');
-var matchesStore = require('./../stores/matchesStore.js');
+var matchesStore = require('./../../stores/matchesStore.js');
 var DateTimeField = require('react-bootstrap-datetimepicker');
 var DateTimePicker = require('./dateTimePicker.js');
 
@@ -94,6 +94,7 @@ var Create = React.createClass({
                       <label className="checkbox-inline">
                         <input type="checkbox" id="inlineCheckbox2" value="head" />Head to Head
                       </label>
+                      
                       <DateTimePicker />
                       
                       </div>
