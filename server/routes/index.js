@@ -18,7 +18,7 @@ var state = require('./state');
 var passport = require('./auth/index');
 
 //export object that gets called from the express server ./../index.js
-module.exports = function (db) {
+module.exports = function (services) {
 
   var router = express.Router();
 
@@ -34,12 +34,12 @@ module.exports = function (db) {
   // router.use(passport.session());
 
   //pass passport connections to the respective files
-  // auth = auth(db);
-  stocks = stocks(db);
-  matches = matches(db);
-  users = users(db);
-  trades = trades(db);
-  state = state(db);
+  // auth = auth(services);
+  stocks = stocks(services);
+  matches = matches(services);
+  users = users(services);
+  trades = trades(services);
+  state = state(services);
 
   //defining the which route goes where
   // router.use('/auth', auth);

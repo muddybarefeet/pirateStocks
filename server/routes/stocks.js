@@ -3,7 +3,7 @@ var router = express.Router();
 var rp = require('request-promise');
 var utils = require('./utils');
 
-module.exports = function (db) {
+module.exports = function (services) {
 
   router
     .param('symbol', function (req, res, next, symbol) {
@@ -20,7 +20,7 @@ module.exports = function (db) {
   router.route('/')
     .get(function (req, res) {
       var search = req.query.search;
-      db.stocks.searchStock(search)
+      services.db.stocks.searchStock(search)
         .then(function (response) {
           res.json({
             data: response
@@ -33,7 +33,7 @@ module.exports = function (db) {
   // router.route('/update')
   //   .post(function (req, res) {
   //     var list = req.body;
-  //     db.updatePrices(list)
+  //     services.db.updatePrices(list)
   //       .then(function (stockArray) {
   //         res.status(200).json({
   //           data: stockArray
@@ -51,7 +51,7 @@ module.exports = function (db) {
   router.route('/:symbol')
     .get(function (req, res) {
       var symbol = req.symbol;
-      db.stocks.getStock(symbol).then(function (response) {
+      services.db.stocks.getStock(symbol).then(function (response) {
         if (response === null) {
           res.sendStatus(404);
         } else {

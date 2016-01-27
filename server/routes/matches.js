@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-module.exports = function (db) {
+module.exports = function (services) {
 
   router
     .param('matchId', function (req, res, next, matchId) {
@@ -18,7 +18,7 @@ router.route('/:userId')
 //-------------------------
 .get(function (req, res) {
 
-  db.matches.getAllJoinableMatches(req.userId)
+  services.db.matches.getAllJoinableMatches(req.userId)
     .then(function (matches) {
       res.status(200).json({
         data: matches
@@ -36,7 +36,7 @@ router.route('/join/:matchId')
 //Join match :)
 //-------------------------
 .put(function (req, res) {
-  db.matches.joinMatch(req.matchId, req.body.userId)
+  services.db.matches.joinMatch(req.matchId, req.body.userId)
     .then(function (match) {
       console.log('match', match);
       if (match === null) {
@@ -57,7 +57,7 @@ router.route('/user/:userId')
 //Get all of a Users Matches :) //move to be in '/'
 //--------------------------
 .get(function (req, res) {
-  db.matches.getUsersMatches(req.userId)
+  services.db.matches.getUsersMatches(req.userId)
     .then(function (matches) {
       res.status(200).json({
         data: matches
@@ -83,7 +83,7 @@ router.route('/')
   var type = req.body.type;
   var title = req.body.title;
   
-  db.matches.createMatch(userId, startFunds, type, startDate, endDate, title)
+  services.db.matches.createMatch(userId, startFunds, type, startDate, endDate, title)
     .then(function (match) {
       return res.status(200).json({
         data: match
@@ -103,7 +103,7 @@ router.route('/')
     //Get a certain match DEPRECATED
     //----------------------
 //       .get(function (req, res) {
-//         db.getMatch(req.matchId)
+//         services.db.getMatch(req.matchId)
 //           .then(function (match) {
 //             res.status(200).json({
 //               data: match

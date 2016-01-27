@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-module.exports = function (db) {
+module.exports = function (services) {
 
   router
     .param('matchId', function (req, res, next, matchId) {
@@ -17,7 +17,7 @@ module.exports = function (db) {
 //-----------------------------------
   router.route('/:matchId/:userId')
     .get(function (req, res) {
-      db.trades.getPortfolio(req.userId, req.matchId)
+      services.db.trades.getPortfolio(req.userId, req.matchId)
         .then(function (portfolio) {
           res.status(200).json({
             data: portfolio
@@ -41,8 +41,8 @@ module.exports = function (db) {
     var stockTicker = req.body.symbol;
 
     var actions = {
-      'buy': db.trades.buy,
-      'sell': db.trades.sell
+      'buy': services.db.trades.buy,
+      'sell': services.db.trades.sell
     };
 
     if (actions[action] === undefined) {

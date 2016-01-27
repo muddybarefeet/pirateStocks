@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-module.exports = function (db) {
+module.exports = function (services) {
 
   router.param('userId', function (req, res, next, userId) {
     req.userId = userId;
@@ -13,7 +13,7 @@ module.exports = function (db) {
   // router.route('/')
   //   .get(function (req, res) {
   //     var search = req.query.search;
-  //     db.searchUsers(search)
+  //     services.db.searchUsers(search)
   //       .then(function (response) {
   //         res.json({
   //           data: response
@@ -26,7 +26,7 @@ module.exports = function (db) {
   // router.route('/:userId')
   //   .get(function (req, res) {
   //     var userId = req.userId;
-  //     db.getUser(userId).then(function (response) {
+  //     services.db.getUser(userId).then(function (response) {
   //       if (response === null) {
   //         res.sendStatus(404);
   //       } else {
@@ -45,7 +45,7 @@ module.exports = function (db) {
       var email = req.body.email;
       var password = req.body.password;
 
-      db.users.login(email, password)
+      services.db.users.login(email, password)
       .then(function(response) {
         res.json({
           data: response
@@ -68,7 +68,7 @@ module.exports = function (db) {
       var email = req.body.email;
       var password = req.body.password;
 
-      db.users.signup(username, email, password)
+      services.db.users.signup(username, email, password)
       .then(function (response) {
         res.json({
           data: response

@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
-module.exports = function (db) {
+module.exports = function (services) {
 
 //Get all of the users portfolios
 //-----------------------------------
   router.get('/', function (req, res) {
     var userId = req.user.u_id;
-    db.matches.getUsersPortfolios(userId).then(function (matches) {
+    services.db.matches.getUsersPortfolios(userId).then(function (matches) {
         // return object with keys that conform to redux state object
         res.json({
           currentMatchId: '',

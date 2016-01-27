@@ -1,2 +1,5 @@
-//start the app
-require('./server/index.js');
+//start the app/server
+
+var services = require('./services/index.js');
+
+var app = require('./server/index.js')(services);
