@@ -13,16 +13,22 @@ var Portfolio = React.createClass({
       stocks: portfolioStore.getMatchData().stocks,
       matchTitle: portfolioStore.getMatchData().matchTitle,
       qtySell: "", 
-      total: null
+      total: null,
+      portfolioId: this.props.location.pathname.split('/').splice(-1, 1).toString()
     }
   },
 
-  componentWillMount: function () {
-    //get the matchId and trigger update
-    matchActions.getMatchPortfolio(localStorage.userId, localStorage.matchId); 
-  },
-
   componentDidMount: function () {
+    if (this.state.portfolioId) {
+      this.setState({
+        portfolioId: this.props.location.pathname.split('/').splice(-1, 1).toString()
+      }, function () {
+        matchActions.getMatchPortfolio(localStorage.userId, this.state.portfolioId); 
+      });
+    } /*else {*/
+      //MAKE A NOT FOUND PAGE
+      // window.location.hash = "#/notFound";
+    // }
     portfolioStore.addChangeListener(this._onChangeEvent);
   },
 
@@ -31,15 +37,14 @@ var Portfolio = React.createClass({
   },
 
   _onChangeEvent: function () {
-    var match = portfolioStore.getMatchData();
+    var match = portfolioStore.getMatchData();//getPortfolioData
     this.setState({
       totalValue: portfolioStore.getMatchData().totalValue,
       availableCash: portfolioStore.getMatchData().availableCash,
       stocks: portfolioStore.getMatchData().stocks,
       matchTitle: portfolioStore.getMatchData().matchTitle,
       qtySell: ""
-    })
-    this.render();
+    });
   },
 
   handleSellStocksChange: function (event) {
@@ -54,7 +59,7 @@ var Portfolio = React.createClass({
     })
     this.refs.amountSell.value = "";
     var symbol = event.target.parentElement.childNodes[1].textContent;
-    matchActions.makeTrade(localStorage.userId, localStorage.matchId, this.state.qtySell, symbol, 'sell');
+    matchActions.makeTrade(localStorage.userId, this.state.portfolioId, this.state.qtySell, symbol, 'sell');
   },
 
   render: function () {
@@ -102,7 +107,7 @@ var Portfolio = React.createClass({
           <Link to="/matches">Return to Yer Battles</Link>
         </div>
         <div>
-          <Link to={"/matches/portfolio/" + localStorage.matchId + "/search"}>Check out yer pieces o{"'"} Eight</Link>
+          <Link to={"/matches/portfolio/" + this.state.portfolioId + "/search"}>Check out yer pieces o{"'"} Eight</Link>
         </div>
 
         <h4>Yer {"'"}ave ${this.state.availableCash} gold ter spend</h4>

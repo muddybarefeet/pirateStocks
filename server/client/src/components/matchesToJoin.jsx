@@ -35,10 +35,7 @@ var MatchesToJoin = React.createClass({
   handleJoinClick: function (event) {
     var match = event.target.value.split(',');
     var matchId = match[match.length-1];
-    localStorage.setItem("matchId", matchId);
-    //trigger the store to get the correct match
-    // matchActions.getMatchPortfolio(localStorage.userId, localStorage.matchId);
-    joinMatchActions.joinMatch(localStorage.matchId, localStorage.userId);
+    joinMatchActions.joinMatch(matchId, localStorage.userId);
 
     window.location.hash="#/matches/portfolio/" + matchId;
   },

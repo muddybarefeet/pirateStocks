@@ -31,7 +31,6 @@ var Matches = React.createClass({
   handleClick: function (event) {
     var match = event.target.value.split(',');
     var matchId = match[match.length-1];
-    localStorage.setItem("matchId", matchId);
     //trigger the store to get the correct match
     window.location.hash="#/matches/portfolio/" + matchId;
   },

@@ -72,8 +72,8 @@ ReactDOM.render(
     <Route path="/" component={App}>
       <Route path="/login" component={Login} />
       <Route path="/home" component={Home} />
-      <Route path="/matches" component={Matches} />
       <Route path="join" component={Join}/>
+      <Route path="/matches" component={Matches} />
       <Route path="/matches/portfolio/:id" component={Portfolio} />
       <Route path="/matches/portfolio/:id/search" component={Search} />
       <Route path="create" component={Create} />
