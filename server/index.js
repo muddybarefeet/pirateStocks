@@ -1,6 +1,6 @@
 //this index is the express server for our app
 var express = require('express');
-var knex = require('./db/index.js');
+var knex = require('./db/index.js');//pass controllers instead
 var router = require('./routes/index');
 
 //morgan logs the requests to the server and body parser
