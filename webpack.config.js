@@ -1,7 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 
-var config = {
+var webpackConfig = {
   entry: './server/client/src/app.jsx',
   output: {
     path: './server/client/build',
@@ -29,4 +29,4 @@ var config = {
   watch: true
 };
 
-module.exports = config;
+module.exports = webpackConfig;
