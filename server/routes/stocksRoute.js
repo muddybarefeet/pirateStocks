@@ -68,7 +68,7 @@ module.exports = function (knex) {
 //--------------------------------------------
 //route returns a csv which includes dates and close prices for a specific stock
 //the last letter on the url denotes that we ask for the weekly close prices(not day or year)
-
+//MOVE TO SERVICES YAHOO
   router.route('/history/:symbol/:date')
     .get(function (req, res) {
 
