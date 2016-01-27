@@ -7,12 +7,12 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 
 //defining the files that are required
-var auth = require('./authRoute');
-var stocks = require('./stocksRoute');
-var matches = require('./matchesRoute');
-var users = require('./usersRoute');
-var trades = require('./tradesRoute');
-var state = require('./stateRoute');
+// var auth = require('./auth');
+var stocks = require('./stocks');
+var matches = require('./matches');
+var users = require('./users');
+var trades = require('./trades');
+var state = require('./state');
 
 //require passport that contains the strategy to query facebook from ./auth file
 var passport = require('./auth/index');
