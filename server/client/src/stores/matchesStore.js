@@ -79,7 +79,6 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
 
     _userMatches.startDate = action.date;
     matchesStore.emitChange();
-    console.log(_userMatches.startDate)
 
   }
 
@@ -87,7 +86,6 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
 
     _userMatches.endDate = action.date;
     matchesStore.emitChange();
-    console.log(_userMatches.endDate)
 
   }
 

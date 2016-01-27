@@ -41070,14 +41070,12 @@
 
 	    _userMatches.startDate = action.date;
 	    matchesStore.emitChange();
-	    console.log(_userMatches.startDate);
 	  }
 
 	  if (action.actionType === "END_DATE") {
 
 	    _userMatches.endDate = action.date;
 	    matchesStore.emitChange();
-	    console.log(_userMatches.endDate);
 	  }
 	});
 
