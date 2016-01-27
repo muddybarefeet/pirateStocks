@@ -1,9 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var tradesController = require('../db/dbcontrollers/tradesController.js');
 
-module.exports = function (knex) {
-  tradesController = tradesController(knex);
+module.exports = function (db) {
 
   router
     .param('matchId', function (req, res, next, matchId) {
@@ -19,7 +17,7 @@ module.exports = function (knex) {
 //-----------------------------------
   router.route('/:matchId/:userId')
     .get(function (req, res) {
-      tradesController.getPortfolio(req.userId, req.matchId)
+      db.getPortfolio(req.userId, req.matchId)
         .then(function (portfolio) {
           res.status(200).json({
             data: portfolio
@@ -43,8 +41,8 @@ module.exports = function (knex) {
     var stockTicker = req.body.symbol;
 
     var actions = {
-      'buy': tradesController.buy,
-      'sell': tradesController.sell
+      'buy': db.buy,
+      'sell': db.sell
     };
 
     if (actions[action] === undefined) {

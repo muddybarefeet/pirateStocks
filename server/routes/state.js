@@ -1,16 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
-var matchesController = require('../db/dbcontrollers/matchesController.js');
-
-module.exports = function (knex) {
-  var matchesCtrl = matchesController(knex);
+module.exports = function (db) {
 
 //Get all of the users portfolios
 //-----------------------------------
   router.get('/', function (req, res) {
     var userId = req.user.u_id;
-    matchesCtrl.getUsersPortfolios(userId).then(function (matches) {
+    db.getUsersPortfolios(userId).then(function (matches) {
         // return object with keys that conform to redux state object
         res.json({
           currentMatchId: '',

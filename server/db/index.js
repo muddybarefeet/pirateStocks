@@ -5,6 +5,11 @@ var config = require('./../../config.js');
 var ENV = process.env.ENVIRONMENT || 'development';
 var db = knex(config.db[ENV]);
 
+var methods = {};
 
+methods.users = require('./dbMethods/users')(knex); //pass knex to file when evaluating it so knex it run in it too
+methods.matches = require('./dbMethods/matches')(knex);
+methods.stocks = require('./dbMethods/stocks')(knex);
+methods.trades = require('./dbMethods/trades')(knex);
 
-module.exports = db;
+module.exports = methods;

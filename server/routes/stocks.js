@@ -1,11 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var stocksController = require('../db/dbcontrollers/stocksController');
 var rp = require('request-promise');
 var utils = require('./utils');
 
-module.exports = function (knex) {
-  stocksController = stocksController(knex);
+module.exports = function (db) {
 
   router
     .param('symbol', function (req, res, next, symbol) {
@@ -22,7 +20,7 @@ module.exports = function (knex) {
   router.route('/')
     .get(function (req, res) {
       var search = req.query.search;
-      stocksController.searchStock(search)
+      db.searchStock(search)
         .then(function (response) {
           res.json({
             data: response
@@ -35,7 +33,7 @@ module.exports = function (knex) {
   // router.route('/update')
   //   .post(function (req, res) {
   //     var list = req.body;
-  //     stocksController.updatePrices(list)
+  //     db.updatePrices(list)
   //       .then(function (stockArray) {
   //         res.status(200).json({
   //           data: stockArray
@@ -53,7 +51,7 @@ module.exports = function (knex) {
   router.route('/:symbol')
     .get(function (req, res) {
       var symbol = req.symbol;
-      stocksController.getStock(symbol).then(function (response) {
+      db.getStock(symbol).then(function (response) {
         if (response === null) {
           res.sendStatus(404);
         } else {

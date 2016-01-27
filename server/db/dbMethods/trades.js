@@ -1,9 +1,7 @@
 var Promise = require('bluebird');
-var stocksController = require('./stocksController');
+var stocksMethods = require('./stocks.js');
 
 module.exports = function (knex) {
-  'use strict';
-  var stocksCtrl = stocksController(knex);
 
   var module = {};
 
@@ -37,7 +35,7 @@ module.exports = function (knex) {
 
     return Promise.all([
         //get the details of the stock you want to buy and gets the users portfolio
-        stocksCtrl.getStock(stockTicker),
+        stocksMethods.getStock(stockTicker),
         generatePortfolio(userId, matchId)
       ])
       //takes results and checks user authorised to buy specified stock/stock symbol is valid
@@ -95,7 +93,7 @@ module.exports = function (knex) {
 
     return Promise.all([
         //get information for a specific stock and the users portfolio for the match
-        stocksCtrl.getStock(stockTicker),
+        stocksMethods.getStock(stockTicker),
         generatePortfolio(userId, matchId)
       ])
       //take the return data and check that the trade is valid/stock exists

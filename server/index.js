@@ -1,6 +1,6 @@
 //this index is the express server for our app
 var express = require('express');
-var knex = require('./db/index.js');//pass controllers instead
+var db = require('./db/index.js');//pass controllers instead
 var router = require('./routes/index');
 
 //morgan logs the requests to the server and body parser
@@ -17,7 +17,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 
 //connection to the routes in ./routes folder
-app.use('/api', router(knex));
+app.use('/api', router(db));
 
 //wild card route to anything not starting /api
 //send html

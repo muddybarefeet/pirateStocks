@@ -18,7 +18,7 @@ var state = require('./stateRoute');
 var passport = require('./auth/index');
 
 //export object that gets called from the express server ./../index.js
-module.exports = function (knex) {
+module.exports = function (db) {
 
   var router = express.Router();
 
@@ -30,19 +30,19 @@ module.exports = function (knex) {
     resave: false,
     saveUninitialized: true
   }));
-  router.use(passport.initialize());
-  router.use(passport.session());
+  // router.use(passport.initialize());
+  // router.use(passport.session());
 
-  //pass knex and passport connections to the respective files
-  auth = auth(knex, passport);
-  stocks = stocks(knex);
-  matches = matches(knex);
-  users = users(knex);
-  trades = trades(knex);
-  state = state(knex);
+  //pass passport connections to the respective files
+  // auth = auth(db);
+  stocks = stocks(db);
+  matches = matches(db);
+  users = users(db);
+  trades = trades(db);
+  state = state(db);
 
   //defining the which route goes where
-  router.use('/auth', auth);
+  // router.use('/auth', auth);
   router.use('/stocks', stocks);
   router.use('/matches', matches);
   router.use('/users', users);

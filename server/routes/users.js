@@ -1,9 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var usersController = require('../db/dbcontrollers/usersController');
 
-module.exports = function (knex) {
-  usersCtrl = usersController(knex);
+module.exports = function (db) {
 
   router.param('userId', function (req, res, next, userId) {
     req.userId = userId;
@@ -15,7 +13,7 @@ module.exports = function (knex) {
   // router.route('/')
   //   .get(function (req, res) {
   //     var search = req.query.search;
-  //     usersCtrl.searchUsers(search)
+  //     db.searchUsers(search)
   //       .then(function (response) {
   //         res.json({
   //           data: response
@@ -28,7 +26,7 @@ module.exports = function (knex) {
   // router.route('/:userId')
   //   .get(function (req, res) {
   //     var userId = req.userId;
-  //     usersCtrl.getUser(userId).then(function (response) {
+  //     db.getUser(userId).then(function (response) {
   //       if (response === null) {
   //         res.sendStatus(404);
   //       } else {
@@ -47,7 +45,7 @@ module.exports = function (knex) {
       var email = req.body.email;
       var password = req.body.password;
 
-      usersCtrl.login(email, password)
+      db.login(email, password)
       .then(function(response) {
         res.json({
           data: response
@@ -70,7 +68,7 @@ module.exports = function (knex) {
       var email = req.body.email;
       var password = req.body.password;
 
-      usersCtrl.signup(username, email, password)
+      db.signup(username, email, password)
       .then(function (response) {
         res.json({
           data: response

@@ -1,9 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var matchesController = require('../db/dbcontrollers/matchesController.js');
 
-module.exports = function (knex) {
-  matchesController = matchesController(knex);
+module.exports = function (db) {
 
   router
     .param('matchId', function (req, res, next, matchId) {
@@ -20,7 +18,7 @@ router.route('/:userId')
 //-------------------------
 .get(function (req, res) {
 
-  matchesController.getAllJoinableMatches(req.userId)
+  db.getAllJoinableMatches(req.userId)
     .then(function (matches) {
       res.status(200).json({
         data: matches
@@ -38,9 +36,7 @@ router.route('/join/:matchId')
 //Join match :)
 //-------------------------
 .put(function (req, res) {
-  console.log('in route');
-  // var userId = req.session.passport.user.u_id;
-  matchesController.joinMatch(req.matchId, req.body.userId)
+  db.joinMatch(req.matchId, req.body.userId)
     .then(function (match) {
       console.log('match', match);
       if (match === null) {
@@ -61,7 +57,7 @@ router.route('/user/:userId')
 //Get all of a Users Matches :) //move to be in '/'
 //--------------------------
 .get(function (req, res) {
-  matchesController.getUsersMatches(req.userId)
+  db.getUsersMatches(req.userId)
     .then(function (matches) {
       res.status(200).json({
         data: matches
@@ -87,7 +83,7 @@ router.route('/')
   var type = req.body.type;
   var title = req.body.title;
   
-  matchesController.createMatch(userId, startFunds, type, startDate, endDate, title)
+  db.createMatch(userId, startFunds, type, startDate, endDate, title)
     .then(function (match) {
       return res.status(200).json({
         data: match
@@ -107,7 +103,7 @@ router.route('/')
     //Get a certain match DEPRECATED
     //----------------------
 //       .get(function (req, res) {
-//         matchesController.getMatch(req.matchId)
+//         db.getMatch(req.matchId)
 //           .then(function (match) {
 //             res.status(200).json({
 //               data: match

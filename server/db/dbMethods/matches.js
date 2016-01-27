@@ -1,10 +1,9 @@
 var Promise = require('bluebird');
 
-var tradesController = require('./tradesController');
+var tradesMethods = require('./trades.js');
 
 module.exports = function (knex) {
   var module = {};
-  var tradesCtrl = tradesController(knex);
 
   var PENDING = 'pending';
   var ACTIVE = 'active';
@@ -111,7 +110,7 @@ module.exports = function (knex) {
     return module.getUsersMatches(userId)
       .then(function (matches) {
         return Promise.map(matches, function (match) {
-          return tradesCtrl.getPortfolio(userId, match.m_id)
+          return tradesMethods.getPortfolio(userId, match.m_id)
             .then(function (portfolio) {
               match.portfolio = portfolio;
               return match; // returns match object with all match info + corresponding portfolio
