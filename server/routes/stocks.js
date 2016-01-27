@@ -20,7 +20,7 @@ module.exports = function (db) {
   router.route('/')
     .get(function (req, res) {
       var search = req.query.search;
-      db.searchStock(search)
+      db.stocks.searchStock(search)
         .then(function (response) {
           res.json({
             data: response
@@ -51,7 +51,7 @@ module.exports = function (db) {
   router.route('/:symbol')
     .get(function (req, res) {
       var symbol = req.symbol;
-      db.getStock(symbol).then(function (response) {
+      db.stocks.getStock(symbol).then(function (response) {
         if (response === null) {
           res.sendStatus(404);
         } else {

@@ -17,7 +17,7 @@ module.exports = function (db) {
 //-----------------------------------
   router.route('/:matchId/:userId')
     .get(function (req, res) {
-      db.getPortfolio(req.userId, req.matchId)
+      db.trades.getPortfolio(req.userId, req.matchId)
         .then(function (portfolio) {
           res.status(200).json({
             data: portfolio
@@ -41,8 +41,8 @@ module.exports = function (db) {
     var stockTicker = req.body.symbol;
 
     var actions = {
-      'buy': db.buy,
-      'sell': db.sell
+      'buy': db.trades.buy,
+      'sell': db.trades.sell
     };
 
     if (actions[action] === undefined) {

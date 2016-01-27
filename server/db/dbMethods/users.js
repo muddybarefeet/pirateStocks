@@ -66,6 +66,8 @@ module.exports = function (knex) {
 //Takes login info and checks password
 //-------------------------------------
   module.login = function (email, password) {
+
+    console.log('about to login');
     
     var id;
     var userEmail;

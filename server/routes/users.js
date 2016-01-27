@@ -45,7 +45,7 @@ module.exports = function (db) {
       var email = req.body.email;
       var password = req.body.password;
 
-      db.login(email, password)
+      db.users.login(email, password)
       .then(function(response) {
         res.json({
           data: response
@@ -68,7 +68,7 @@ module.exports = function (db) {
       var email = req.body.email;
       var password = req.body.password;
 
-      db.signup(username, email, password)
+      db.users.signup(username, email, password)
       .then(function (response) {
         res.json({
           data: response

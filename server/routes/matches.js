@@ -18,7 +18,7 @@ router.route('/:userId')
 //-------------------------
 .get(function (req, res) {
 
-  db.getAllJoinableMatches(req.userId)
+  db.matches.getAllJoinableMatches(req.userId)
     .then(function (matches) {
       res.status(200).json({
         data: matches
@@ -36,7 +36,7 @@ router.route('/join/:matchId')
 //Join match :)
 //-------------------------
 .put(function (req, res) {
-  db.joinMatch(req.matchId, req.body.userId)
+  db.matches.joinMatch(req.matchId, req.body.userId)
     .then(function (match) {
       console.log('match', match);
       if (match === null) {
@@ -57,7 +57,7 @@ router.route('/user/:userId')
 //Get all of a Users Matches :) //move to be in '/'
 //--------------------------
 .get(function (req, res) {
-  db.getUsersMatches(req.userId)
+  db.matches.getUsersMatches(req.userId)
     .then(function (matches) {
       res.status(200).json({
         data: matches
@@ -83,7 +83,7 @@ router.route('/')
   var type = req.body.type;
   var title = req.body.title;
   
-  db.createMatch(userId, startFunds, type, startDate, endDate, title)
+  db.matches.createMatch(userId, startFunds, type, startDate, endDate, title)
     .then(function (match) {
       return res.status(200).json({
         data: match

@@ -7,7 +7,7 @@ module.exports = function (db) {
 //-----------------------------------
   router.get('/', function (req, res) {
     var userId = req.user.u_id;
-    db.getUsersPortfolios(userId).then(function (matches) {
+    db.matches.getUsersPortfolios(userId).then(function (matches) {
         // return object with keys that conform to redux state object
         res.json({
           currentMatchId: '',

@@ -7,7 +7,7 @@ var config = {
   db: {
     
     development: {
-      client: 'postgresql',
+      client: 'pg',
       connection: {
         host: "127.0.0.1",
         database: 'stockduel'
@@ -15,7 +15,7 @@ var config = {
     },
 
     deployment: {
-      client: 'postgresql',
+      client: 'pg',
       connection: {
         host: "127.0.0.1",
         database: 'stockduel',
