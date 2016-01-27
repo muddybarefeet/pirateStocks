@@ -6,6 +6,7 @@ module.exports = {
       database: 'stockduel'
     }
   },
+  
   deployment: {
     client: 'postgresql',
     connection: {

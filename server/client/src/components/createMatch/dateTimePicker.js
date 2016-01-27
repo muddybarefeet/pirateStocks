@@ -1,7 +1,8 @@
 
 var React = require('react');
-var DateTimeField = require('react-bootstrap-datetimepicker');
 var moment = require('moment');
+var DateTimeField = require('react-bootstrap-datetimepicker');
+var createMatchActions = require('./../../actions/createMatchActions.js');
 
 var DateTimePicker = React.createClass ({
   
@@ -14,8 +15,19 @@ var DateTimePicker = React.createClass ({
   },
 
   handleChange: function (e) {
-    console.log("newDate", e);
-    return this.setState({date: e});
+    if (this.props.start) {
+      this.setState({
+        startDate: new Date(e)
+      }, function () {
+        createMatchActions.getStartDate(this.state.startDate);
+      });
+    } else if (this.props.end) {
+      this.setState({
+        endDate: new Date (e)
+      }, function () {
+        createMatchActions.getEndDate(this.state.endDate);
+      });
+    }
   },
 
   render: function () {

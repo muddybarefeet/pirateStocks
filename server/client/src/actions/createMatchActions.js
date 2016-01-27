@@ -20,6 +20,20 @@ var CreateMatchActions = {
       }
     });
 
+  },
+
+  getStartDate: function (date) {
+    AppDispatcher.handleClientAction({
+      actionType: "START_DATE",
+      date: date
+    });
+  },
+
+  getEndDate: function (date) {
+    AppDispatcher.handleClientAction({
+      actionType: "END_DATE",
+      date: date
+    });
   }
 
 };

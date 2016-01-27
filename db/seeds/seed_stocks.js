@@ -15,9 +15,12 @@ exports.seed = function (knex, Promise) {
     knex('stocks').del(),
 
     readFile(INPUT).then(function (jsonString) {
-      return Promise.map(JSON.parse(jsonString), function (stock) {
-        return knex('stocks').insert(stock);
-      });
+
+      return knex('stocks').insert(JSON.parse(jsonString));
+
+      // return Promise.map(JSON.parse(jsonString), function (stock) {
+      //   return knex('stocks').insert(stock);
+      // });
     })
   ]);
 };

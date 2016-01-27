@@ -19,7 +19,6 @@ var AppDispatcher = Object.assign(new Dispatcher(), {
    },
 
    handleClientAction: function (action) {
-    console.log('in client dispatch', action);
     this.dispatch({
       source: 'CLIENT_ACTION',
       action: action

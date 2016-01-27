@@ -64,7 +64,6 @@ router.route('/user/:userId')
   .get(function (req, res) {
     matchesController.getUsersMatches(req.userId)
       .then(function (matches) {
-        console.log('returning matches', matches);
         res.status(200).json({
           data: matches
         });
@@ -123,5 +122,5 @@ router.route('/')
 //           });
 //       });
 
-//   return router;
-// };
+  return router;
+};

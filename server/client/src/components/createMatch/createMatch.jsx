@@ -1,10 +1,10 @@
 
 var React = require('react');
 var Link = require('react-router').Link;
-var createMatchActions = require('./../../actions/createMatchActions.js');
 var numeral = require('numeral');
 var moment = require('moment');
 var matchesStore = require('./../../stores/matchesStore.js');
+var createMatchActions = require('./../../actions/createMatchActions.js');
 var DateTimeField = require('react-bootstrap-datetimepicker');
 var DateTimePicker = require('./dateTimePicker.js');
 
@@ -12,7 +12,12 @@ var DateTimePicker = require('./dateTimePicker.js');
 var Create = React.createClass({
 
   getInitialState: function() {
-    return {};
+    return {
+      matches: matchesStore.getMatchData().matches,
+      startDate: matchesStore.getMatchData().startDate,
+      endDate: matchesStore.getMatchData().endDate,
+      clicked: false
+    }
   },
 
   componentDidMount: function () {
@@ -24,7 +29,19 @@ var Create = React.createClass({
   },
 
   _onChangeEvent: function () {
-    window.location.hash="#/portfolio";
+    this.setState({
+      matches: matchesStore.getMatchData().matches,
+      startDate: matchesStore.getMatchData().startDate,
+      endDate: matchesStore.getMatchData().endDate
+    })
+    if (this.state.clicked) {
+      this.setState({
+        clicked: false
+      });
+      var lastMatch = this.state.matches[this.state.matches.length-1];
+      var matchId = lastMatch[lastMatch.length-1];
+      window.location.hash="#/matches/portfolio/" + matchId;
+    }
   },
 
   //methods to add form fields data to the state
@@ -49,15 +66,11 @@ var Create = React.createClass({
 
   //get the date with refs can I add them on the state? Would be neater REVISIT!
   handleClick: function (action) {
-    var start = this.refs.startDate.value;
-    var end = this.refs.finishDate.value;
-    createMatchActions.createMatch(localStorage.userId, this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, new Date(start), new Date(end));
+    createMatchActions.createMatch(localStorage.userId, this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, new Date(this.state.startDate), new Date(this.state.endDate));
+    this.setState({
+      clicked: true
+    })
   },
-
-  // handleChange: function () {
-  //   console.log("newDate", newDate);
-  //   return this.setState({date: newDate});
-  // },
 
   render: function () {
 
@@ -79,10 +92,10 @@ var Create = React.createClass({
 
                   <div className="row">
                     <div className="col-sm-4">
-                       <h4>Start Date:</h4>
-                       <input className="datePicker" type="date" name="start" ref="startDate" />
-                        <h4>Finish Date:</h4>
-                       <input className="datePicker" type="date" name="finish" ref="finishDate" />
+                      <h4>Start Date:</h4>
+                      <DateTimePicker start="startDate"/>
+                      <h4>Finish Date:</h4>
+                      <DateTimePicker end="endDate" />
                     </div>
 
                     <div className="col-sm-4" onChange={this.handleTypeChange}>
@@ -94,8 +107,6 @@ var Create = React.createClass({
                       <label className="checkbox-inline">
                         <input type="checkbox" id="inlineCheckbox2" value="head" />Head to Head
                       </label>
-                      
-                      <DateTimePicker />
                       
                       </div>
 

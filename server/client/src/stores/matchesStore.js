@@ -5,7 +5,9 @@ var moment = require('moment');
 var CHANGE_EVENT = "change";
 
 var _userMatches = {
-  matches: []
+  matches: [],
+  startDate: null,
+  endDate: null
 };
 
 var matchesStore = Object.assign(new EventEmitter(), {
@@ -70,6 +72,22 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
     });
 
     matchesStore.emitChange();
+
+  }
+
+  if (action.actionType === "START_DATE") {
+
+    _userMatches.startDate = action.date;
+    matchesStore.emitChange();
+    console.log(_userMatches.startDate)
+
+  }
+
+  if (action.actionType === "END_DATE") {
+
+    _userMatches.endDate = action.date;
+    matchesStore.emitChange();
+    console.log(_userMatches.endDate)
 
   }
 
