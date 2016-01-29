@@ -1,4 +1,5 @@
 var classes = require('./classes.js');
+var Promise = require('bluebird');
 
 module.exports = function (knex) {
   var module = {};
@@ -46,30 +47,23 @@ module.exports = function (knex) {
     });
   };
 
-//Update Prices Controller. Deprecated
-//------------------------------
-//pass in array of objects contaning symbol,shares,and price 
-//query stock_prices and update price if needed and return
-  // module.updatePrices = function (stockArr) {
-  //   return knex.select('symbol','ask')
-  //     .from('stock_prices')
-  //   .then(function (dataArr) {
-  //     return stockArr.map(function (stockObj) {
-  //       var price;
-  //       for (var i = 0; i < dataArr.length; i++) {
-  //         if (dataArr[i].symbol === stockObj.stockSymbol) {
-  //           if (dataArr[i].ask !== stockObj.price) {
-  //             stockObj.price = dataArr[i].ask;
-  //           }
-  //         }
-  //       }
-  //       return stockObj;
-  //     });
 
-  //   });
+  module.getStockSymbols = function () {
 
-  // };
+    return knex.select('symbol')
+    .from('stocks');
 
+  };
+
+  module.updateAllStockPrices = function (stockData) {
+
+    return Promise.map(stockData, function (stock) { //poke Rohan on better way to do this
+      return knex('stock_prices')
+      .where('symbol', stock.symbol)
+      .update(stock);
+    });
+
+  };
 
   return module;
 
