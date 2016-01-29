@@ -5,6 +5,8 @@ var tables = {
   }
 };
 
+var Promise = require('bluebird');
+
 
 module.exports = function (knex) {
 
@@ -42,13 +44,22 @@ module.exports = function (knex) {
 
   module.get = function (key) {
 
-    if (key !== "") {
-      return knex.select('value')
-      .from('schedule')
-      .where(tables.schedule.keyCol, key);
-    } else {
-      return null;
-    }
+    return Promise.try (function () {
+      if (key !== "") {
+        return knex.select('value')
+        .from('schedule')
+        .where(tables.schedule.keyCol, key);
+      } else {
+        return null;
+      }
+    })
+    .then(function (data) {
+      if (data) {
+        return data[0].value.timeStamp;
+      } else {
+        return data;
+      }
+    });
 
   };
 

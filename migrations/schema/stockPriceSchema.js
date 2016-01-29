@@ -24,5 +24,6 @@ module.exports = function (knex) {
         table.string('peg_ratio');
         table.string('percent_change');
         table.string('volume');
+        table.timestamp('timestamp').defaultTo(knex.fn.now());
     });
 };

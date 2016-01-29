@@ -1,1 +1,0 @@
-//sweep through the matches for the day and update status and check if the winner needs to be updated

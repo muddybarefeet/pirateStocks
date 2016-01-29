@@ -56,7 +56,7 @@ module.exports = function (knex) {
   };
 
   module.updateAllStockPrices = function (stockData) {
-
+    console.log('inserting to table', stockData[0]);
     return Promise.map(stockData, function (stock) { //poke Rohan on better way to do this
       return knex('stock_prices')
       .where('symbol', stock.symbol)

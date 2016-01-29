@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dbup": "knex migrate:latest --knexfile db/index.js; knex seed:run --knexfile db/index.js",
-    "dbdown": "knex migrate:rollback --knexfile db/index.js"
+    "dbup": "knex migrate:latest --knexfile migrations/index.js; knex seed:run --knexfile migrations/index.js",
+    "dbdown": "knex migrate:rollback --knexfile migrations/index.js"
   },
   "repository": {
     "type": "git",
@@ -37,10 +37,12 @@
     "jquery": "^1.12.0",
     "json-loader": "^0.5.4",
     "knex": "^0.9.0",
+    "moment": "^2.11.1",
     "morgan": "^1.6.1",
     "passport": "^0.3.2",
     "passport-facebook": "^2.0.0",
     "pg": "^4.4.3",
+    "request": "^2.69.0",
     "superagent": "^1.6.1",
     "webpack": "^1.12.11"
   }

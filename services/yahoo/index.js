@@ -7,6 +7,7 @@ var request = require('request');
 var yahooMethods = {};
 
 yahooMethods.getPrices = function (stockSymbols) {
+
   var api = 'https://query.yahooapis.com/v1/public/yql';
 
   return new Promise(function (resolve, reject) {
@@ -21,9 +22,12 @@ yahooMethods.getPrices = function (stockSymbols) {
       '")&format=json&diagnostics=true&env=store://datatables.org/alltableswithkeys&callback=';
 
     request(query, function (error, response, body) {
+      console.log('in request');
       if (!error && response.statusCode == 200) {
+        console.log('return from yahoo RESPONSE---->', resolve(JSON.parse(body).query.results.quote));
         resolve(JSON.parse(body).query.results.quote);
       } else {
+        console.log('getting price data ERR------>', reject(console.error()));
         reject(error);
       }
     });
