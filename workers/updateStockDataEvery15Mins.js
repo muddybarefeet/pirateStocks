@@ -52,20 +52,29 @@ var areTimesInDiffQuarts = function (time1, time2) {
 
 };
 
+var getStockData = function (stocks, services) {
+  var LIMIT = 100;
+  var stockData = [];
+  for (var i = 0; i < stocks.length; i += LIMIT) {
+    batch = stocks.slice(i, i + LIMIT);
+    stockData.push(services.yahoo.getPrices(batch));
+  }
+  return Promise.all(stockData);
+};
+
 //update the stock_prices table and re-insert the time into the schedule schema table
 var updateStockPricesToLatest = function (services) {
   //call yahoo get data to stocks table
   return services.db.stocks.getStockSymbols()
   .then(function (symbols) {
-    services.yahoo.getPrices(symbols);
+    return getStockData(symbols, services);
   })
   .then(function (priceData) {
-    console.log('price data yahoo', priceData);
     var stockData = parseStockData(priceData);//return the formatted data
     services.db.stocks.updateAllStockPrices(stockData);
   })
   .then(function (updated) {
-    console.log('updated price data -------->', updated)
+    console.log('updated price data -------->', updated);
     services.db.metaTable.upsert("Latest_Stock_Update", {
       timeStamp: new Date().toString()
     });

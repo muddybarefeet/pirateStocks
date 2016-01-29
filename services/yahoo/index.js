@@ -1,6 +1,6 @@
 var knex = require('knex');
 var config = require('./../../config.js');
-var request = require('request');
+var rp = require('request-promise');
 
 //if there is an environmental variable set (this will be the word 'deployment') then the envirnment will be deployment
 
@@ -21,16 +21,14 @@ yahooMethods.getPrices = function (stockSymbols) {
       symbolQuery +
       '")&format=json&diagnostics=true&env=store://datatables.org/alltableswithkeys&callback=';
 
-    request(query, function (error, response, body) {
-      console.log('in request');
-      if (!error && response.statusCode == 200) {
-        console.log('return from yahoo RESPONSE---->', resolve(JSON.parse(body).query.results.quote));
-        resolve(JSON.parse(body).query.results.quote);
-      } else {
-        console.log('getting price data ERR------>', reject(console.error()));
-        reject(error);
-      }
+    rp(query)
+    .then(function (returnData) {
+      return JSON.parse(returnData).query.results.quote;
+    })
+    .catch(function (err) {
+      console.log('err', err);
     });
+
 
   });
 };
