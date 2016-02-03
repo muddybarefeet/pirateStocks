@@ -1,4 +1,5 @@
 var moment = require('moment');
+var Promise = require('bluebird');
 
 var areTimesInDiffQuarts = function (time1, time2) {
 
@@ -52,14 +53,33 @@ var areTimesInDiffQuarts = function (time1, time2) {
 
 };
 
-var getStockData = function (stocks, services) {
+var getStockData = function (symbols, services) {
+
   var LIMIT = 100;
   var stockData = [];
-  for (var i = 0; i < stocks.length; i += LIMIT) {
-    batch = stocks.slice(i, i + LIMIT);
-    stockData.push(services.yahoo.getPrices(batch));
+  for (var i = 0; i < symbols.length; i += LIMIT) {
+    var batch = symbols.slice(i, i + LIMIT);
+    stockData.push(batch);
   }
-  return Promise.all(stockData);
+  console.log('about to get stock data');
+  return Promise.try(function() {
+    return stockData;
+  })
+  .mapSeries(function (stockData) {
+    return services.yahoo.getPrices(stockData)
+    .then(function (yahooData) {
+      console.log('for each data returned doing stuff');
+      var formatData = parseStockData(yahooData);//return the formatted data
+      return services.db.stocks.updateAllStockPrices(stockData);
+    })
+    .then(function (updated) {
+      console.log('updated price data');
+      return services.db.metaTable.upsert("Latest_Stock_Update", {
+        timeStamp: new Date().toString()
+      });
+    });
+  });
+
 };
 
 //update the stock_prices table and re-insert the time into the schedule schema table
@@ -67,18 +87,20 @@ var updateStockPricesToLatest = function (services) {
   //call yahoo get data to stocks table
   return services.db.stocks.getStockSymbols()
   .then(function (symbols) {
+    console.log('got symbols');
     return getStockData(symbols, services);
   })
-  .then(function (priceData) {
-    var stockData = parseStockData(priceData);//return the formatted data
-    services.db.stocks.updateAllStockPrices(stockData);
-  })
-  .then(function (updated) {
-    console.log('updated price data -------->', updated);
-    services.db.metaTable.upsert("Latest_Stock_Update", {
-      timeStamp: new Date().toString()
-    });
-  })
+  // .then(function (priceData) {
+  //   console.log('got price data');
+  //   var stockData = parseStockData(priceData);//return the formatted data
+  //   return services.db.stocks.updateAllStockPrices(stockData);
+  // })
+  // .then(function (updated) {
+  //   console.log('updated price data -------->', updated);
+  //   return services.db.metaTable.upsert("Latest_Stock_Update", {
+  //     timeStamp: new Date().toString()
+  //   });
+  // })
   .catch(function (err) {
     console.log('err getting yahoo api price data', err);
   });
@@ -114,15 +136,17 @@ var parseStockData = function (prices) {
 };
 
 module.exports = function (services) {
-  setInterval(function () {
+  setTimeout(function () {
     //check if time to update and update
     services.db.metaTable.get("Latest_Stock_Update")
     .then(function (data) {
       //if data then need use moment to see how long ago.
       if (data && areTimesInDiffQuarts(data, new Date().toString())) {
         //if the time is up to change
+        console.log('time true');
         updateStockPricesToLatest(services);
       } else {
+        console.log('time false');
         updateStockPricesToLatest(services);
       }
 

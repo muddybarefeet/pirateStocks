@@ -23,10 +23,10 @@ yahooMethods.getPrices = function (stockSymbols) {
 
     rp(query)
     .then(function (returnData) {
-      return JSON.parse(returnData).query.results.quote;
+      resolve(JSON.parse(returnData).query.results.quote);
     })
     .catch(function (err) {
-      console.log('err', err);
+      reject(err);
     });
 
 
