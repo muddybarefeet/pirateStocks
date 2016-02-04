@@ -23,8 +23,9 @@ yahooMethods.getPrices = function (stockSymbols) {
 
     rp(query)
     .then(function (returnData) {
-      console.log('quote', JSON.parse(returnData).query.results.quote)
-      resolve(JSON.parse(returnData).query.results.quote);
+      if (returnData) {
+        resolve(JSON.parse(returnData).query.results.quote);
+      }
     })
     .catch(function (err) {
       reject(err);

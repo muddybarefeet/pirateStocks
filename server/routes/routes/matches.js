@@ -57,6 +57,7 @@ router.route('/user/:userId')
 //Get all of a Users Matches :) //move to be in '/'
 //--------------------------
 .get(function (req, res) {
+  console.log('in get function route')
   services.db.matches.getUsersMatches(req.userId)
     .then(function (matches) {
       res.status(200).json({
