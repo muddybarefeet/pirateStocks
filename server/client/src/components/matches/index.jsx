@@ -11,7 +11,7 @@ var Matches = React.createClass({
   },
 
   componentWillMount: function () {
-    matchActions.getUserMatches(localStorage.userId);
+    matchActions.getUserMatches(localStorage.jwt);
   },
 
   componentDidMount: function () {

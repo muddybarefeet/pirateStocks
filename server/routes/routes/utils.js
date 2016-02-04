@@ -1,8 +1,11 @@
 //function to convert csv into json
+var jwt = require('jwt-simple');
+var secret = 'noffleThePenguin';
+
 
 module.exports = {
 
-  csvJSON : function (csv){
+  csvJSON: function (csv) {
     var lines=csv.split("\n");
     var result = [];
     var headers=lines[0].split(",");
@@ -17,6 +20,12 @@ module.exports = {
     }
 
     return JSON.stringify(result);
+  },
+
+  decode: function (userJwt) {
+    var decoded = jwt.decode(userJwt, secret);
+    console.log('decoded jwt',decoded);
+    return decoded.id;
   }
 
 };

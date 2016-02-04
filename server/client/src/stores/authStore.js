@@ -6,9 +6,7 @@ var CHANGE_EVENT = "change";
 
 
 var _userDetails = {
-  userId: null,
-  userEmail: null,
-  username: null
+  userName: null
 };
 
 var authStore = Object.assign(new EventEmitter (), {
@@ -35,20 +33,16 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
   var action = payload.action;//payload is the object of data coming from dispactcher //action is the object passed from the actions file
 
   if(action.actionType === "USER_SIGNUP") {
-    _userDetails.userId = action.id;
-    _userDetails.userEmail = action.email;
-    _userDetails.username = action.username;
-    localStorage.setItem("userId", action.id);
-    authStore.emitChange();
+    localStorage.setItem('jwt', action.data.jwt);
+    localStorage.setItem("userName", action.data.username);
   }
 
   if (action.actionType === "USER_LOGIN") {
-    _userDetails.userId = action.id;
-    _userDetails.userEmail = action.email;
-    _userDetails.username = action.username;
-    localStorage.setItem("userId", action.id);
-    authStore.emitChange();
+    localStorage.setItem("jwt", action.data.jwt);
+    localStorage.setItem("userName", action.data.username);
   }
+
+  authStore.emitChange();
 
 });
 

@@ -17,7 +17,7 @@ var requestHelper = {
     
   },
 
-  get: function (url) {
+  get: function (url, jwt) {
 
     return rp(baseUrl + url);
 

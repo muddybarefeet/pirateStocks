@@ -24837,19 +24837,8 @@
 	  },
 
 	  _onChangeEvent: function () {
-	    var user = authStore.getUserData().userId;
-	    var userEmail = authStore.getUserData().userEmail;
-	    var username = authStore.getUserData().username;
-	    this.setState({
-	      userId: user,
-	      userEmail: userEmail,
-	      username: username
-	    });
-	    //tigger action to go and get all the users matches and update the matches store
-	    //Make this location route properly!!
-	    if (username && user && userEmail) {
-	      window.location.hash = "#/matches";
-	    }
+	    console.log('jwt in component', localStorage.jwt);
+	    window.location.hash = "#/matches";
 	  },
 
 	  //-------methods for login-------
@@ -25003,14 +24992,12 @@
 
 	  sendLogin: function (email, password) {
 
-	    requestHelper.post('users/login', { email: email, password: password }).end(function (err, userData) {
-	      if (userData) {
-	        userData = userData.body.data;
+	    requestHelper.post('users/login', { email: email, password: password }).end(function (err, response) {
+	      if (response) {
+	        userData = response.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "USER_LOGIN",
-	          id: userData.id,
-	          email: userData.email,
-	          username: userData.username
+	          data: userData
 	        });
 	      } else {
 	        console.log('err', err);
@@ -25025,9 +25012,7 @@
 	        userData = userData.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "USER_SIGNUP",
-	          id: userData.id,
-	          email: userData.email,
-	          username: userData.username
+	          response: userData
 	        });
 	      } else {
 	        console.log('err', err);
@@ -25412,7 +25397,7 @@
 	    return rp.post(baseUrl + url).send(body);
 	  },
 
-	  get: function (url) {
+	  get: function (url, jwt) {
 
 	    return rp(baseUrl + url);
 	  },
@@ -26843,9 +26828,7 @@
 	var CHANGE_EVENT = "change";
 
 	var _userDetails = {
-	  userId: null,
-	  userEmail: null,
-	  username: null
+	  userName: null
 	};
 
 	var authStore = Object.assign(new EventEmitter(), {
@@ -26873,20 +26856,16 @@
 	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
 
 	  if (action.actionType === "USER_SIGNUP") {
-	    _userDetails.userId = action.id;
-	    _userDetails.userEmail = action.email;
-	    _userDetails.username = action.username;
-	    localStorage.setItem("userId", action.id);
-	    authStore.emitChange();
+	    localStorage.setItem('jwt', action.data.jwt);
+	    localStorage.setItem("userName", action.data.username);
 	  }
 
 	  if (action.actionType === "USER_LOGIN") {
-	    _userDetails.userId = action.id;
-	    _userDetails.userEmail = action.email;
-	    _userDetails.username = action.username;
-	    localStorage.setItem("userId", action.id);
-	    authStore.emitChange();
+	    localStorage.setItem("jwt", action.data.jwt);
+	    localStorage.setItem("userName", action.data.username);
 	  }
+
+	  authStore.emitChange();
 	});
 
 	module.exports = authStore;
@@ -27205,9 +27184,9 @@
 
 	var matchActions = {
 
-	  getUserMatches: function (userId) {
+	  getUserMatches: function (jwt) {
 
-	    requestHelper.get('matches/user/' + userId).end(function (err, response) {
+	    requestHelper.get('matches/user').set('Authorization', jwt).end(function (err, response) {
 	      if (!err) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -44616,7 +44595,7 @@
 	  },
 
 	  componentWillMount: function () {
-	    matchActions.getUserMatches(localStorage.userId);
+	    matchActions.getUserMatches(localStorage.jwt);
 	  },
 
 	  componentDidMount: function () {

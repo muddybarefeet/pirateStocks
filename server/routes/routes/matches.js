@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var utils = require('./utils.js');
+
 
 module.exports = function (services) {
 
@@ -13,11 +15,30 @@ module.exports = function (services) {
       next();
     });
 
+router.route('/user')
+//Get all of a Users Matches :) //move to be in '/'
+//--------------------------
+.get(function (req, res) {
+  var id = utils.decode(req.headers.authorization);
+  services.db.matches.getUsersMatches(id)
+    .then(function (matches) {
+      console.log('in match router', matches);
+      res.status(200).json({
+        data: matches
+      });
+    })
+    .catch(function (err) {
+      res.status(404).json({
+        message: err.message
+      });
+    });
+
+});
+
 router.route('/:userId')
 //Get All Joinable Matches :) //make this /joinable (use jwts for userId)
 //-------------------------
 .get(function (req, res) {
-
   services.db.matches.getAllJoinableMatches(req.userId)
     .then(function (matches) {
       res.status(200).json({
@@ -53,24 +74,6 @@ router.route('/join/:matchId')
 });
   
 
-router.route('/user/:userId')
-//Get all of a Users Matches :) //move to be in '/'
-//--------------------------
-.get(function (req, res) {
-  console.log('in get function route')
-  services.db.matches.getUsersMatches(req.userId)
-    .then(function (matches) {
-      res.status(200).json({
-        data: matches
-      });
-    })
-    .catch(function (err) {
-      res.status(404).json({
-        message: err.message
-      });
-    });
-
-});
 
 router.route('/')
 //Post New Match Details :)
@@ -97,25 +100,6 @@ router.route('/')
     });
 
   });
-
-
-  // router.route('/match/:matchId')
-
-    //Get a certain match DEPRECATED
-    //----------------------
-//       .get(function (req, res) {
-//         services.db.getMatch(req.matchId)
-//           .then(function (match) {
-//             res.status(200).json({
-//               data: match
-//             });
-//           })
-//           .catch(function (err) {
-//             res.status(404).json({
-//               message: err
-//             });
-//           });
-//       });
 
   return router;
 };

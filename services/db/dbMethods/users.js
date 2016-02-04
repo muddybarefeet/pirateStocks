@@ -1,5 +1,6 @@
 var Promise = require('bluebird');
 var bcrypt = Promise.promisifyAll(require('bcrypt'));
+var encrypt = require('./utils.js');
 
 module.exports = function (knex) {
 
@@ -36,7 +37,7 @@ module.exports = function (knex) {
     console.log('about to login');
     
     var id;
-    var userEmail;
+    // var userEmail;
     var user_name;
     return knex('users').where('email', email)
     .then(function (data) {
@@ -48,8 +49,12 @@ module.exports = function (knex) {
     .then(function (userVerified) {
       //userVerified returns true/false
       if (userVerified) {
-        //RETURN THE USER A JWT
-        return { id: id, email: userEmail, username: user_name };
+        //return the user a jwt plus username
+        var obj = {};
+        obj.jwt = encrypt({id: id, exp: current});
+        obj.username = user_name;
+        console.log('return obj', obj);
+        return obj;
       } else {
         throw new Error("User Not Verified");
       }
@@ -75,10 +80,11 @@ module.exports = function (knex) {
       }, '*');
     })
     .then(function (insertedUser) {
-      //here we want to include jwts
-      //return encoded object with the userId and expiry date of a month?
-      //return {id: insertedUser[0].u_id, exp: ONEMONTHAHEAD}
-      return { id: insertedUser[0].u_id, email: insertedUser[0].email, username: insertedUser[0].username };
+      //make an encoded jwt to send back to client plus username
+      var obj = {};
+      obj.jwt = encrypt({id: insertedUser[0].u_id, exp: current});
+      obj.username = insertedUser[0].username;
+      return obj;
     })
     .catch(function (err) {
       throw new Error("Email already exists");

@@ -3,11 +3,6 @@ var router = express.Router();
 
 module.exports = function (services) {
 
-  router.param('userId', function (req, res, next, userId) {
-    req.userId = userId;
-    next();
-  });
-
 //Post user
 //-----------------------------------
   router.route('/login')
@@ -15,9 +10,10 @@ module.exports = function (services) {
       
       var email = req.body.email;
       var password = req.body.password;
-
+      console.log('request sent', email, password);
       services.db.users.login(email, password)
       .then(function(response) {
+        console.log('response in login from db want encrypt', response);
         res.json({
           data: response
         });
@@ -41,6 +37,7 @@ module.exports = function (services) {
 
       services.db.users.signup(username, email, password)
       .then(function (response) {
+        console.log('response in signup from db want encrypt', response);
         res.json({
           data: response
         });

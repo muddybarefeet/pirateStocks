@@ -4,10 +4,11 @@ var requestHelper = require('./requestHelper.js');
 
 var matchActions = {
 
-  getUserMatches: function (userId) {
+  getUserMatches: function (jwt) {
 
     requestHelper
-    .get('matches/user/'+ userId)
+    .get('matches/user')
+    .set('Authorization', jwt)
     .end(function(err, response){
       if (!err) {
         response = response.body.data;

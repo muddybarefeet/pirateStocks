@@ -21,19 +21,8 @@ var Login = React.createClass({
   },
 
   _onChangeEvent: function () {
-    var user = authStore.getUserData().userId;
-    var userEmail = authStore.getUserData().userEmail;
-    var username = authStore.getUserData().username;
-    this.setState({
-      userId: user, 
-      userEmail: userEmail, 
-      username: username
-    });
-    //tigger action to go and get all the users matches and update the matches store
-    //Make this location route properly!!
-    if (username && user && userEmail) {
-      window.location.hash="#/matches";
-    }
+    console.log('jwt in component', localStorage.jwt)
+    window.location.hash="#/matches";
   },
 
   //-------methods for login-------
