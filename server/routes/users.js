@@ -8,35 +8,6 @@ module.exports = function (services) {
     next();
   });
 
-//Search Users Deprecated
-//-----------------------------------
-  // router.route('/')
-  //   .get(function (req, res) {
-  //     var search = req.query.search;
-  //     services.db.searchUsers(search)
-  //       .then(function (response) {
-  //         res.json({
-  //           data: response
-  //         });
-  //       });
-  //   });
-  
-//Get Specific User Deprecated
-//-----------------------------------
-  // router.route('/:userId')
-  //   .get(function (req, res) {
-  //     var userId = req.userId;
-  //     services.db.getUser(userId).then(function (response) {
-  //       if (response === null) {
-  //         res.sendStatus(404);
-  //       } else {
-  //         res.json({
-  //           data: response
-  //         });
-  //       }
-  //     });
-  //   });
-
 //Post user
 //-----------------------------------
   router.route('/login')

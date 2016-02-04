@@ -1,11 +1,11 @@
 //Knex Migrations file to build and tear down the database tables in one command
 //--------------------------------------------------------------------------------
-var stocks = require('../schema/stockSchema.js');
-var stockprices = require('../schema/stockPriceSchema.js');
-var matches = require('../schema/matchesSchema.js');
-var trades = require('../schema/tradesSchema.js');
-var users = require('../schema/usersSchema.js');
-var schedule = require('../schema/schedule.js');
+var stocks = require('./schemas/stocks.js');
+var stockprices = require('./schemas/stockPrices.js');
+var matches = require('./schemas/matches.js');
+var trades = require('./schemas/trades.js');
+var users = require('./schemas/users.js');
+var schedule = require('./schemas/schedule.js');
 
 exports.up = function (knex, Promise) {
   return Promise.all([

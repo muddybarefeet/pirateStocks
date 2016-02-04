@@ -155,6 +155,6 @@ module.exports = function (services) {
       console.log('err', err);
     });
 
-  }, 5000); //change this to play with maybe every 30 secs 60000
+  }, 5000); //60000
 
 };

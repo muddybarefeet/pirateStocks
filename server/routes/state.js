@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 module.exports = function (services) {
+  //NOT SURE THIS IS BEING USED TEST AND REMOVE IF NOT NEEDED(also in traded route atm)
 
 //Get all of the users portfolios
 //-----------------------------------

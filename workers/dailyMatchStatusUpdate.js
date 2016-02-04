@@ -13,6 +13,6 @@
 //   //else just change the 
 
 
-//   }, 60000); //change this to play with maybe every 30 secs
+//   }, 60000);
 
 // };

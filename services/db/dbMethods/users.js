@@ -5,40 +5,6 @@ module.exports = function (knex) {
 
   var module = {};
 
-//Select all User Details NOT SURE WHERE USED
-//---------------------------
-  // module.getUsers = function () {
-  //   return knex.select().table('users')
-  //     .catch(function (err) {
-  //       return null;
-  //     });
-  // };
-
-//Get a Specific Users Details Deprecated
-//------------------------------
-
-  // module.getUser = function (userId) {
-  //   return knex.select().table('users').where('u_id', '=', userId)
-  //     .then(function (response) {
-  //       if (response.length === 0) {
-  //         throw new Error('no user found');
-  //       }
-  //       return response[0];
-  //     })
-  //     .catch(function (err) {
-  //       return null;
-  //     });
-  // };
-
-//Search Users for anything to match input Deprecated
-//-----------------------------------------
-  // module.searchUsers = function (search) {
-  //   var searchLike = search + '%';
-  //   return knex('users')
-  //     .where(knex.raw('UPPER(username) like UPPER(?)', [searchLike]))
-  //     .orWhere(knex.raw('UPPER(name) like UPPER(?)', [searchLike]));
-  // };
-
 //Creates/Check a Users Details used from facebook auth route
 //---------------------------------------------------------------
   module.findOrCreateUser = function (username, name, email) {
@@ -82,6 +48,7 @@ module.exports = function (knex) {
     .then(function (userVerified) {
       //userVerified returns true/false
       if (userVerified) {
+        //RETURN THE USER A JWT
         return { id: id, email: userEmail, username: user_name };
       } else {
         throw new Error("User Not Verified");
@@ -108,6 +75,9 @@ module.exports = function (knex) {
       }, '*');
     })
     .then(function (insertedUser) {
+      //here we want to include jwts
+      //return encoded object with the userId and expiry date of a month?
+      //return {id: insertedUser[0].u_id, exp: ONEMONTHAHEAD}
       return { id: insertedUser[0].u_id, email: insertedUser[0].email, username: insertedUser[0].username };
     })
     .catch(function (err) {
