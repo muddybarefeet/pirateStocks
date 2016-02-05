@@ -25032,7 +25032,6 @@
 	  sendSignup: function (username, email, password) {
 
 	    requestHelper.post('users/signup', { username: username, email: email, password: password }).end(function (err, response) {
-	      console.log('signup data', response);
 	      if (response) {
 	        userData = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -27400,13 +27399,13 @@
 	                    React.createElement(
 	                      'label',
 	                      { className: 'checkbox-inline' },
-	                      React.createElement('input', { type: 'checkbox', id: 'inlineCheckbox1', value: 'solo' }),
+	                      React.createElement('input', { type: 'checkbox', id: 'inlineCheckbox1', value: 'Solo' }),
 	                      'Solo'
 	                    ),
 	                    React.createElement(
 	                      'label',
 	                      { className: 'checkbox-inline' },
-	                      React.createElement('input', { type: 'checkbox', id: 'inlineCheckbox2', value: 'head' }),
+	                      React.createElement('input', { type: 'checkbox', id: 'inlineCheckbox2', value: 'Head to Head' }),
 	                      'Head to Head'
 	                    )
 	                  ),
@@ -41053,6 +41052,7 @@
 	  createMatch: function (title, type, funds, start, end) {
 
 	    requestHelper.post('matches/create', { title: title, type: type, funds: funds, start: start, end: end }, jwt).end(function (err, response) {
+	      console.log('response from create', response);
 	      if (response) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -44413,16 +44413,6 @@
 	              null,
 	              'Start Funds'
 	            ),
-	            React.createElement(
-	              'th',
-	              null,
-	              'Status'
-	            ),
-	            React.createElement(
-	              'th',
-	              null,
-	              'My Portfolio Value'
-	            ),
 	            React.createElement('th', null)
 	          )
 	        ),
@@ -44474,16 +44464,6 @@
 	            'td',
 	            null,
 	            match[4]
-	          ),
-	          React.createElement(
-	            'td',
-	            null,
-	            match[5]
-	          ),
-	          React.createElement(
-	            'td',
-	            null,
-	            'To be worked out'
 	          ),
 	          React.createElement(
 	            'td',
@@ -44694,17 +44674,17 @@
 	            React.createElement(
 	              'th',
 	              null,
-	              'Start Funds'
-	            ),
-	            React.createElement(
-	              'th',
-	              null,
-	              'Status'
-	            ),
-	            React.createElement(
-	              'th',
-	              null,
 	              'My Portfolio Value'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Opponents Portfolio Value'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Gauge'
 	            ),
 	            React.createElement('th', null)
 	          )
@@ -44758,18 +44738,14 @@
 	          React.createElement(
 	            'td',
 	            null,
-	            match[4]
-	          ),
-	          React.createElement(
-	            'td',
-	            null,
-	            match[5]
+	            'To be worked out'
 	          ),
 	          React.createElement(
 	            'td',
 	            null,
 	            'To be worked out'
 	          ),
+	          React.createElement('td', null),
 	          React.createElement(
 	            'td',
 	            null,

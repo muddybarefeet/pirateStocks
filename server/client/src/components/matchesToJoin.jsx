@@ -56,8 +56,6 @@ var MatchesToJoin = React.createClass({
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Start Funds</th>
-                <th>Status</th>
-                <th>My Portfolio Value</th>
                 <th></th>
                 {/*<th>Opponents Portfolio Value</th>*/}
               </tr>
@@ -79,8 +77,6 @@ var MatchesToJoin = React.createClass({
                               <td>{match[2]}</td>
                               <td>{match[3]}</td>
                               <td>{match[4]}</td>
-                              <td>{match[5]}</td>
-                              <td>To be worked out</td>
                               <td><button value={match} type="button" className="btn btn-primary" onClick={that.handleJoinClick}>Join Match</button></td>
                             </tr>);
       });

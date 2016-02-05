@@ -71,17 +71,17 @@ module.exports = function (services) {
 
     });
 
-  //Post New Match Details :)
+  //Create New Match :)
   //----------------------
   router.route('/create')
     .post(function (req, res) {
-
+      
       var startFunds = req.body.funds;
       var startDate = req.body.start;
       var endDate = req.body.end;
       var type = req.body.type;
       var title = req.body.title;
-      
+
       services.db.matches.createMatch(req.__userId, startFunds, type, startDate, endDate, title)
         .then(function (match) {
           return res.status(200).json({

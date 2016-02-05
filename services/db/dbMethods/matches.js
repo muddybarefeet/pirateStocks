@@ -5,9 +5,9 @@ var tradesMethods = require('./trades.js');
 module.exports = function (knex) {
   var module = {};
 
-  var PENDING = 'pending';
-  var ACTIVE = 'active';
-  var SOLO = 'solo';
+  var PENDING = 'Pending';
+  var ACTIVE = 'Active';
+  var SOLO = 'Solo';
 
   // ensure start dates are stored consistently in db
   function standardizeStart(date){
@@ -34,7 +34,7 @@ module.exports = function (knex) {
   //-------------------------------------------------------------------------------------   
 
   module.createMatch = function (userId, startFunds, type, startDate, endDate, title) {
-
+    console.log('in db methods', startDate);
     var challengee = null;
     var today = standardizeStart(Date.now());
     var status = PENDING;
@@ -57,6 +57,8 @@ module.exports = function (knex) {
       }
     }
 
+    console.log(startDate);
+
     return knex('matches').insert({
       'creator_id': userId,
       'starting_funds': startFunds,
@@ -68,6 +70,7 @@ module.exports = function (knex) {
       'type': type
     }, '*')
     .then(function (match) {
+      console.log('returned inserted', match);
       return match[0];
     });
 
@@ -81,7 +84,7 @@ module.exports = function (knex) {
       challengee: null,
       m_id: matchId,
       status: 'pending',
-      type: 'head'
+      type: 'Head'
     })
     .update({
       challengee: userId
