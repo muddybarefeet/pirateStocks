@@ -39,6 +39,7 @@ module.exports = function (services) {
     var file = require('./routes/' + fileName)(services);
     var newName = fileName.split('.')[0];
     router.use('/' + newName, file);
+    console.log('filename', fileName);
   });
 
   return router;

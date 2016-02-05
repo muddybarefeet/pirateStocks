@@ -27,6 +27,7 @@ var joinMatchActions = {
     requestHelper
     .put('matches/join/' + matchId, jwt)
     .end(function (err, response) {
+      console.log('response from join', response);
       if (response) {
         response = response.body.data;
         AppDispatcher.handleServerAction({

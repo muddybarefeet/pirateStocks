@@ -21,11 +21,10 @@ var requestHelper = {
       .set('authorization', jwt);
   },
 
-  put: function(url, body, jwt) {
+  put: function(url, jwt) {
     return rp
       .put(baseUrl + url)
-      .set('authorization', jwt)
-      .send(body);
+      .set('authorization', jwt);
   }
 
 };

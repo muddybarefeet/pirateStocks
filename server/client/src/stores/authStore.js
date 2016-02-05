@@ -34,12 +34,12 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
 
   if(action.actionType === "USER_SIGNUP") {
     localStorage.setItem('jwt', action.data.jwt);
-    localStorage.setItem("userName", action.data.username);
+    localStorage.setItem("username", action.data.username);
   }
 
   if (action.actionType === "USER_LOGIN") {
     localStorage.setItem("jwt", action.data.jwt);
-    localStorage.setItem("userName", action.data.username);
+    localStorage.setItem("username", action.data.username);
   }
 
   authStore.emitChange();

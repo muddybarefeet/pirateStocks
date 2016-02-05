@@ -12,6 +12,7 @@ module.exports = {
   },
 
   checkAuth: function (req, res, next) {
+    
     if (req.headers.authorization) {
       var decoded = jwt.decode(req.headers.authorization, secret);
       req.__userId = decoded.id;
@@ -25,3 +26,5 @@ module.exports = {
   }
 
 };
+
+

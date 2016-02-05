@@ -24849,7 +24849,7 @@
 	  },
 
 	  _onChangeEvent: function () {
-	    console.log('jwt in component', localStorage.jwt);
+	    console.log('jwt in component', localStorage.username);
 	    window.location.hash = "#/matches";
 	  },
 
@@ -24997,7 +24997,7 @@
 
 	
 	var AppDispatcher = __webpack_require__(220);
-	var requestHelper = __webpack_require__(225);
+	var requestHelper = __webpack_require__(224);
 
 	var authActions = {
 
@@ -25381,20 +25381,9 @@
 
 /***/ },
 /* 224 */
-/***/ function(module, exports) {
-
-	module.exports = {
-
-	  BASE_URL: 'http://localhost:3000/api/',
-	  jwt: localStorage.jwt
-
-	};
-
-/***/ },
-/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseUrl = __webpack_require__(224).BASE_URL;
+	var baseUrl = __webpack_require__(225).BASE_URL;
 
 	var rp = __webpack_require__(226);
 
@@ -25413,13 +25402,24 @@
 	    return rp(baseUrl + url).set('authorization', jwt);
 	  },
 
-	  put: function (url, body, jwt) {
-	    return rp.put(baseUrl + url).set('authorization', jwt).send(body);
+	  put: function (url, jwt) {
+	    return rp.put(baseUrl + url).set('authorization', jwt);
 	  }
 
 	};
 
 	module.exports = requestHelper;
+
+/***/ },
+/* 225 */
+/***/ function(module, exports) {
+
+	module.exports = {
+
+	  BASE_URL: 'http://localhost:3000/api/',
+	  jwt: localStorage.jwt
+
+	};
 
 /***/ },
 /* 226 */
@@ -26867,12 +26867,12 @@
 
 	  if (action.actionType === "USER_SIGNUP") {
 	    localStorage.setItem('jwt', action.data.jwt);
-	    localStorage.setItem("userName", action.data.username);
+	    localStorage.setItem("username", action.data.username);
 	  }
 
 	  if (action.actionType === "USER_LOGIN") {
 	    localStorage.setItem("jwt", action.data.jwt);
-	    localStorage.setItem("userName", action.data.username);
+	    localStorage.setItem("username", action.data.username);
 	  }
 
 	  authStore.emitChange();
@@ -27189,8 +27189,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(220);
-	var jwt = __webpack_require__(224).jwt;
-	var requestHelper = __webpack_require__(225);
+	var jwt = __webpack_require__(225).jwt;
+	var requestHelper = __webpack_require__(224);
 
 	var matchActions = {
 
@@ -41032,8 +41032,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(220);
-	var jwt = __webpack_require__(224).jwt;
-	var requestHelper = __webpack_require__(225);
+	var jwt = __webpack_require__(225).jwt;
+	var requestHelper = __webpack_require__(224);
 
 	var CreateMatchActions = {
 
@@ -43917,9 +43917,13 @@
 	      return matchTitle.charAt(0).toUpperCase() + matchTitle.slice(1);
 	    };
 
-	    _currentMatch.stocks = action.data.stocks.map(function (stock) {
-	      return [stock.name, stock.symbol, stock.ask, stock.gain_loss, stock.marketValue, stock.percent_change, stock.price, stock.shares];
-	    });
+	    var stocksBought = action.data.stocks;
+
+	    if (stocksBought) {
+	      _currentMatch.stocks = action.data.stocks.map(function (stock) {
+	        return [stock.name, stock.symbol, stock.ask, stock.gain_loss, stock.marketValue, stock.percent_change, stock.price, stock.shares];
+	      });
+	    }
 
 	    _currentMatch.totalValue = action.data.totalValue;
 	    _currentMatch.availableCash = action.data.available_cash;
@@ -44206,9 +44210,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(220);
-	var constants = __webpack_require__(224);
-	var requestHelper = __webpack_require__(225);
-	var jwt = __webpack_require__(224).jwt;
+	var constants = __webpack_require__(225);
+	var requestHelper = __webpack_require__(224);
+	var jwt = __webpack_require__(225).jwt;
 
 	var searchActions = {
 
@@ -44344,6 +44348,7 @@
 	  handleJoinClick: function (event) {
 	    var match = event.target.value.split(',');
 	    var matchId = match[match.length - 1];
+	    console.log('matchid in component', matchId);
 	    joinMatchActions.joinMatch(matchId);
 	    window.location.hash = "#/matches/portfolio/" + matchId;
 	  },
@@ -44548,8 +44553,8 @@
 
 	
 	var AppDispatcher = __webpack_require__(220);
-	var requestHelper = __webpack_require__(225);
-	var jwt = __webpack_require__(224).jwt;
+	var requestHelper = __webpack_require__(224);
+	var jwt = __webpack_require__(225).jwt;
 
 	var joinMatchActions = {
 
@@ -44570,6 +44575,7 @@
 
 	  joinMatch: function (matchId) {
 	    requestHelper.put('matches/join/' + matchId, jwt).end(function (err, response) {
+	      console.log('response from join', response);
 	      if (response) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -44616,9 +44622,12 @@
 	  },
 
 	  _onChangeEvent: function () {
-	    this.setState({
-	      matches: matchesStore.getMatchData().matches
-	    });
+	    var newMatches = matchesStore.getMatchData().matches;
+	    if (newMatches.length !== 0) {
+	      this.setState({
+	        matches: matchesStore.getMatchData().matches
+	      });
+	    }
 	  },
 
 	  handleClick: function (event) {

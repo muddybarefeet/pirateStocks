@@ -21,7 +21,7 @@ var Login = React.createClass({
   },
 
   _onChangeEvent: function () {
-    console.log('jwt in component', localStorage.jwt)
+    console.log('jwt in component', localStorage.username)
     window.location.hash="#/matches";
   },
 

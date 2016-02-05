@@ -39,18 +39,23 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
       return matchTitle.charAt(0).toUpperCase() + matchTitle.slice(1);
     };
 
-    _currentMatch.stocks = action.data.stocks.map(function (stock) {
-      return [
-        stock.name,
-        stock.symbol,
-        stock.ask,
-        stock.gain_loss,
-        stock.marketValue,
-        stock.percent_change,
-        stock.price,
-        stock.shares
-      ];
-    });
+    var stocksBought = action.data.stocks;
+
+    if (stocksBought) {
+      _currentMatch.stocks = action.data.stocks.map(function (stock) {
+        return [
+          stock.name,
+          stock.symbol,
+          stock.ask,
+          stock.gain_loss,
+          stock.marketValue,
+          stock.percent_change,
+          stock.price,
+          stock.shares
+        ];
+      });
+    }
+
 
     _currentMatch.totalValue = action.data.totalValue;
     _currentMatch.availableCash = action.data.available_cash;

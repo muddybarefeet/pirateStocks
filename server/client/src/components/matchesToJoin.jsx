@@ -35,6 +35,7 @@ var MatchesToJoin = React.createClass({
   handleJoinClick: function (event) {
     var match = event.target.value.split(',');
     var matchId = match[match.length-1];
+    console.log('matchid in component', matchId);
     joinMatchActions.joinMatch(matchId);
     window.location.hash="#/matches/portfolio/" + matchId;
   },

@@ -23,9 +23,12 @@ var Matches = React.createClass({
   },
 
   _onChangeEvent: function () {
-    this.setState({
-      matches: matchesStore.getMatchData().matches
-    });
+    var newMatches = matchesStore.getMatchData().matches;
+    if (newMatches.length !== 0) {
+      this.setState({
+        matches: matchesStore.getMatchData().matches
+      });
+    }
   },
 
   handleClick: function (event) {
@@ -62,7 +65,7 @@ var Matches = React.createClass({
           </table>
         </div>);
 
-      if (!(this.state.matches)) {
+      if (!this.state.matches) {
         toDisplay = (<p key={0}>Oh arr! Ye {"'"}ave nah created or joined any matches yet, get t{"'"} t{"'"} it handsomely!</p>);
       } else {
         var that = this;
