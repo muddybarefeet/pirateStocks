@@ -25031,12 +25031,13 @@
 
 	  sendSignup: function (username, email, password) {
 
-	    requestHelper.post('users/signup', { username: username, email: email, password: password }).end(function (err, userData) {
-	      if (userData) {
-	        userData = userData.body.data;
+	    requestHelper.post('users/signup', { username: username, email: email, password: password }).end(function (err, response) {
+	      console.log('signup data', response);
+	      if (response) {
+	        userData = response.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "USER_SIGNUP",
-	          response: userData
+	          data: userData
 	        });
 	      } else {
 	        console.log('err', err);

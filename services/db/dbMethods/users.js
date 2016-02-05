@@ -63,7 +63,7 @@ module.exports = function (knex) {
 //save new user data to the db
 //-------------------------------------
   module.signup = function (username, email, password) {
-    
+
     return bcrypt.genSaltAsync(10)
     .then(function(salt) {
       return bcrypt.hashAsync(password, salt);
@@ -77,13 +77,16 @@ module.exports = function (knex) {
       }, '*');
     })
     .then(function (insertedUser) {
+      console.log('inserted data', insertedUser);
       //make an encoded jwt to send back to client plus username
       var obj = {};
-      obj.jwt = encrypt({id: insertedUser[0].u_id});
+      obj.jwt = encode({id: insertedUser[0].u_id});
       obj.username = insertedUser[0].username;
+      console.log('return obj', obj);
       return obj;
     })
     .catch(function (err) {
+      // console.log('Error', err);
       throw new Error("Email already exists");
     });
 

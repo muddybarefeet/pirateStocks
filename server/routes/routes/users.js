@@ -11,7 +11,6 @@ module.exports = function (services) {
       
       var email = req.body.email;
       var password = req.body.password;
-      console.log('request sent', email, password);
       services.db.users.login(email, password)
       .then(function(response) {
         console.log('response in login from db encrypt', response);
@@ -31,10 +30,10 @@ module.exports = function (services) {
   //-----------------------------------
   router.route('/signup')
     .post(function (req, res) {
-
       var username = req.body.username;
       var email = req.body.email;
       var password = req.body.password;
+      console.log('request sent signup', email, password, username);
 
       services.db.users.signup(username, email, password)
       .then(function (response) {
