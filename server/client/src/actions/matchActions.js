@@ -7,8 +7,7 @@ var matchActions = {
   getUserMatches: function (jwt) {
 
     requestHelper
-    .get('matches/user')
-    .set('Authorization', jwt)
+    .get('matches/user', jwt)
     .end(function(err, response){
       if (!err) {
         response = response.body.data;
@@ -23,10 +22,10 @@ var matchActions = {
     });
   },
 
-  getMatchPortfolio: function (userId, matchId) {
+  getMatchPortfolio: function (jwt, matchId) {
 
     requestHelper
-    .get('trades/'+ matchId + '/' + userId)
+    .get('trades/'+ matchId, jwt)
     .end(function (err, response) {
       if (response) {
         response = response.body.data;
@@ -41,11 +40,12 @@ var matchActions = {
 
   },
 
-  makeTrade: function (userId, matchId, qty, symbol, action) {
+  makeTrade: function (jwt, matchId, qty, symbol, action) {
 
     requestHelper
-    .post('trades/' + matchId + '/' + userId, {userId: userId, matchId: matchId, numShares: qty, symbol: symbol, action: action })// /matchId/userId
+    .post('trades/' + matchId, {matchId: matchId, numShares: qty, symbol: symbol, action: action }, jwt)
     .end(function (err, response) {
+      console.log('err in trade', response);
       if (!err) {
         response = response.body.data;
         AppDispatcher.handleServerAction({

@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var rp = require('request-promise');
-var utils = require('./utils');
+var checkAuth = require('./../../../services/jwts/index.js').checkAuth;
+// var utils = require('./utils'); NEED TO MOVE TO SERVICES??
+
 
 module.exports = function (services) {
 
@@ -14,6 +16,8 @@ module.exports = function (services) {
       req.date = date;
       next();
     });
+    
+  router.use(checkAuth);
 
 //Stock Search Route :)
 //-----------------------------------
@@ -27,24 +31,6 @@ module.exports = function (services) {
           });
         });
     });
-
-//Update Prices Route DEPRECATED
-//-----------------------------------
-  // router.route('/update')
-  //   .post(function (req, res) {
-  //     var list = req.body;
-  //     services.db.updatePrices(list)
-  //       .then(function (stockArray) {
-  //         res.status(200).json({
-  //           data: stockArray
-  //         });
-  //       })
-  //       .catch(function (err) {
-  //         res.status(400).json({
-  //           message: err
-  //         });
-  //       });
-  //   });
 
 //Get Stock Route :)
 //-----------------------------------

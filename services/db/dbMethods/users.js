@@ -1,6 +1,6 @@
 var Promise = require('bluebird');
 var bcrypt = Promise.promisifyAll(require('bcrypt'));
-var encrypt = require('./utils.js');
+var encode = require('./../../jwts/index.js').encode;
 
 module.exports = function (knex) {
 
@@ -33,11 +33,8 @@ module.exports = function (knex) {
 //Takes login info and checks password
 //-------------------------------------
   module.login = function (email, password) {
-
-    console.log('about to login');
     
     var id;
-    // var userEmail;
     var user_name;
     return knex('users').where('email', email)
     .then(function (data) {
@@ -51,9 +48,9 @@ module.exports = function (knex) {
       if (userVerified) {
         //return the user a jwt plus username
         var obj = {};
-        obj.jwt = encrypt({id: id, exp: current});
+        obj.jwt = encode({id: id, exp: current});
         obj.username = user_name;
-        console.log('return obj', obj);
+        console.log('from db methods',obj);
         return obj;
       } else {
         throw new Error("User Not Verified");
@@ -82,7 +79,7 @@ module.exports = function (knex) {
     .then(function (insertedUser) {
       //make an encoded jwt to send back to client plus username
       var obj = {};
-      obj.jwt = encrypt({id: insertedUser[0].u_id, exp: current});
+      obj.jwt = encrypt({id: insertedUser[0].u_id});
       obj.username = insertedUser[0].username;
       return obj;
     })

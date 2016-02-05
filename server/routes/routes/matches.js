@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var utils = require('./utils.js');
+var checkAuth = require('./../../../services/jwts/index.js').checkAuth;
 
 
 module.exports = function (services) {
@@ -9,97 +9,92 @@ module.exports = function (services) {
     .param('matchId', function (req, res, next, matchId) {
       req.matchId = matchId;
       next();
-    })
-    .param('userId', function (req, res, next, userId) {
-      req.userId = userId;
-      next();
     });
 
-router.route('/user')
-//Get all of a Users Matches :) //move to be in '/'
-//--------------------------
-.get(function (req, res) {
-  var id = utils.decode(req.headers.authorization);
-  services.db.matches.getUsersMatches(id)
-    .then(function (matches) {
-      console.log('in match router', matches);
-      res.status(200).json({
-        data: matches
-      });
-    })
-    .catch(function (err) {
-      res.status(404).json({
-        message: err.message
-      });
-    });
+  router.use(checkAuth);
 
-});
+  //Get all of a Users Matches :) done
+  //--------------------------
+  router.route('/user')
+    .get(function (req, res) {
 
-router.route('/:userId')
-//Get All Joinable Matches :) //make this /joinable (use jwts for userId)
-//-------------------------
-.get(function (req, res) {
-  services.db.matches.getAllJoinableMatches(req.userId)
-    .then(function (matches) {
-      res.status(200).json({
-        data: matches
-      });
-    })
-    .catch(function (err) {
-      res.status(404).json({
-        message: err
-      });
-    });
-
-});
-
-router.route('/join/:matchId')
-//Join match :)
-//-------------------------
-.put(function (req, res) {
-  services.db.matches.joinMatch(req.matchId, req.body.userId)
-    .then(function (match) {
-      console.log('match', match);
-      if (match === null) {
-        res.status(400).json({
-          message: 'unable to join match. Please try another'
+      services.db.matches.getUsersMatches(req.__userId)
+        .then(function (matches) {
+          res.status(200).json({
+            data: matches
+          });
+        })
+        .catch(function (err) {
+          res.status(404).json({
+            message: err.message
+          });
         });
-      } else {
+
+    });
+
+  router.route('/joinable')
+  //Get All Joinable Matches :) done
+  //-------------------------
+  .get(function (req, res) {
+    services.db.matches.getAllJoinableMatches(req.__userId)
+      .then(function (matches) {
         res.status(200).json({
-          data: match
+          data: matches
         });
-      }
-    });
-
-});
-  
-
-
-router.route('/')
-//Post New Match Details :)
-//----------------------
-.post(function (req, res) {
-
-  var userId = req.body.userId;
-  var startFunds = req.body.funds;
-  var startDate = req.body.start;
-  var endDate = req.body.end;
-  var type = req.body.type;
-  var title = req.body.title;
-  
-  services.db.matches.createMatch(userId, startFunds, type, startDate, endDate, title)
-    .then(function (match) {
-      return res.status(200).json({
-        data: match
+      })
+      .catch(function (err) {
+        res.status(404).json({
+          message: err
+        });
       });
-    })
-    .catch(function (err) {
-      return res.status(400).json({
-        message: err
-      });
-    });
 
   });
+
+  //Join match :)
+  //-------------------------
+  router.route('/join/:matchId')
+    .put(function (req, res) {
+
+      services.db.matches.joinMatch(req.matchId, req.body.userId)
+        .then(function (match) {
+          console.log('match', match);
+          if (match === null) {
+            res.status(400).json({
+              message: 'unable to join match. Please try another'
+            });
+          } else {
+            res.status(200).json({
+              data: match
+            });
+          }
+        });
+
+    });
+
+  //Post New Match Details :)
+  //----------------------
+  router.route('/create')
+    .post(function (req, res) {
+
+      var startFunds = req.body.funds;
+      var startDate = req.body.start;
+      var endDate = req.body.end;
+      var type = req.body.type;
+      var title = req.body.title;
+      
+      services.db.matches.createMatch(req.__userId, startFunds, type, startDate, endDate, title)
+        .then(function (match) {
+          return res.status(200).json({
+            data: match
+          });
+        })
+        .catch(function (err) {
+          return res.status(400).json({
+            message: err
+          });
+        });
+
+    });
 
   return router;
 };

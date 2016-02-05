@@ -7,7 +7,7 @@ var CreateMatchActions = {
   createMatch: function (userId, title, type, funds, start, end) {
 
     requestHelper
-    .post('matches/', {userId: userId, title: title, type: type, funds: funds, start: start, end: end})
+    .post('matches/create', {userId: userId, title: title, type: type, funds: funds, start: start, end: end})
     .end(function(err, response){
       if (response) {
         response = response.body.data;

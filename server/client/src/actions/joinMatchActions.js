@@ -8,7 +8,7 @@ var joinMatchActions = {
   getJoinableMatches: function (userId) {
 
     requestHelper
-    .get('matches/'+ userId)
+    .get('matches/joinable')
     .end(function(err, response){
       if (!err) {
         response = response.body.data;

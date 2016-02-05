@@ -1,7 +1,4 @@
 //function to convert csv into json
-var jwt = require('jwt-simple');
-var secret = 'noffleThePenguin';
-
 
 module.exports = {
 
@@ -20,12 +17,6 @@ module.exports = {
     }
 
     return JSON.stringify(result);
-  },
-
-  decode: function (userJwt) {
-    var decoded = jwt.decode(userJwt, secret);
-    console.log('decoded jwt',decoded);
-    return decoded.id;
   }
 
 };

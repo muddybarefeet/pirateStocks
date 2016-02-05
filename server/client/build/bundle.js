@@ -24993,6 +24993,7 @@
 	  sendLogin: function (email, password) {
 
 	    requestHelper.post('users/login', { email: email, password: password }).end(function (err, response) {
+	      console.log('response', response);
 	      if (response) {
 	        userData = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -25392,18 +25393,15 @@
 
 	var requestHelper = {
 
-	  post: function (url, body) {
-
-	    return rp.post(baseUrl + url).send(body);
+	  post: function (url, body, jwt) {
+	    return rp.post(baseUrl + url).set('authorization', jwt).send(body);
 	  },
 
 	  get: function (url, jwt) {
-
-	    return rp(baseUrl + url);
+	    return rp(baseUrl + url).set('authorization', jwt);
 	  },
 
 	  put: function (url, body) {
-
 	    return rp.put(baseUrl + url).send(body);
 	  }
 
@@ -27186,7 +27184,7 @@
 
 	  getUserMatches: function (jwt) {
 
-	    requestHelper.get('matches/user').set('Authorization', jwt).end(function (err, response) {
+	    requestHelper.get('matches/user', jwt).end(function (err, response) {
 	      if (!err) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -27199,9 +27197,9 @@
 	    });
 	  },
 
-	  getMatchPortfolio: function (userId, matchId) {
+	  getMatchPortfolio: function (jwt, matchId) {
 
-	    requestHelper.get('trades/' + matchId + '/' + userId).end(function (err, response) {
+	    requestHelper.get('trades/' + matchId, jwt).end(function (err, response) {
 	      if (response) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -27214,10 +27212,10 @@
 	    });
 	  },
 
-	  makeTrade: function (userId, matchId, qty, symbol, action) {
+	  makeTrade: function (jwt, matchId, qty, symbol, action) {
 
-	    requestHelper.post('trades/' + matchId + '/' + userId, { userId: userId, matchId: matchId, numShares: qty, symbol: symbol, action: action }) // /matchId/userId
-	    .end(function (err, response) {
+	    requestHelper.post('trades/' + matchId, { matchId: matchId, numShares: qty, symbol: symbol, action: action }, jwt).end(function (err, response) {
+	      console.log('err in trade', response);
 	      if (!err) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -41029,7 +41027,7 @@
 
 	  createMatch: function (userId, title, type, funds, start, end) {
 
-	    requestHelper.post('matches/', { userId: userId, title: title, type: type, funds: funds, start: start, end: end }).end(function (err, response) {
+	    requestHelper.post('matches/create', { userId: userId, title: title, type: type, funds: funds, start: start, end: end }).end(function (err, response) {
 	      if (response) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -43675,7 +43673,7 @@
 	      this.setState({
 	        portfolioId: this.props.location.pathname.split('/').splice(-1, 1).toString()
 	      }, function () {
-	        matchActions.getMatchPortfolio(localStorage.userId, this.state.portfolioId);
+	        matchActions.getMatchPortfolio(localStorage.jwt, this.state.portfolioId);
 	      });
 	    } /*else {*/
 	    //MAKE A NOT FOUND PAGE
@@ -43711,7 +43709,7 @@
 	    });
 	    this.refs.amountSell.value = "";
 	    var symbol = event.target.parentElement.childNodes[1].textContent;
-	    matchActions.makeTrade(localStorage.userId, this.state.portfolioId, this.state.qtySell, symbol, 'sell');
+	    matchActions.makeTrade(localStorage.jwt, this.state.portfolioId, this.state.qtySell, symbol, 'sell');
 	  },
 
 	  render: function () {
@@ -43902,7 +43900,6 @@
 	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
 
 	  if (action.actionType === "GET_USER_MATCH") {
-	    console.log('action', action.data);
 
 	    var capFirstLetter = function (matchTitle) {
 	      return matchTitle.charAt(0).toUpperCase() + matchTitle.slice(1);
@@ -44020,7 +44017,7 @@
 
 	  handleBuyClick: function (event) {
 	    //trigger action to trades and return new portfolio to the portfolio store
-	    matchActions.makeTrade(localStorage.userId, this.state.matchId, this.state.qtyBuy, this.state.oneStock[0][1], 'buy');
+	    matchActions.makeTrade(localStorage.jwt, this.state.matchId, this.state.qtyBuy, this.state.oneStock[0][1], 'buy');
 	    var location = this.props.location.pathname.split('/').splice(-2, 1);
 	    window.location.hash = "#/matches/portfolio/" + location;
 	  },
@@ -44203,7 +44200,7 @@
 	var searchActions = {
 
 	  searchStockDb: function (queryStr) {
-	    requestHelper.get('stocks/?search=' + queryStr).end(function (err, response) {
+	    requestHelper.get('stocks/?search=' + queryStr, localStorage.jwt).end(function (err, response) {
 	      if (!err) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -44217,7 +44214,7 @@
 	  },
 
 	  getOneStocksDetails: function (symbol) {
-	    requestHelper.get('stocks/' + symbol).end(function (err, response) {
+	    requestHelper.get('stocks/' + symbol, localStorage.jwt).end(function (err, response) {
 	      if (!err) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -44546,7 +44543,7 @@
 
 	  getJoinableMatches: function (userId) {
 
-	    requestHelper.get('matches/' + userId).end(function (err, response) {
+	    requestHelper.get('matches/joinable').end(function (err, response) {
 	      if (!err) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({

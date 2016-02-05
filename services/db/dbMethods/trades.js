@@ -1,5 +1,5 @@
 var Promise = require('bluebird');
-var stocksMethods = require('./stocks.js');
+var classes = require('./classes.js');
 
 module.exports = function (knex) {
 
@@ -27,15 +27,45 @@ module.exports = function (knex) {
       .orderBy('created_at', 'desc');
   };
 
+//Get the stock of a certain symbol
+//-------------------------------------
+  var getStock = function (symbol) {
+    return knex('stocks')
+    .join('stock_prices', 'stocks.symbol', '=', 'stock_prices.symbol')
+    .where(knex.raw('stocks.symbol = UPPER(?)', [symbol]))
+    .then(function (response) {
+      if (response.length !== 1) {
+        throw new Error('unexepected response length: ' +
+          response.length);
+      }
+      res = response[0];
+      return new classes.SingleStock(
+        res.name,
+        res.symbol,
+        res.industry,
+        res.sector,
+        res.exchange,
+        res.ask,
+        res.percent_change,
+        res.year_high,
+        res.year_low
+      );
+    })
+    .catch(function (err) {
+      return null;
+    });
+
+  };
+
 //Buy Controller. userId {string} matchId {string} numShares {int} stockTicker {stockTicker}
 //--------------------------------------------------------------------------------------------
   module.buy = function (userId, matchId, numShares, stockTicker) {
 
     var trade;
-
+    console.log('symbol', stockTicker);
     return Promise.all([
         //get the details of the stock you want to buy and gets the users portfolio
-        stocksMethods.getStock(stockTicker),
+        getStock(stockTicker),
         generatePortfolio(userId, matchId)
       ])
       //takes results and checks user authorised to buy specified stock/stock symbol is valid
@@ -66,22 +96,24 @@ module.exports = function (knex) {
           price: stock.ask,
           available_cash: available_cash
         });
+
       })
       .then(function(resp){
         //the trade that just occured is stored and the newly updated portfolio is got again from the database
         trade = resp;
         return module.getPortfolio(userId, matchId);
       })
-      .then(function(port){
+      .then(function(portfolio){
         //return both the trade that occured and the new portfolio
+        console.log('return from buy', trade, portfolio);
         return {
           trade: trade,
-          portfolio: port
+          portfolio: portfolio
         };
       })
       .catch(function (err) {
         console.log('err in buy',err);
-        return null;
+        return err;
       });
   };
 
@@ -93,7 +125,7 @@ module.exports = function (knex) {
 
     return Promise.all([
         //get information for a specific stock and the users portfolio for the match
-        stocksMethods.getStock(stockTicker),
+        getStock(stockTicker),
         generatePortfolio(userId, matchId)
       ])
       //take the return data and check that the trade is valid/stock exists

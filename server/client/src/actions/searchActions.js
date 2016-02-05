@@ -6,7 +6,7 @@ var searchActions = {
 
   searchStockDb: function (queryStr) {
     requestHelper
-    .get('stocks/?search=' + queryStr)
+    .get('stocks/?search=' + queryStr, localStorage.jwt)
     .end(function (err, response){
       if (!err) {
         response = response.body.data;
@@ -23,7 +23,7 @@ var searchActions = {
 
   getOneStocksDetails: function (symbol) {
     requestHelper
-    .get('stocks/'+ symbol)
+    .get('stocks/'+ symbol, localStorage.jwt)
     .end(function (err, response) {
       if (!err) {
         response = response.body.data;

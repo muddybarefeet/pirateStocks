@@ -77,7 +77,7 @@ var Search = React.createClass({
 
   handleBuyClick: function (event) {
     //trigger action to trades and return new portfolio to the portfolio store
-    matchActions.makeTrade(localStorage.userId, this.state.matchId, this.state.qtyBuy, this.state.oneStock[0][1], 'buy');
+    matchActions.makeTrade(localStorage.jwt, this.state.matchId, this.state.qtyBuy, this.state.oneStock[0][1], 'buy');
     var location = this.props.location.pathname.split('/').splice(-2,1);
     window.location.hash = "#/matches/portfolio/"+location;
   },

@@ -1,10 +1,11 @@
+
 var express = require('express');
 var router = express.Router();
 
 module.exports = function (services) {
 
-//Post user
-//-----------------------------------
+  //Post user
+  //-----------------------------------
   router.route('/login')
     .post(function (req, res) {
       
@@ -13,7 +14,7 @@ module.exports = function (services) {
       console.log('request sent', email, password);
       services.db.users.login(email, password)
       .then(function(response) {
-        console.log('response in login from db want encrypt', response);
+        console.log('response in login from db encrypt', response);
         res.json({
           data: response
         });
@@ -26,8 +27,8 @@ module.exports = function (services) {
 
     });
 
-//Add user
-//-----------------------------------
+  //Add user
+  //-----------------------------------
   router.route('/signup')
     .post(function (req, res) {
 

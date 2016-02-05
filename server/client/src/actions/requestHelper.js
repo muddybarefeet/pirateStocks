@@ -9,26 +9,22 @@ var displayErrorMsg = function(msg){
 
 var requestHelper = {
   
-  post: function (url, body) {
-
+  post: function (url, body, jwt) {
     return rp
       .post(baseUrl + url)
+      .set('authorization', jwt)
       .send(body);
-    
   },
 
   get: function (url, jwt) {
-
-    return rp(baseUrl + url);
-
+    return rp(baseUrl + url)
+      .set('authorization', jwt);
   },
 
   put: function(url, body) {
-
     return rp
       .put(baseUrl + url)
       .send(body);
-
   }
 
 };

@@ -34,7 +34,6 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
   var action = payload.action;//payload is the object of data coming from dispactcher //action is the object passed from the actions file
   
   if(action.actionType === "GET_USER_MATCH") {
-    console.log('action', action.data)
     
     var capFirstLetter  = function (matchTitle) {
       return matchTitle.charAt(0).toUpperCase() + matchTitle.slice(1);
