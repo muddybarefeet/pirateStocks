@@ -1,6 +1,5 @@
 
 var AppDispatcher = require('./../dispatchers/appDispatcher.js');
-var constants = require('../constants.js');
 var requestHelper = require('./requestHelper.js');
 
 var authActions = {

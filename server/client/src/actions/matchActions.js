@@ -1,10 +1,10 @@
 var AppDispatcher = require('./../dispatchers/appDispatcher.js');
-var constants = require('../constants.js');
+var jwt = require('../constants.js').jwt;
 var requestHelper = require('./requestHelper.js');
 
 var matchActions = {
 
-  getUserMatches: function (jwt) {
+  getUserMatches: function () {
 
     requestHelper
     .get('matches/user', jwt)
@@ -22,7 +22,7 @@ var matchActions = {
     });
   },
 
-  getMatchPortfolio: function (jwt, matchId) {
+  getMatchPortfolio: function (matchId) {
 
     requestHelper
     .get('trades/'+ matchId, jwt)
@@ -40,7 +40,7 @@ var matchActions = {
 
   },
 
-  makeTrade: function (jwt, matchId, qty, symbol, action) {
+  makeTrade: function (matchId, qty, symbol, action) {
 
     requestHelper
     .post('trades/' + matchId, {matchId: matchId, numShares: qty, symbol: symbol, action: action }, jwt)

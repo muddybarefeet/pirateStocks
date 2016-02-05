@@ -55,7 +55,7 @@ module.exports = function (services) {
   router.route('/join/:matchId')
     .put(function (req, res) {
 
-      services.db.matches.joinMatch(req.matchId, req.body.userId)
+      services.db.matches.joinMatch(req.matchId, req.__userId)
         .then(function (match) {
           console.log('match', match);
           if (match === null) {

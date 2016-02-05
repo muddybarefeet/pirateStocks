@@ -15,7 +15,7 @@ var MatchesToJoin = React.createClass({
 
   componentWillMount: function () {
     //trigger action to get the data from the db
-    joinMatchActions.getJoinableMatches(localStorage.userId);  
+    joinMatchActions.getJoinableMatches();  
   },
 
   componentDidMount: function () {
@@ -35,8 +35,7 @@ var MatchesToJoin = React.createClass({
   handleJoinClick: function (event) {
     var match = event.target.value.split(',');
     var matchId = match[match.length-1];
-    joinMatchActions.joinMatch(matchId, localStorage.userId);
-
+    joinMatchActions.joinMatch(matchId);
     window.location.hash="#/matches/portfolio/" + matchId;
   },
 
@@ -81,7 +80,7 @@ var MatchesToJoin = React.createClass({
                               <td>{match[4]}</td>
                               <td>{match[5]}</td>
                               <td>To be worked out</td>
-                              <td><button value={match} type="button" className="btn btn-primary" onClick={that.handleJoinClick}>To Portfolio</button></td>
+                              <td><button value={match} type="button" className="btn btn-primary" onClick={that.handleJoinClick}>Join Match</button></td>
                             </tr>);
       });
       toDisplay = matchTable;

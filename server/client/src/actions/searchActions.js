@@ -1,12 +1,13 @@
 var AppDispatcher = require('./../dispatchers/appDispatcher.js');
 var constants = require('../constants.js');
 var requestHelper = require('./requestHelper.js');
+var jwt = require('../constants.js').jwt;
 
 var searchActions = {
 
   searchStockDb: function (queryStr) {
     requestHelper
-    .get('stocks/?search=' + queryStr, localStorage.jwt)
+    .get('stocks/?search=' + queryStr, jwt)
     .end(function (err, response){
       if (!err) {
         response = response.body.data;
@@ -23,7 +24,7 @@ var searchActions = {
 
   getOneStocksDetails: function (symbol) {
     requestHelper
-    .get('stocks/'+ symbol, localStorage.jwt)
+    .get('stocks/'+ symbol, jwt)
     .end(function (err, response) {
       if (!err) {
         response = response.body.data;

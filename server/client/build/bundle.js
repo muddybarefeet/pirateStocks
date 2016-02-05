@@ -74,9 +74,15 @@
 	    // console.log(this.props.children);
 	  },
 
+	  logout: function () {
+	    localStorage.clear();
+	    window.location.hash = "#/home";
+	  },
+
 	  render: function render() {
 
 	    var toShowNav;
+	    var logout;
 	    //WAY TO NOT SHOW NAV WHEN SIGNED IN JOTS??
 	    var pills = React.createElement(
 	      'div',
@@ -123,8 +129,15 @@
 	      )
 	    );
 
-	    if (localStorage.userId) {
+	    var logoutButton = React.createElement(
+	      'button',
+	      { style: { "float": "right", marginTop: '10px' }, type: 'button', className: 'btn btn-primary', onClick: this.logout },
+	      'Logout'
+	    );
+
+	    if (localStorage.jwt) {
 	      toShowNav = pills;
+	      logout = logoutButton;
 	    }
 
 	    return React.createElement(
@@ -138,13 +151,14 @@
 	          { className: 'container-fluid' },
 	          React.createElement(
 	            'div',
-	            { className: 'navbar-header' },
+	            { className: 'navbar-header', style: { marginTop: '20px' } },
 	            React.createElement(
 	              Link,
 	              { to: '/home', style: { fontSize: "22px", textDecoration: "none", color: "white" } },
 	              'Pirate Stocks'
 	            )
-	          )
+	          ),
+	          logout
 	        )
 	      ),
 	      toShowNav,
@@ -170,9 +184,7 @@
 	  )
 	), document.getElementById('app'));
 
-	//<Link to="/join">Join a New Match</Link>
-	//<Link to="/matches">Your Matches</Link>
-	//<Link to="/create">Create Match</Link>
+	//
 
 /***/ },
 /* 1 */
@@ -24985,7 +24997,6 @@
 
 	
 	var AppDispatcher = __webpack_require__(220);
-	var constants = __webpack_require__(224);
 	var requestHelper = __webpack_require__(225);
 
 	var authActions = {
@@ -25374,7 +25385,8 @@
 
 	module.exports = {
 
-	  BASE_URL: 'http://localhost:3000/api/'
+	  BASE_URL: 'http://localhost:3000/api/',
+	  jwt: localStorage.jwt
 
 	};
 
@@ -25401,8 +25413,8 @@
 	    return rp(baseUrl + url).set('authorization', jwt);
 	  },
 
-	  put: function (url, body) {
-	    return rp.put(baseUrl + url).send(body);
+	  put: function (url, body, jwt) {
+	    return rp.put(baseUrl + url).set('authorization', jwt).send(body);
 	  }
 
 	};
@@ -27177,12 +27189,12 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(220);
-	var constants = __webpack_require__(224);
+	var jwt = __webpack_require__(224).jwt;
 	var requestHelper = __webpack_require__(225);
 
 	var matchActions = {
 
-	  getUserMatches: function (jwt) {
+	  getUserMatches: function () {
 
 	    requestHelper.get('matches/user', jwt).end(function (err, response) {
 	      if (!err) {
@@ -27197,7 +27209,7 @@
 	    });
 	  },
 
-	  getMatchPortfolio: function (jwt, matchId) {
+	  getMatchPortfolio: function (matchId) {
 
 	    requestHelper.get('trades/' + matchId, jwt).end(function (err, response) {
 	      if (response) {
@@ -27212,7 +27224,7 @@
 	    });
 	  },
 
-	  makeTrade: function (jwt, matchId, qty, symbol, action) {
+	  makeTrade: function (matchId, qty, symbol, action) {
 
 	    requestHelper.post('trades/' + matchId, { matchId: matchId, numShares: qty, symbol: symbol, action: action }, jwt).end(function (err, response) {
 	      console.log('in trade', response);
@@ -27304,7 +27316,7 @@
 
 	  //get the date with refs can I add them on the state? Would be neater REVISIT!
 	  handleClick: function (action) {
-	    createMatchActions.createMatch(localStorage.userId, this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, this.state.startDate, this.state.endDate);
+	    createMatchActions.createMatch(this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, this.state.startDate, this.state.endDate);
 	    this.setState({
 	      clicked: true
 	    });
@@ -41020,14 +41032,14 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(220);
-	var constants = __webpack_require__(224);
+	var jwt = __webpack_require__(224).jwt;
 	var requestHelper = __webpack_require__(225);
 
 	var CreateMatchActions = {
 
-	  createMatch: function (userId, title, type, funds, start, end) {
+	  createMatch: function (title, type, funds, start, end) {
 
-	    requestHelper.post('matches/create', { userId: userId, title: title, type: type, funds: funds, start: start, end: end }).end(function (err, response) {
+	    requestHelper.post('matches/create', { title: title, type: type, funds: funds, start: start, end: end }, jwt).end(function (err, response) {
 	      if (response) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -43673,7 +43685,7 @@
 	      this.setState({
 	        portfolioId: this.props.location.pathname.split('/').splice(-1, 1).toString()
 	      }, function () {
-	        matchActions.getMatchPortfolio(localStorage.jwt, this.state.portfolioId);
+	        matchActions.getMatchPortfolio(this.state.portfolioId);
 	      });
 	    } /*else {*/
 	    //MAKE A NOT FOUND PAGE
@@ -43709,7 +43721,7 @@
 	    });
 	    this.refs.amountSell.value = "";
 	    var symbol = event.target.parentElement.childNodes[1].textContent;
-	    matchActions.makeTrade(localStorage.jwt, this.state.portfolioId, this.state.qtySell, symbol, 'sell');
+	    matchActions.makeTrade(this.state.portfolioId, this.state.qtySell, symbol, 'sell');
 	  },
 
 	  render: function () {
@@ -44017,7 +44029,7 @@
 
 	  handleBuyClick: function (event) {
 	    //trigger action to trades and return new portfolio to the portfolio store
-	    matchActions.makeTrade(localStorage.jwt, this.state.matchId, this.state.qtyBuy, this.state.oneStock[0][1], 'buy');
+	    matchActions.makeTrade(this.state.matchId, this.state.qtyBuy, this.state.oneStock[0][1], 'buy');
 	    var location = this.props.location.pathname.split('/').splice(-2, 1);
 	    window.location.hash = "#/matches/portfolio/" + location;
 	  },
@@ -44196,11 +44208,12 @@
 	var AppDispatcher = __webpack_require__(220);
 	var constants = __webpack_require__(224);
 	var requestHelper = __webpack_require__(225);
+	var jwt = __webpack_require__(224).jwt;
 
 	var searchActions = {
 
 	  searchStockDb: function (queryStr) {
-	    requestHelper.get('stocks/?search=' + queryStr, localStorage.jwt).end(function (err, response) {
+	    requestHelper.get('stocks/?search=' + queryStr, jwt).end(function (err, response) {
 	      if (!err) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -44214,7 +44227,7 @@
 	  },
 
 	  getOneStocksDetails: function (symbol) {
-	    requestHelper.get('stocks/' + symbol, localStorage.jwt).end(function (err, response) {
+	    requestHelper.get('stocks/' + symbol, jwt).end(function (err, response) {
 	      if (!err) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -44311,7 +44324,7 @@
 
 	  componentWillMount: function () {
 	    //trigger action to get the data from the db
-	    joinMatchActions.getJoinableMatches(localStorage.userId);
+	    joinMatchActions.getJoinableMatches();
 	  },
 
 	  componentDidMount: function () {
@@ -44331,8 +44344,7 @@
 	  handleJoinClick: function (event) {
 	    var match = event.target.value.split(',');
 	    var matchId = match[match.length - 1];
-	    joinMatchActions.joinMatch(matchId, localStorage.userId);
-
+	    joinMatchActions.joinMatch(matchId);
 	    window.location.hash = "#/matches/portfolio/" + matchId;
 	  },
 
@@ -44461,7 +44473,7 @@
 	            React.createElement(
 	              'button',
 	              { value: match, type: 'button', className: 'btn btn-primary', onClick: that.handleJoinClick },
-	              'To Portfolio'
+	              'Join Match'
 	            )
 	          )
 	        ));
@@ -44536,14 +44548,14 @@
 
 	
 	var AppDispatcher = __webpack_require__(220);
-	var constants = __webpack_require__(224);
 	var requestHelper = __webpack_require__(225);
+	var jwt = __webpack_require__(224).jwt;
 
 	var joinMatchActions = {
 
-	  getJoinableMatches: function (userId) {
+	  getJoinableMatches: function () {
 
-	    requestHelper.get('matches/joinable').end(function (err, response) {
+	    requestHelper.get('matches/joinable', jwt).end(function (err, response) {
 	      if (!err) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -44556,8 +44568,8 @@
 	    });
 	  },
 
-	  joinMatch: function (matchId, userId) {
-	    requestHelper.put('matches/join/' + matchId, { userId: userId }).end(function (err, response) {
+	  joinMatch: function (matchId) {
+	    requestHelper.put('matches/join/' + matchId, jwt).end(function (err, response) {
 	      if (response) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -44592,7 +44604,7 @@
 	  },
 
 	  componentWillMount: function () {
-	    matchActions.getUserMatches(localStorage.jwt);
+	    matchActions.getUserMatches();
 	  },
 
 	  componentDidMount: function () {

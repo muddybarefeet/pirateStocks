@@ -66,7 +66,7 @@ var Create = React.createClass({
 
   //get the date with refs can I add them on the state? Would be neater REVISIT!
   handleClick: function (action) {
-    createMatchActions.createMatch(localStorage.userId, this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, this.state.startDate, this.state.endDate);
+    createMatchActions.createMatch(this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, this.state.startDate, this.state.endDate);
     this.setState({
       clicked: true
     })

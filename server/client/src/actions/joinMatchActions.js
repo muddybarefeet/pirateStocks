@@ -1,14 +1,14 @@
 
 var AppDispatcher = require('./../dispatchers/appDispatcher.js');
-var constants = require('../constants.js');
 var requestHelper = require('./requestHelper.js');
+var jwt = require('../constants.js').jwt;
 
 var joinMatchActions = {
 
-  getJoinableMatches: function (userId) {
+  getJoinableMatches: function () {
 
     requestHelper
-    .get('matches/joinable')
+    .get('matches/joinable', jwt)
     .end(function(err, response){
       if (!err) {
         response = response.body.data;
@@ -23,9 +23,9 @@ var joinMatchActions = {
     });
   },
 
-  joinMatch: function (matchId, userId) {
+  joinMatch: function (matchId) {
     requestHelper
-    .put('matches/join/' + matchId, {userId: userId})
+    .put('matches/join/' + matchId, jwt)
     .end(function (err, response) {
       if (response) {
         response = response.body.data;

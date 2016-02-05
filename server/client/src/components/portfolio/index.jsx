@@ -23,7 +23,7 @@ var Portfolio = React.createClass({
       this.setState({
         portfolioId: this.props.location.pathname.split('/').splice(-1, 1).toString()
       }, function () {
-        matchActions.getMatchPortfolio(localStorage.jwt, this.state.portfolioId); 
+        matchActions.getMatchPortfolio(this.state.portfolioId); 
       });
     } /*else {*/
       //MAKE A NOT FOUND PAGE
@@ -59,7 +59,7 @@ var Portfolio = React.createClass({
     })
     this.refs.amountSell.value = "";
     var symbol = event.target.parentElement.childNodes[1].textContent;
-    matchActions.makeTrade(localStorage.jwt, this.state.portfolioId, this.state.qtySell, symbol, 'sell');
+    matchActions.makeTrade(this.state.portfolioId, this.state.qtySell, symbol, 'sell');
   },
 
   render: function () {

@@ -1,13 +1,13 @@
 var AppDispatcher = require('./../dispatchers/appDispatcher.js');
-var constants = require('../constants.js');
+var jwt = require('../constants.js').jwt;
 var requestHelper = require('./requestHelper.js');
 
 var CreateMatchActions = {
 
-  createMatch: function (userId, title, type, funds, start, end) {
+  createMatch: function (title, type, funds, start, end) {
 
     requestHelper
-    .post('matches/create', {userId: userId, title: title, type: type, funds: funds, start: start, end: end})
+    .post('matches/create', {title: title, type: type, funds: funds, start: start, end: end}, jwt)
     .end(function(err, response){
       if (response) {
         response = response.body.data;

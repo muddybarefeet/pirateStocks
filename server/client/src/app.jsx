@@ -28,9 +28,15 @@ var App = React.createClass({
     // console.log(this.props.children);
   },
 
+  logout: function () {
+    localStorage.clear();
+    window.location.hash = "#/home";
+  },
+
   render: function render() {
 
     var toShowNav;
+    var logout;
     //WAY TO NOT SHOW NAV WHEN SIGNED IN JOTS??
     var pills = (
       <div className="container">
@@ -43,8 +49,13 @@ var App = React.createClass({
       </div>
     )
 
-    if (localStorage.userId) {
+    var logoutButton = (
+      <button style={{"float":"right", marginTop: '10px'}} type="button" className="btn btn-primary" onClick={this.logout}>Logout</button>
+    );
+
+    if (localStorage.jwt) {
       toShowNav = pills;
+      logout = logoutButton;
     }
 
     return (
@@ -52,9 +63,10 @@ var App = React.createClass({
       <div>
         <nav className="navbar navbar-fixed-top" style={{backgroundImage: 'url('+'./../assets/images/woodHeader2.jpg'+')', height:"60px"}}>
           <div className="container-fluid">
-            <div className="navbar-header">
+            <div className="navbar-header" style={{marginTop: '20px'}}>
               <Link to="/home" style={{fontSize: "22px", textDecoration: "none", color: "white"}}>Pirate Stocks</Link>
             </div>
+            {logout}
           </div>
         </nav>
         {toShowNav}
@@ -81,7 +93,6 @@ ReactDOM.render(
   </Router>
 , document.getElementById('app'));
 
+//
 
-//<Link to="/join">Join a New Match</Link>
-//<Link to="/matches">Your Matches</Link>
-//<Link to="/create">Create Match</Link>
+
