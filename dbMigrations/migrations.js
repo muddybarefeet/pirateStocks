@@ -8,6 +8,7 @@ var users = require('./schemas/users.js');
 var schedule = require('./schemas/schedule.js');
 
 exports.up = function (knex, Promise) {
+  //do with thens then seed with the data insert
   return Promise.all([
     stocks(knex),
     stockprices(knex),
@@ -28,3 +29,14 @@ exports.down = function (knex, Promise) {
     knex.schema.dropTable('schedule')
   ]);
 };
+
+/* index think sbout order can be used for both up and down
+Promise.mapSync[require('./schemas/stocks.js'),
+require('./schemas/stockPrices.js'),
+require('./schemas/matches.js'),
+require('./schemas/trades.js'),
+require('./schemas/users.js'),
+require('./schemas/schedule.js')], function(table){
+    return table(knex);
+});
+*/
