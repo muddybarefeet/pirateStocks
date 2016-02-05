@@ -101,11 +101,11 @@ var Create = React.createClass({
                     <div className="col-sm-4" onChange={this.handleTypeChange}>
                       <h4>Type of Match:</h4>
                       <label className="checkbox-inline">
-                        <input type="checkbox" id="inlineCheckbox1" value="Solo" />Solo
+                        <input type="checkbox" id="inlineCheckbox1" value="solo" />Solo
                       </label>
 
                       <label className="checkbox-inline">
-                        <input type="checkbox" id="inlineCheckbox2" value="Head to Head" />Head to Head
+                        <input type="checkbox" id="inlineCheckbox2" value="head to head" />Head to Head
                       </label>
                       
                       </div>

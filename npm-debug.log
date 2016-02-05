@@ -7,8 +7,8 @@
 6 info dbdown pirate_stocks@1.0.0
 7 verbose unsafe-perm in lifecycle true
 8 info pirate_stocks@1.0.0 Failed to exec dbdown script
-9 verbose stack Error: pirate_stocks@1.0.0 dbdown: `knex migrate:rollback --knexfile dbMigrations/index.js`
-9 verbose stack Exit status 1
+9 verbose stack Error: pirate_stocks@1.0.0 dbdown: `dbMigrations/index.js`
+9 verbose stack Exit status 126
 9 verbose stack     at EventEmitter.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/lifecycle.js:214:16)
 9 verbose stack     at emitTwo (events.js:87:13)
 9 verbose stack     at EventEmitter.emit (events.js:172:7)
@@ -24,13 +24,13 @@
 14 error node v4.2.4
 15 error npm  v2.14.12
 16 error code ELIFECYCLE
-17 error pirate_stocks@1.0.0 dbdown: `knex migrate:rollback --knexfile dbMigrations/index.js`
-17 error Exit status 1
-18 error Failed at the pirate_stocks@1.0.0 dbdown script 'knex migrate:rollback --knexfile dbMigrations/index.js'.
+17 error pirate_stocks@1.0.0 dbdown: `dbMigrations/index.js`
+17 error Exit status 126
+18 error Failed at the pirate_stocks@1.0.0 dbdown script 'dbMigrations/index.js'.
 18 error This is most likely a problem with the pirate_stocks package,
 18 error not with npm itself.
 18 error Tell the author that this fails on your system:
-18 error     knex migrate:rollback --knexfile dbMigrations/index.js
+18 error     dbMigrations/index.js
 18 error You can get their info via:
 18 error     npm owner ls pirate_stocks
 18 error There is likely additional logging output above.

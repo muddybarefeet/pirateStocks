@@ -7,27 +7,35 @@ var trades = require('./schemas/trades.js');
 var users = require('./schemas/users.js');
 var schedule = require('./schemas/schedule.js');
 
-exports.up = function (knex, Promise) {
-  //do with thens then seed with the data insert
-  return Promise.all([
-    stocks(knex),
-    stockprices(knex),
-    matches(knex),
-    users(knex),
-    trades(knex),
-    schedule(knex)
-  ]);
-};
+module.exports = function (knex, Promise) {
 
-exports.down = function (knex, Promise) {
-  return Promise.all([
-    knex.schema.dropTable('stock_prices'),
-    knex.schema.dropTable('trades'),
-    knex.schema.dropTable('matches'),
-    knex.schema.dropTable('users'),
-    knex.schema.dropTable('stocks'),
-    knex.schema.dropTable('schedule')
-  ]);
+  //do with thens then seed with the data insert
+  var module = {};
+
+  module.up = function () {
+    return Promise.all([
+      users(knex),
+      matches(knex),
+      trades(knex),
+      stocks(knex),
+      stockprices(knex),
+      schedule(knex)
+    ]);
+  };
+
+  module.down = function () {
+    return Promise.all([
+      knex.schema.dropTable('users'),
+      knex.schema.dropTable('matches'),
+      knex.schema.dropTable('trades'),
+      knex.schema.dropTable('stocks'),
+      knex.schema.dropTable('stock_prices'),
+      knex.schema.dropTable('schedule')
+    ]);
+  };
+
+  return module;
+
 };
 
 /* index think sbout order can be used for both up and down

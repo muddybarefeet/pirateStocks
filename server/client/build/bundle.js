@@ -27209,6 +27209,7 @@
 	  getUserMatches: function () {
 
 	    requestHelper.get('matches/user', jwt).end(function (err, response) {
+	      console.log('response', response);
 	      if (!err) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -27399,13 +27400,13 @@
 	                    React.createElement(
 	                      'label',
 	                      { className: 'checkbox-inline' },
-	                      React.createElement('input', { type: 'checkbox', id: 'inlineCheckbox1', value: 'Solo' }),
+	                      React.createElement('input', { type: 'checkbox', id: 'inlineCheckbox1', value: 'solo' }),
 	                      'Solo'
 	                    ),
 	                    React.createElement(
 	                      'label',
 	                      { className: 'checkbox-inline' },
-	                      React.createElement('input', { type: 'checkbox', id: 'inlineCheckbox2', value: 'Head to Head' }),
+	                      React.createElement('input', { type: 'checkbox', id: 'inlineCheckbox2', value: 'head to head' }),
 	                      'Head to Head'
 	                    )
 	                  ),

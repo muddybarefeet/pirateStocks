@@ -19,9 +19,9 @@ module.exports = function (knex) {
             .notNullable();
         table.string('enddate')
             .notNullable();
-        table.enu('status', ['Pending', 'Active', 'Rejected', 'Complete'])
+        table.enu('status', ['pending', 'active', 'rejected', 'complete'])
             .notNullable();
-        table.enu('type', ['Solo', 'Head to Head'])
+        table.enu('type', ['solo', 'head to head'])
             .notNullable();
         table.integer('winner');
         table.timestamp('created_at').defaultTo(knex.fn.now());

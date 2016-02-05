@@ -47,13 +47,13 @@ module.exports = function (knex) {
     });
   };
 
-//Update the status of a match if it starts to day anf it has a challengee
+//Update the status of a match if it starts today and it has a challengee
   module.activateMatch = function (match) {
     return knex('matches')
       .where('m_id', '=', match.m_id)
-      .andWhere('status', '=', 'pending')
+      .andWhere('Status', '=', 'Pending')
       .andWhereNot({challengee: null})
-      .update({status: 'active'}, '*')
+      .update({status: 'Active'}, '*')
       .then( function (match) {
         console.log('activating match');
         return match[0];
@@ -67,9 +67,9 @@ module.exports = function (knex) {
   module.rejectMatch = function (match) {
     return knex('matches')
       .where('m_id', '=', match.m_id)
-      .andWhere({status : 'pending'})
+      .andWhere({status : 'Pending'})
       .andWhere({challengee : null})
-      .update({status: 'rejected'}, '*')
+      .update({status: 'Rejected'}, '*')
       .then( function (rejectedMatch) {
         console.log('rejecting match');
         return rejectedMatch[0];

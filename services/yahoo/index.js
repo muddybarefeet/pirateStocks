@@ -102,6 +102,4 @@ yahooMethods.getStockData = function (stockSymbol, startDate) {
 
 };
 
-
-
 module.exports = yahooMethods;

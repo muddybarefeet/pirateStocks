@@ -1,13 +1,14 @@
 var Promise = require('bluebird');
 
 var tradesMethods = require('./trades.js');
+var utils = require('./utils.js');
 
 module.exports = function (knex) {
   var module = {};
 
-  var PENDING = 'Pending';
-  var ACTIVE = 'Active';
-  var SOLO = 'Solo';
+  var PENDING = 'pending';
+  var ACTIVE = 'active';
+  var SOLO = 'solo';
 
   // ensure start dates are stored consistently in db
   function standardizeStart(date){
@@ -83,8 +84,8 @@ module.exports = function (knex) {
     .where({
       challengee: null,
       m_id: matchId,
-      status: 'pending',
-      type: 'Head'
+      status: PENDING,
+      type: 'head to head'
     })
     .update({
       challengee: userId
@@ -122,25 +123,50 @@ module.exports = function (knex) {
       });
   };
 
-// Return a specific match. matchId {string} DEprecated
-//----------------------------------------------
-  // module.getMatch = function (matchId) {
-  //   return knex.select()
-  //     .table('matches').where('m_id', '=', matchId)
-  //     .then(function (match) {
-  //       return match[0];
-  //     });
-  // };
-
 // Get all matches for a user. userId {string}
 //----------------------------------------------
   module.getUsersMatches = function (userId) {
+
     return knex.select()
     .table('matches')
     .where('creator_id', userId)
     .orWhere('challengee', userId)
     .then(function (matches) {
-      return matches;
+      //now want to map thought them and find the opponent and get their portfolio value
+      matches.map(function (match) {
+
+        var opponentId;
+
+        if (match.creator_id !== userId) { //if the creator is not the user then use this id to get the opponents portfolio value
+          opponentId = match.creator_id;
+        } else { //challangee is the id you need to use to get the opponents portfolio value
+          opponentId = match.challangee;
+        }
+        // var x = tradesMethods.getPortfolio(userId, match.m_id);
+        //want to call the function to get the opponents portfolio and get their available cash and do the same for the user
+        console.log('tradesMethods', utils.getPortfolio(userId, match.m_id));
+        // return x;
+        // return tradesMethods.getPortfolio(userId, match.m_id)
+        // .then(function (portfolio) {
+        //   console.log('userPortfolio', portfolio);
+        //   match.userVal = portfolio.available_cash;
+        //   return null;
+        // })
+        // .then(function () {
+        //   return tradesMethods.getPortfolio(opponentId, match.m_id);
+        // })
+        // .then(function (opponentPortfolio) {
+        //   console.log('opponentPortfolio', opponentPortfolio);
+        //   match.opponentVal = opponentPortfolio.available_cash;
+        //   return;
+        // });
+        //MAY WANT TO EDIT THE MONEY HERE TO 2DP??
+
+      })
+      .catch(function (err) {
+        console.log('err in get user matches', err);
+      });
+
     });
 
   };

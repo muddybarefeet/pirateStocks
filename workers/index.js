@@ -2,6 +2,8 @@
 
 module.exports = function (services) {
 
-  //var updateStockDataEvery15Mins = require('./updateStockDataEvery15Mins.js')(services);
+  // var updateStock = require('./updateStock.js')(services);
+  //var scoreMatches = require('./scoreMatches.js')(services);
+  var startMatches = require('./startMatches.js')(services);
 
 };

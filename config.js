@@ -1,5 +1,5 @@
 //database connection
-//facebook auth keys
+//facebook auth keys here too?
 var knex = require('knex');
 
 var config = {

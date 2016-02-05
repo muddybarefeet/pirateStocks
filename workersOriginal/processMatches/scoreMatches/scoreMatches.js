@@ -29,7 +29,7 @@ module.exports = function (knex) {
   module.selectCompletingMatches = function (date) {
     console.log('grabbing matches to evaluate');
     return knex('matches')
-      .where('status', 'active')
+      .where('status', 'Active')
       .then( function(matches) {
         return matches.filter(function(match) {
           return Date.parse(match.enddate) <= Date.parse(date);
@@ -74,7 +74,7 @@ module.exports = function (knex) {
     return knex('matches')
       .where('m_id', '=', matchId)
       .update({
-        status: 'complete',
+        status: 'Complete',
         winner: userId
       }, '*')
       .then(function (match) {
