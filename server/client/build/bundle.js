@@ -83,6 +83,7 @@
 
 	    var toShowNav;
 	    var logout;
+	    var userGreeting;
 	    //WAY TO NOT SHOW NAV WHEN SIGNED IN JOTS??
 	    var pills = React.createElement(
 	      'div',
@@ -140,6 +141,15 @@
 	      logout = logoutButton;
 	    }
 
+	    if (localStorage.username) {
+	      userGreeting = React.createElement(
+	        'div',
+	        { style: { marginTop: '24px', marginRight: '10px', fontSize: "15px", textDecoration: "none", color: "white", float: 'right' } },
+	        'Ahoy: ',
+	        localStorage.username
+	      );
+	    }
+
 	    return React.createElement(
 	      'div',
 	      null,
@@ -158,7 +168,8 @@
 	              'Pirate Stocks'
 	            )
 	          ),
-	          logout
+	          logout,
+	          userGreeting
 	        )
 	      ),
 	      toShowNav,

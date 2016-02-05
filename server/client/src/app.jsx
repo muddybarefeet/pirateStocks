@@ -37,6 +37,7 @@ var App = React.createClass({
 
     var toShowNav;
     var logout;
+    var userGreeting;
     //WAY TO NOT SHOW NAV WHEN SIGNED IN JOTS??
     var pills = (
       <div className="container">
@@ -53,9 +54,14 @@ var App = React.createClass({
       <button style={{"float":"right", marginTop: '10px'}} type="button" className="btn btn-primary" onClick={this.logout}>Logout</button>
     );
 
+
     if (localStorage.jwt) {
       toShowNav = pills;
       logout = logoutButton;
+    }
+
+    if (localStorage.username) {
+      userGreeting = (<div style={{marginTop: '24px', marginRight: '10px', fontSize: "15px", textDecoration: "none", color: "white", float:'right'}}>Ahoy: {localStorage.username}</div>);
     }
 
     return (
@@ -67,6 +73,7 @@ var App = React.createClass({
               <Link to="/home" style={{fontSize: "22px", textDecoration: "none", color: "white"}}>Pirate Stocks</Link>
             </div>
             {logout}
+            {userGreeting}
           </div>
         </nav>
         {toShowNav}
