@@ -37,7 +37,7 @@ module.exports = function (services) {
   router.route('/:symbol')
     .get(function (req, res) {
       var symbol = req.symbol;
-      services.db.stocks.getStock(symbol).then(function (response) {
+      services.db.trades.getStock(symbol).then(function (response) {
         if (response === null) {
           res.sendStatus(404);
         } else {

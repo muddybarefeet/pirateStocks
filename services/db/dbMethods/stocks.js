@@ -7,7 +7,6 @@ module.exports = function (knex) {
 //Query the database for anything like the input search (for search page on the front end)
 //------------------------------------------------------------------------------------------
   module.searchStock = function (search) {
-
     var searchLike = search + '%';
     return knex('stocks').where(function() {
         this.where(knex.raw('stocks.symbol like UPPER(?)', [searchLike]))
@@ -25,7 +24,6 @@ module.exports = function (knex) {
     .then(function (formattedStocks) {
       return formattedStocks;
     });
-    
   };
 
 

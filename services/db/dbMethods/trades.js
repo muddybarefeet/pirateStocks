@@ -29,7 +29,7 @@ module.exports = function (knex) {
 
 //Get the stock of a certain symbol
 //-------------------------------------
-  var getStock = function (symbol) {
+  module.getStock = function (symbol) {
     return knex('stocks')
     .join('stock_prices', 'stocks.symbol', '=', 'stock_prices.symbol')
     .where(knex.raw('stocks.symbol = UPPER(?)', [symbol]))
@@ -65,7 +65,7 @@ module.exports = function (knex) {
     console.log('symbol', stockTicker);
     return Promise.all([
         //get the details of the stock you want to buy and gets the users portfolio
-        getStock(stockTicker),
+        module.getStock(stockTicker),
         generatePortfolio(userId, matchId)
       ])
       //takes results and checks user authorised to buy specified stock/stock symbol is valid
@@ -125,7 +125,7 @@ module.exports = function (knex) {
 
     return Promise.all([
         //get information for a specific stock and the users portfolio for the match
-        getStock(stockTicker),
+        module.getStock(stockTicker),
         generatePortfolio(userId, matchId)
       ])
       //take the return data and check that the trade is valid/stock exists

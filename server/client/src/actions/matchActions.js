@@ -45,7 +45,7 @@ var matchActions = {
     requestHelper
     .post('trades/' + matchId, {matchId: matchId, numShares: qty, symbol: symbol, action: action }, jwt)
     .end(function (err, response) {
-      console.log('err in trade', response);
+      console.log('in trade', response);
       if (!err) {
         response = response.body.data;
         AppDispatcher.handleServerAction({
