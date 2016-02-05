@@ -184,8 +184,6 @@
 	  )
 	), document.getElementById('app'));
 
-	//
-
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
@@ -24756,6 +24754,19 @@
 
 	  render: function () {
 
+	    var signupLoginShow;
+
+	    var authButton = React.createElement(
+	      'button',
+	      { type: 'button', className: 'btn btn-warning', onClick: this.handleLoginClick },
+	      'Signup/ Login'
+	    );
+
+	    //if the jot is present then dont show the sign in button
+	    if (!localStorage.jwt) {
+	      signupLoginShow = authButton;
+	    }
+
 	    return React.createElement(
 	      'div',
 	      { className: 'container font' },
@@ -24799,20 +24810,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'centreTitle' },
-	        React.createElement(
-	          'a',
-	          { href: 'http://localhost:3000/api/auth/facebook' },
-	          React.createElement('img', { className: 'imgWidth', src: './../../assets/images/login.png', alt: 'facebook login button' })
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'centreTitle' },
-	        React.createElement(
-	          'button',
-	          { type: 'button', className: 'btn btn-warning', onClick: this.handleLoginClick },
-	          'Signup/ Login'
-	        )
+	        signupLoginShow
 	      )
 	    );
 	  }
@@ -24820,6 +24818,10 @@
 	});
 
 	module.exports = Home;
+
+	/*  <div className="centreTitle" >
+	          <a href="http://localhost:3000/api/auth/facebook"><img className="imgWidth" src='./../../assets/images/login.png' alt="facebook login button" /></a>
+	        </div>*/
 
 /***/ },
 /* 218 */
@@ -25004,7 +25006,6 @@
 	  sendLogin: function (email, password) {
 
 	    requestHelper.post('users/login', { email: email, password: password }).end(function (err, response) {
-	      console.log('response', response);
 	      if (response) {
 	        userData = response.body.data;
 	        AppDispatcher.handleServerAction({

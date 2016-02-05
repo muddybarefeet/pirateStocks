@@ -9,7 +9,6 @@ var authActions = {
     requestHelper
     .post('users/login', {email: email, password: password})
     .end(function (err, response) {
-      console.log('response', response);
       if (response) {
         userData = response.body.data;
         AppDispatcher.handleServerAction({

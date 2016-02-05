@@ -10,6 +10,17 @@ var Home = React.createClass({
 
   render: function () {
 
+    var signupLoginShow;
+
+    var authButton = (
+      <button type="button" className="btn btn-warning" onClick={this.handleLoginClick}>Signup/ Login</button>
+    );
+
+    //if the jot is present then dont show the sign in button
+    if (!localStorage.jwt) {
+      signupLoginShow = authButton;
+    }
+
     return (
       <div className="container font">
         <div className="centreTitle marginUnder">
@@ -30,10 +41,7 @@ var Home = React.createClass({
           </div>
         </div>
         <div className="centreTitle" >
-          <a href="http://localhost:3000/api/auth/facebook"><img className="imgWidth" src='./../../assets/images/login.png' alt="facebook login button" /></a>
-        </div>
-        <div className="centreTitle" >
-          <button type="button" className="btn btn-warning" onClick={this.handleLoginClick}>Signup/ Login</button>
+          {signupLoginShow}
         </div>
 
       </div>
@@ -43,3 +51,7 @@ var Home = React.createClass({
 });
 
 module.exports = Home;
+
+/*  <div className="centreTitle" >
+          <a href="http://localhost:3000/api/auth/facebook"><img className="imgWidth" src='./../../assets/images/login.png' alt="facebook login button" /></a>
+        </div>*/
