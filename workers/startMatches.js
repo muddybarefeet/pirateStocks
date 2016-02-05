@@ -6,7 +6,7 @@ module.exports = function (services) {
   setTimeout(function () {
   //in the schedule table have a Daily_Update key in the table
   //check this every hour
-    services.db.metaTable.get("Latest_Stock_Update") //need to change this
+    services.db.metaTable.get("Latest_Stock_Update") //----------->CHANGE THIS WHEN WORKED OUT HOW!!!
     .then(function (date) {
       //want to insert a new row in the table Latest_Status_Update
       var iscurrentDay = moment(new Date(date)).isSame(new Date(), "day");

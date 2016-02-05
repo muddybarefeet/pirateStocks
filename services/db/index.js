@@ -13,6 +13,7 @@ methods.stocks = require('./dbMethods/stocks')(knex);
 methods.trades = require('./dbMethods/trades')(knex);
 methods.metaTable = require('./dbMethods/metaTable')(knex);
 methods.startMatches = require('./dbMethods/startMatches')(knex);
+methods.scoreMatches = require('./dbMethods/scoreMatches')(knex);
 methods.utils = require('./dbMethods/utils');
 
 module.exports = methods;
