@@ -51,13 +51,12 @@ var MatchesToJoin = React.createClass({
           <table className="table">
             <thead>
               <tr>
-                <th>Title</th>
+                <th>Name of Yer Battle</th>
                 <th>Type</th>
-                <th>Start Date</th>
-                <th>End Date</th>
+                <th>Battle Starts</th>
+                <th>Length o{"'"} Battle</th>
                 <th>Start Funds</th>
                 <th></th>
-                {/*<th>Opponents Portfolio Value</th>*/}
               </tr>
             </thead>
             <tbody>

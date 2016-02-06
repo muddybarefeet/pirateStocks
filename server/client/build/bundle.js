@@ -44415,7 +44415,7 @@
 	            React.createElement(
 	              'th',
 	              null,
-	              'Title'
+	              'Name of Yer Battle'
 	            ),
 	            React.createElement(
 	              'th',
@@ -44425,12 +44425,14 @@
 	            React.createElement(
 	              'th',
 	              null,
-	              'Start Date'
+	              'Battle Starts'
 	            ),
 	            React.createElement(
 	              'th',
 	              null,
-	              'End Date'
+	              'Length o',
+	              "'",
+	              ' Battle'
 	            ),
 	            React.createElement(
 	              'th',
@@ -44555,7 +44557,7 @@
 	  if (action.actionType === "GET_JOINABLE_MATCHES") {
 
 	    _joinableMatches.matches = action.data.map(function (match) {
-	      return [match.title, match.type, moment(match.startdate).fromNow(), moment(match.enddate).fromNow(), match.starting_funds, match.status, match.challengee, match.creator_id, match.winner, match.created_at, match.m_id];
+	      return [match.title, match.type, match.startdate, match.duration, match.starting_funds, match.status, match.challengee, match.creator_id, match.winner, match.created_at, match.m_id];
 	    });
 
 	    joinMatchStore.emitChange();
@@ -44678,7 +44680,7 @@
 	            React.createElement(
 	              'th',
 	              null,
-	              'Title'
+	              'Name of Yer Battle'
 	            ),
 	            React.createElement(
 	              'th',
@@ -44688,12 +44690,14 @@
 	            React.createElement(
 	              'th',
 	              null,
-	              'Start Date'
+	              'Battle Starts'
 	            ),
 	            React.createElement(
 	              'th',
 	              null,
-	              'Duration'
+	              'Length o',
+	              "'",
+	              ' Battle'
 	            ),
 	            React.createElement(
 	              'th',
@@ -44703,12 +44707,14 @@
 	            React.createElement(
 	              'th',
 	              null,
-	              'My Portfolio Value'
+	              'Yer Treasure',
+	              "'",
+	              's Value'
 	            ),
 	            React.createElement(
 	              'th',
 	              null,
-	              'Opponents Portfolio Value'
+	              'Opponents Treasure'
 	            ),
 	            React.createElement(
 	              'th',

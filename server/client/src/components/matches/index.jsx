@@ -48,13 +48,13 @@ var Matches = React.createClass({
           <table className="table">
             <thead>
               <tr>
-                <th>Title</th>
+                <th>Name of Yer Battle</th>
                 <th>Type</th>
-                <th>Start Date</th>
-                <th>Duration</th>
+                <th>Battle Starts</th>
+                <th>Length o{"'"} Battle</th>
                 <th>Starting Gold</th>
-                <th>My Portfolio Value</th>
-                <th>Opponents Portfolio Value</th>
+                <th>Yer Treasure{"'"}s Value</th>
+                <th>Opponents Treasure</th>
                 <th>Gauge</th>
                 <th></th>
               </tr>

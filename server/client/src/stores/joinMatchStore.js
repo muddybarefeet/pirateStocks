@@ -37,8 +37,8 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
       return [
         match.title,
         match.type,
-        moment(match.startdate).fromNow(),
-        moment(match.enddate).fromNow(),
+        match.startdate,
+        match.duration,
         match.starting_funds,
         match.status,
         match.challengee,

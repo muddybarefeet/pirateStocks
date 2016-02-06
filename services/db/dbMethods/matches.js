@@ -102,11 +102,23 @@ module.exports = function (knex) {
 //Return all joinable matches
 //----------------------------------
   module.getAllJoinableMatches = function (userId) {
-    return knex('matches').where({
+    return knex('matches')
+    .where({
       'status': PENDING,
       'challengee': null
     })
-    .andWhereNot('creator_id', userId);
+    .andWhereNot('creator_id', userId)
+    .orderBy('startdate', 'desc')
+    .then(function (matches) {
+      console.log('matches', matches);
+      return Promise.map(matches, function (match) {
+        match.duration = getDuarion(match.startdate, match.enddate);
+        match.starting_funds = '$' + match.starting_funds;
+        match.startdate =  moment(new Date (match.startdate)).fromNow();
+        match.type = formatType(match.type);
+        return match;
+      });
+    });
   };
 
 // Return all portfolios for a user. userId {string}
@@ -177,6 +189,7 @@ module.exports = function (knex) {
             //find duration
             match.duration = getDuarion(match.startdate, match.enddate);
             match.startdate = moment(new Date (match.startdate)).fromNow();
+            match.type = formatType(match.type);
             return match;
           });
         });
@@ -199,6 +212,14 @@ module.exports = function (knex) {
       return diff + " day";
     } else {
       return diff + " days";
+    }
+  };
+
+  var formatType = function (type) {
+    if (type === 'head') {
+      return 'Head to Head';
+    } else {
+      return 'Solo';
     }
   };
 
