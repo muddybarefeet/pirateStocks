@@ -84,6 +84,7 @@ module.exports = function (services) {
 
       services.db.matches.createMatch(req.__userId, startFunds, type, startDate, endDate, title)
         .then(function (match) {
+          console.log('route make match', match);
           return res.status(200).json({
             data: match
           });

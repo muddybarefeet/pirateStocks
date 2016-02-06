@@ -25068,6 +25068,7 @@
 	  //tells us/store where the action originated e.g.user/server
 
 	  handleServerAction: function (action) {
+	    console.log('server disp');
 	    this.dispatch({
 	      source: 'SERVER_ACTION',
 	      action: action
@@ -41020,7 +41021,9 @@
 	  if (action.actionType === "CREATE_MATCH") {
 	    //needed??
 
-	    _userMatches.pendingMatches.push([action.data.title, action.data.type, moment(action.data.startdate).fromNow(), moment(action.data.enddate).fromNow(), action.data.starting_funds, action.data.challengee, action.data.creator_id, action.data.winner, action.data.created_at, action.data.status, action.data.m_id]);
+	    console.log('sTORE', action.data);
+
+	    _userMatches.matches.push([action.data.title, action.data.type, moment(action.data.startdate).fromNow(), moment(action.data.enddate).fromNow(), action.data.starting_funds, action.data.challengee, action.data.creator_id, action.data.winner, action.data.created_at, action.data.status, action.data.m_id]);
 
 	    localStorage.setItem('matchId', action.data.m_id);
 	    matchesStore.emitChange();
@@ -41031,9 +41034,9 @@
 	    action.data.forEach(function (match) {
 
 	      if (match.status === 'pending' || match.status === 'active') {
-	        _userMatches.matches.push(formatMatch(match));
+	        _userMatches.matches = formatMatch(match);
 	      } else {
-	        _userMatches.pastMatches.push(formatMatch(match));
+	        _userMatches.pastMatches = formatMatch(match);
 	      }
 	    });
 

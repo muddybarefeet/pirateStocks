@@ -53,7 +53,9 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
 
   if(action.actionType === "CREATE_MATCH") { //needed??
 
-    _userMatches.pendingMatches.push([
+    console.log('sTORE', action.data);
+
+    _userMatches.matches.push([
       action.data.title,
       action.data.type,
       moment(action.data.startdate).fromNow(),
@@ -76,9 +78,9 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
     action.data.forEach(function (match) {
 
       if (match.status === 'pending' || match.status === 'active') {
-        _userMatches.matches.push(formatMatch(match));
+        _userMatches.matches = formatMatch(match);
       } else {
-        _userMatches.pastMatches.push(formatMatch(match));
+        _userMatches.pastMatches = formatMatch(match);
       }
 
     });

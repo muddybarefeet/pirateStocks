@@ -12,6 +12,7 @@ var AppDispatcher = Object.assign(new Dispatcher(), {
    //tells us/store where the action originated e.g.user/server
 
    handleServerAction: function (action) {
+    console.log('server disp');
     this.dispatch({
       source: 'SERVER_ACTION',
       action: action
