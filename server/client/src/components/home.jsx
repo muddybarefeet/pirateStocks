@@ -30,13 +30,13 @@ var Home = React.createClass({
         <div className="container">
           <div className="font">
             <h5 className="font">
-              1. Join or make a match
+              1. Join or make a Battle
             </h5> 
             <h5>
-              2. Create a portfolio
+              2. Collect Treasure
             </h5>
             <h5>
-              {"3. Beat your opponent's portfolio"}
+              {"3. Beat yer opponent"}
             </h5>
           </div>
         </div>

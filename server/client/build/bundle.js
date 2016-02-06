@@ -24806,17 +24806,17 @@
 	          React.createElement(
 	            'h5',
 	            { className: 'font' },
-	            '1. Join or make a match'
+	            '1. Join or make a Battle'
 	          ),
 	          React.createElement(
 	            'h5',
 	            null,
-	            '2. Create a portfolio'
+	            '2. Collect Treasure'
 	          ),
 	          React.createElement(
 	            'h5',
 	            null,
-	            "3. Beat your opponent's portfolio"
+	            "3. Beat yer opponent"
 	          )
 	        )
 	      ),
