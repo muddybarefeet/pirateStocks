@@ -75,12 +75,20 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
 
   if(action.actionType === "GET_USER_MATCHES") {
 
-    action.data.forEach(function (match) {
+    action.data.forEach(function (match, index) {
 
       if (match.status === 'pending' || match.status === 'active') {
-        _userMatches.matches = formatMatch(match);
-      } else {
-        _userMatches.pastMatches = formatMatch(match);
+        if (index === 0) {
+          _userMatches.matches = [ formatMatch(match) ];
+        } else {
+          _userMatches.matches.push(formatMatch(match));
+        }
+      } else if (status === 'complete') {
+        if (index === 0) {
+          _userMatches.pastMatches = [ formatMatch(match) ];
+        } else {
+          _userMatches.pastMatches.push(formatMatch(match));
+        }
       }
 
     });

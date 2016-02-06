@@ -53,7 +53,7 @@ var Portfolio = React.createClass({
     })
   },
 
-  handleSellStocksClick: function (event) {
+  handleSellClick: function (event) {
     this.setState({
       qtySell: ""
     })
@@ -88,7 +88,7 @@ var Portfolio = React.createClass({
                             <label htmlFor="number">Qty:</label>
                             <input type="number" ref="amountSell" className="form-control" onChange={that.handleSellStocksChange} />
                           </div>
-                          <button type="button" className="btn btn-primary" onClick={that.handleSellStocksClick} >Sell</button>
+                          <button type="button" className="btn btn-primary" onClick={that.handleSellClick} >Sell</button>
 
                         </div>
                       </li>

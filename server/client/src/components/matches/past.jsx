@@ -65,11 +65,11 @@ var PastMatches = React.createClass({
           </table>
         </div>);
 
-      if (!this.state.matches) {
+      if (!this.state.pastMatches) {
         toDisplay = (<p key={0}>Oh arr! Ye {"'"}ave nah created or joined any matches yet, get t{"'"} t{"'"} it handsomely!</p>);
       } else {
         var that = this;
-        this.state.matches.map(function (match, index) {
+        this.state.pastMatches.map(function (match, index) {
           arrayOfMatches.push(<tr key={index}>
                                 <td>{match[0]}</td>
                                 <td>{match[1]}</td>

@@ -64,7 +64,7 @@
 	var Search = __webpack_require__(388);
 	var Join = __webpack_require__(391);
 	var Matches = __webpack_require__(394);
-	var pastMatches = __webpack_require__(397);
+	var PastMatches = __webpack_require__(397);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -85,7 +85,7 @@
 	    var toShowNav;
 	    var logout;
 	    var userGreeting;
-	    //WAY TO NOT SHOW NAV WHEN SIGNED IN JOTS??
+
 	    var pills = React.createElement(
 	      'div',
 	      { className: 'container' },
@@ -190,7 +190,7 @@
 	    React.createElement(Route, { path: '/home', component: Home }),
 	    React.createElement(Route, { path: 'join', component: Join }),
 	    React.createElement(Route, { path: '/matches', component: Matches }),
-	    React.createElement(Route, { path: '/pastMatches', component: pastMatches }),
+	    React.createElement(Route, { path: '/pastMatches', component: PastMatches }),
 	    React.createElement(Route, { path: '/matches/portfolio/:id', component: Portfolio }),
 	    React.createElement(Route, { path: '/matches/portfolio/:id/search', component: Search }),
 	    React.createElement(Route, { path: 'create', component: Create })
@@ -25068,7 +25068,6 @@
 	  //tells us/store where the action originated e.g.user/server
 
 	  handleServerAction: function (action) {
-	    console.log('server disp');
 	    this.dispatch({
 	      source: 'SERVER_ACTION',
 	      action: action
@@ -27212,7 +27211,6 @@
 	  getUserMatches: function () {
 
 	    requestHelper.get('matches/user', jwt).end(function (err, response) {
-	      console.log('response', response);
 	      if (!err) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -27241,9 +27239,9 @@
 	  },
 
 	  makeTrade: function (matchId, qty, symbol, action) {
-
+	    console.log('in action to trade', matchId, qty, symbol, action);
 	    requestHelper.post('trades/' + matchId, { matchId: matchId, numShares: qty, symbol: symbol, action: action }, jwt).end(function (err, response) {
-	      console.log('in trade', response);
+	      console.log('in trade RESPONSE', response);
 	      if (!err) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -41031,12 +41029,20 @@
 
 	  if (action.actionType === "GET_USER_MATCHES") {
 
-	    action.data.forEach(function (match) {
+	    action.data.forEach(function (match, index) {
 
 	      if (match.status === 'pending' || match.status === 'active') {
-	        _userMatches.matches = formatMatch(match);
-	      } else {
-	        _userMatches.pastMatches = formatMatch(match);
+	        if (index === 0) {
+	          _userMatches.matches = [formatMatch(match)];
+	        } else {
+	          _userMatches.matches.push(formatMatch(match));
+	        }
+	      } else if (status === 'complete') {
+	        if (index === 0) {
+	          _userMatches.pastMatches = [formatMatch(match)];
+	        } else {
+	          _userMatches.pastMatches.push(formatMatch(match));
+	        }
 	      }
 	    });
 
@@ -43747,7 +43753,7 @@
 	    });
 	  },
 
-	  handleSellStocksClick: function (event) {
+	  handleSellClick: function (event) {
 	    this.setState({
 	      qtySell: ""
 	    });
@@ -43836,7 +43842,7 @@
 	                  ),
 	                  React.createElement(
 	                    'button',
-	                    { type: 'button', className: 'btn btn-primary', onClick: that.handleSellStocksClick },
+	                    { type: 'button', className: 'btn btn-primary', onClick: that.handleSellClick },
 	                    'Sell'
 	                  )
 	                )
@@ -44915,7 +44921,7 @@
 	      )
 	    );
 
-	    if (!this.state.matches) {
+	    if (!this.state.pastMatches) {
 	      toDisplay = React.createElement(
 	        'p',
 	        { key: 0 },
@@ -44929,7 +44935,7 @@
 	      );
 	    } else {
 	      var that = this;
-	      this.state.matches.map(function (match, index) {
+	      this.state.pastMatches.map(function (match, index) {
 	        arrayOfMatches.push(React.createElement(
 	          'tr',
 	          { key: index },

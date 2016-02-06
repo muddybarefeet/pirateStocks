@@ -9,7 +9,6 @@ var matchActions = {
     requestHelper
     .get('matches/user', jwt)
     .end(function(err, response){
-      console.log('response', response);
       if (!err) {
         response = response.body.data;
         AppDispatcher.handleServerAction({
@@ -42,11 +41,11 @@ var matchActions = {
   },
 
   makeTrade: function (matchId, qty, symbol, action) {
-
+    console.log('in action to trade', matchId, qty, symbol, action);
     requestHelper
     .post('trades/' + matchId, {matchId: matchId, numShares: qty, symbol: symbol, action: action }, jwt)
     .end(function (err, response) {
-      console.log('in trade', response);
+      console.log('in trade RESPONSE', response);
       if (!err) {
         response = response.body.data;
         AppDispatcher.handleServerAction({

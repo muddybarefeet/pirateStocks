@@ -18,7 +18,7 @@ var Portfolio = require('./components/portfolio/index.jsx');
 var Search = require('./components/portfolio/searchStocks/index.jsx');
 var Join = require('./components/matchesToJoin.jsx');
 var Matches = require('./components/matches/index.jsx');
-var pastMatches = require('./components/matches/past.jsx');
+var PastMatches = require('./components/matches/past.jsx');
 
 var App = React.createClass({
 
@@ -38,7 +38,7 @@ var App = React.createClass({
     var toShowNav;
     var logout;
     var userGreeting;
-    //WAY TO NOT SHOW NAV WHEN SIGNED IN JOTS??
+
     var pills = (
       <div className="container">
         <ul className="nav nav-pills">
@@ -93,7 +93,7 @@ ReactDOM.render(
       <Route path="/home" component={Home} />
       <Route path="join" component={Join}/>
       <Route path="/matches" component={Matches} />
-      <Route path="/pastMatches" component={pastMatches} />
+      <Route path="/pastMatches" component={PastMatches} />
       <Route path="/matches/portfolio/:id" component={Portfolio} />
       <Route path="/matches/portfolio/:id/search" component={Search} />
       <Route path="create" component={Create} />

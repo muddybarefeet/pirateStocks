@@ -122,7 +122,7 @@ module.exports = function (knex) {
   module.sell = function (userId, matchId, numShares, stockTicker) {
 
     var trade;
-
+    console.log('in sell');
     return Promise.all([
         //get information for a specific stock and the users portfolio for the match
         module.getStock(stockTicker),
@@ -131,6 +131,7 @@ module.exports = function (knex) {
       //take the return data and check that the trade is valid/stock exists
       //if all fine the avaiable cash updated and data is inserted
       .then(function (tuple) {
+        console.log('TUPLE', tuple);
         var stock = tuple[0];
         var portfolio = tuple[1];
         var stocks = portfolio.stocks;
@@ -144,8 +145,8 @@ module.exports = function (knex) {
           stocks[stock.symbol].shares < numShares) {
           throw new Error('number of shares to sell exceeds number of shares owned');
         }
-
-        available_cash += stock.bid * numShares;
+        
+        available_cash += stock.ask * numShares;
 
         return createTrade({
           user_id: userId,
@@ -153,8 +154,8 @@ module.exports = function (knex) {
           symbol: stockTicker,
           shares: numShares,
           action: SELL,
-          price: stock.bid,
-          available_cash: available_cash
+          price: stock.ask,
+          available_cash: available_cash.toFixed(2)
         });
       })
       .then(function(resp){
@@ -165,7 +166,7 @@ module.exports = function (knex) {
       })
       .then(function(port){
         //trade and portfolio sent back to the user
-
+        console.log('return from sell', trade, port);
         return {
           trade: trade,
           portfolio: port
