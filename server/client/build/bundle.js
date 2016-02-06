@@ -123,8 +123,8 @@
 	          'li',
 	          null,
 	          React.createElement(
-	            'a',
-	            { href: '/pastMatches' },
+	            Link,
+	            { to: '/pastMatches' },
 	            'Past Battles'
 	          )
 	        )
@@ -27465,6 +27465,9 @@
 
 	module.exports = Create;
 
+	/*                 {<label className="radio-inline"><p>solo</p><input type="radio" value="solo"></input></label>
+	                        <label className="radio-inline"><p>h</p><input type="radio" name="optradio"></input></label>}*/
+
 /***/ },
 /* 233 */
 /***/ function(module, exports, __webpack_require__) {
@@ -41010,15 +41013,14 @@
 	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
 
 	  var formatMatch = function (match) {
-	    return [match.title, match.type, match.startdate, match.duration, match.starting_funds, match.userCash, match.opponentCash, match.creator_id, match.winner, match.created_at, match.status, match.m_id];
+	    return [match.title, match.type, match.startdate, match.enddate, match.duration, match.starting_funds, match.userCash, match.opponentCash, match.winner, match.status, match.m_id];
 	  };
 
 	  if (action.actionType === "CREATE_MATCH") {
 	    //needed??
 
-	    console.log('sTORE', action.data);
-
-	    _userMatches.matches.push([action.data.title, action.data.type, moment(action.data.startdate).fromNow(), moment(action.data.enddate).fromNow(), action.data.starting_funds, action.data.challengee, action.data.creator_id, action.data.winner, action.data.created_at, action.data.status, action.data.m_id]);
+	    _userMatches.matches.push([action.data.title, action.data.type, moment(action.data.startdate).fromNow(), moment(action.data.enddate).fromNow(), action.data.starting_funds, action.data.challengee, action.data.winner, //-----------------> to be updated
+	    action.data.status, action.data.m_id]);
 
 	    localStorage.setItem('matchId', action.data.m_id);
 	    matchesStore.emitChange();
@@ -41033,7 +41035,7 @@
 
 	      if (match.status === 'pending' || match.status === 'active') {
 	        matches.push(formatMatch(match));
-	      } else if (status === 'complete') {
+	      } else if (match.status === 'complete') {
 	        past.push(formatMatch(match));
 	      }
 	    });
@@ -44734,7 +44736,7 @@
 	        { key: 0 },
 	        'Oh arr! Ye ',
 	        "'",
-	        'ave nah created or joined any matches yet, get t',
+	        'ave nah created or joined any battles yet, get t',
 	        "'",
 	        ' t',
 	        "'",
@@ -44764,11 +44766,6 @@
 	          React.createElement(
 	            'td',
 	            null,
-	            match[3]
-	          ),
-	          React.createElement(
-	            'td',
-	            null,
 	            match[4]
 	          ),
 	          React.createElement(
@@ -44780,6 +44777,11 @@
 	            'td',
 	            null,
 	            match[6]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[7]
 	          ),
 	          React.createElement('td', null),
 	          React.createElement(
@@ -44862,11 +44864,6 @@
 	      'div',
 	      null,
 	      React.createElement(
-	        'h1',
-	        { className: 'centreTitle' },
-	        'Battles'
-	      ),
-	      React.createElement(
 	        'table',
 	        { className: 'table' },
 	        React.createElement(
@@ -44878,7 +44875,7 @@
 	            React.createElement(
 	              'th',
 	              null,
-	              'Title'
+	              'Name of Yer Battle'
 	            ),
 	            React.createElement(
 	              'th',
@@ -44888,7 +44885,7 @@
 	            React.createElement(
 	              'th',
 	              null,
-	              'Start Date'
+	              'Date Finished'
 	            ),
 	            React.createElement(
 	              'th',
@@ -44898,22 +44895,17 @@
 	            React.createElement(
 	              'th',
 	              null,
-	              'Starting Gold'
+	              'Final Treasure'
 	            ),
 	            React.createElement(
 	              'th',
 	              null,
-	              'My Portfolio Value'
+	              'Opponents Treasure'
 	            ),
 	            React.createElement(
 	              'th',
 	              null,
-	              'Opponents Portfolio Value'
-	            ),
-	            React.createElement(
-	              'th',
-	              null,
-	              'Gauge'
+	              'The Victor'
 	            ),
 	            React.createElement('th', null)
 	          )
@@ -44932,11 +44924,7 @@
 	        { key: 0 },
 	        'Oh arr! Ye ',
 	        "'",
-	        'ave nah created or joined any matches yet, get t',
-	        "'",
-	        ' t',
-	        "'",
-	        ' it handsomely!'
+	        'ave nah any past battles'
 	      );
 	    } else {
 	      var that = this;
@@ -44957,11 +44945,6 @@
 	          React.createElement(
 	            'td',
 	            null,
-	            match[2]
-	          ),
-	          React.createElement(
-	            'td',
-	            null,
 	            match[3]
 	          ),
 	          React.createElement(
@@ -44969,11 +44952,20 @@
 	            null,
 	            match[4]
 	          ),
-	          React.createElement('td', null),
 	          React.createElement(
 	            'td',
 	            null,
-	            match[5]
+	            match[6]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[7]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[8]
 	          ),
 	          React.createElement('td', null),
 	          React.createElement(
@@ -44993,6 +44985,11 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'container' },
+	      React.createElement(
+	        'h1',
+	        { className: 'centreTitle' },
+	        'Past Battles'
+	      ),
 	      toDisplay
 	    );
 	  }

@@ -43,19 +43,17 @@ var PastMatches = React.createClass({
     var arrayOfMatches = [];
     var toDisplay;
     var matchTable = 
-      (<div>
-        <h1 className="centreTitle">Battles</h1>           
+      (<div>      
           <table className="table">
             <thead>
               <tr>
-                <th>Title</th>
+                <th>Name of Yer Battle</th>
                 <th>Type</th>
-                <th>Start Date</th>
+                <th>Date Finished</th>
                 <th>Duration</th>
-                <th>Starting Gold</th>
-                <th>My Portfolio Value</th>
-                <th>Opponents Portfolio Value</th>
-                <th>Gauge</th>
+                <th>Final Treasure</th>
+                <th>Opponents Treasure</th>
+                <th>The Victor</th>
                 <th></th>
               </tr>
             </thead>
@@ -66,18 +64,18 @@ var PastMatches = React.createClass({
         </div>);
 
       if (!this.state.pastMatches) {
-        toDisplay = (<p key={0}>Oh arr! Ye {"'"}ave nah created or joined any matches yet, get t{"'"} t{"'"} it handsomely!</p>);
+        toDisplay = (<p key={0}>Oh arr! Ye {"'"}ave nah any past battles</p>);
       } else {
         var that = this;
         this.state.pastMatches.map(function (match, index) {
           arrayOfMatches.push(<tr key={index}>
                                 <td>{match[0]}</td>
                                 <td>{match[1]}</td>
-                                <td>{match[2]}</td>
                                 <td>{match[3]}</td>
                                 <td>{match[4]}</td>
-                                <td></td>
-                                <td>{match[5]}</td>
+                                <td>{match[6]}</td>
+                                <td>{match[7]}</td>
+                                <td>{match[8]}</td>
                                 <td></td>
                                 <td><button value={match} type="button" className="btn btn-primary" onClick={that.handleClick}>To Portfolio</button></td>
                               </tr>);
@@ -87,6 +85,7 @@ var PastMatches = React.createClass({
 
     return (
       <div className="container">
+        <h1 className="centreTitle">Past Battles</h1>     
 
         {toDisplay}
         

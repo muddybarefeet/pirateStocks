@@ -39,21 +39,18 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
       match.title,
       match.type,
       match.startdate,
+      match.enddate,
       match.duration,
       match.starting_funds,
       match.userCash,
       match.opponentCash,
-      match.creator_id,
       match.winner,
-      match.created_at,
       match.status,
       match.m_id
     ];
   };
 
   if(action.actionType === "CREATE_MATCH") { //needed??
-
-    console.log('sTORE', action.data);
 
     _userMatches.matches.push([
       action.data.title,
@@ -62,9 +59,7 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
       moment(action.data.enddate).fromNow(),
       action.data.starting_funds,
       action.data.challengee,
-      action.data.creator_id,
-      action.data.winner,
-      action.data.created_at,
+      action.data.winner,//-----------------> to be updated
       action.data.status,
       action.data.m_id
     ]);
@@ -82,7 +77,7 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
 
       if (match.status === 'pending' || match.status === 'active') {
         matches.push(formatMatch(match));
-      } else if (status === 'complete') {
+      } else if (match.status === 'complete') {
         past.push(formatMatch(match));
 
       }

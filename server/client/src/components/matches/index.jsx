@@ -66,7 +66,7 @@ var Matches = React.createClass({
         </div>);
 
       if (!this.state.matches) {
-        toDisplay = (<p key={0}>Oh arr! Ye {"'"}ave nah created or joined any matches yet, get t{"'"} t{"'"} it handsomely!</p>);
+        toDisplay = (<p key={0}>Oh arr! Ye {"'"}ave nah created or joined any battles yet, get t{"'"} t{"'"} it handsomely!</p>);
       } else {
         var that = this;
         this.state.matches.map(function (match, index) {
@@ -74,10 +74,10 @@ var Matches = React.createClass({
                                 <td>{match[0]}</td>
                                 <td>{match[1]}</td>
                                 <td>{match[2]}</td>
-                                <td>{match[3]}</td>
                                 <td>{match[4]}</td>
                                 <td>{match[5]}</td>
                                 <td>{match[6]}</td>
+                                <td>{match[7]}</td>
                                 <td></td>
                                 <td><button value={match} type="button" className="btn btn-primary" onClick={that.handleClick}>To Portfolio</button></td>
                               </tr>);

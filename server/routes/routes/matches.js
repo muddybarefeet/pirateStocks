@@ -82,18 +82,17 @@ module.exports = function (services) {
       var title = req.body.title;
 
       services.db.matches.createMatch(req.__userId, startFunds, type, startDate, endDate, title)
-        .then(function (match) {
-          console.log('in match route', match);
-          console.log('route make match', match);
-          return res.status(200).json({
-            data: match
-          });
-        })
-        .catch(function (err) {
-          return res.status(400).json({
-            message: err
-          });
+      .then(function (match) {
+        console.log('route make match', match);
+        return res.status(200).json({
+          data: match
         });
+      })
+      .catch(function (err) {
+        return res.status(400).json({
+          message: err
+        });
+      });
 
     });
 

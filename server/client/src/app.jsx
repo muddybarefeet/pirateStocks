@@ -45,7 +45,7 @@ var App = React.createClass({
           <li className="active"><Link to="/matches">Yer Battles</Link></li>
           <li><Link to="/join">Join a New Battle</Link></li>
           <li><Link to="/create">Design a Battle</Link></li>
-          <li><a href="/pastMatches">Past Battles</a></li>
+          <li><Link to="/pastMatches">Past Battles</Link></li>
         </ul>
       </div>
     )

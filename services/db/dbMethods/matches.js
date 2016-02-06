@@ -43,13 +43,13 @@ module.exports = function (knex) {
     startDate = standardizeStart(startDate);
     endDate = standardizeEnd(endDate);
 
-    // if (startDate >= endDate){
-    //   throw new Error('End date can not occur before start date.');
-    // }
+    if (startDate >= endDate){
+      throw new Error('End date can not occur before start date.');
+    }
 
-    // if (startDate < today){
-    //   throw new Error('Start date can be before today.');
-    // }
+    if (startDate < today){
+      throw new Error('Start date can be before today.');
+    }
 
     if (type === SOLO) {
       challengee = userId;
@@ -71,9 +71,6 @@ module.exports = function (knex) {
     .then(function (match) {
       console.log('return match', match);
       return match[0];
-    })
-    .catch(function (err) {
-      return err;
     });
 
   };
@@ -160,6 +157,7 @@ module.exports = function (knex) {
         return knex.select()
         .from('trades')
         .where('user_id', opponentId)
+        .andWhere('match_id', match.m_id)
         .orderBy('created_at', 'desc')//check this is in the right order!!! not need asc!!
         .limit(1)
         .then(function (trade) {
@@ -174,6 +172,7 @@ module.exports = function (knex) {
           return knex.select()
           .from('trades')
           .where('user_id', userId)
+          .andWhere('match_id', match.m_id)
           .orderBy('created_at', 'desc')
           .limit(1)
           .then(function (trade) {
@@ -187,6 +186,7 @@ module.exports = function (knex) {
             //find duration
             match.duration = getDuarion(match.startdate, match.enddate);
             match.startdate = moment(new Date (match.startdate)).fromNow();
+            match.enddate = moment(new Date (match.enddate)).fromNow();
             match.type = formatType(match.type);
             console.log('match rteurn from trades table to battles', match);
             return match;

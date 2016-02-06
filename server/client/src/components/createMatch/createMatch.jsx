@@ -140,3 +140,6 @@ var Create = React.createClass({
 
 module.exports = Create;
 
+/*                 {<label className="radio-inline"><p>solo</p><input type="radio" value="solo"></input></label>
+                        <label className="radio-inline"><p>h</p><input type="radio" name="optradio"></input></label>}*/
+
