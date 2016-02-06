@@ -36,7 +36,6 @@ var Search = React.createClass({
   },
 
   componentDidMount: function () {
-    console.log('location', this.props.location.pathname.split('/').splice(-2, 1));
     this.setState({
       matchId: this.props.location.pathname.split('/').splice(-2, 1)
     });

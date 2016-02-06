@@ -27239,7 +27239,6 @@
 	  },
 
 	  makeTrade: function (matchId, qty, symbol, action) {
-	    console.log('in action to trade', matchId, qty, symbol, action);
 	    requestHelper.post('trades/' + matchId, { matchId: matchId, numShares: qty, symbol: symbol, action: action }, jwt).end(function (err, response) {
 	      console.log('in trade RESPONSE', response);
 	      if (!err) {
@@ -27407,7 +27406,7 @@
 	                    React.createElement(
 	                      'label',
 	                      { className: 'checkbox-inline' },
-	                      React.createElement('input', { type: 'checkbox', id: 'inlineCheckbox2', value: 'head to head' }),
+	                      React.createElement('input', { type: 'checkbox', id: 'inlineCheckbox2', value: 'head' }),
 	                      'Head to Head'
 	                    )
 	                  ),
@@ -43702,6 +43701,7 @@
 	var Link = __webpack_require__(159).Link;
 	var portfolioStore = __webpack_require__(387);
 	var matchActions = __webpack_require__(231);
+	var numeral = __webpack_require__(233);
 
 	var Portfolio = React.createClass({
 	  displayName: 'Portfolio',
@@ -43890,7 +43890,7 @@
 	        'Yer ',
 	        "'",
 	        'ave $',
-	        this.state.availableCash,
+	        numeral(this.state.availableCash).format('0,0.00'),
 	        ' gold ter spend'
 	      ),
 	      React.createElement(
@@ -43899,7 +43899,7 @@
 	        'Yer current chest o',
 	        "'",
 	        ' gold values $',
-	        this.state.totalValue
+	        numeral(this.state.totalValue).format('0,0.00')
 	      ),
 	      arrayOfStocks
 	    );
@@ -44030,7 +44030,6 @@
 	  },
 
 	  componentDidMount: function () {
-	    console.log('location', this.props.location.pathname.split('/').splice(-2, 1));
 	    this.setState({
 	      matchId: this.props.location.pathname.split('/').splice(-2, 1)
 	    });

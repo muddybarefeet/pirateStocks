@@ -105,7 +105,7 @@ var Create = React.createClass({
                       </label>
 
                       <label className="checkbox-inline">
-                        <input type="checkbox" id="inlineCheckbox2" value="head to head" />Head to Head
+                        <input type="checkbox" id="inlineCheckbox2" value="head" />Head to Head
                       </label>
                       
                       </div>

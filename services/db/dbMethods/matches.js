@@ -57,7 +57,7 @@ module.exports = function (knex) {
         status = ACTIVE;
       }
     }
-
+    console.log('ready to insert into create', userId, startFunds, startDate, endDate, status, challengee, title, type);
     return knex('matches').insert({
       'creator_id': userId,
       'starting_funds': startFunds,
@@ -69,7 +69,11 @@ module.exports = function (knex) {
       'type': type
     }, '*')
     .then(function (match) {
+      console.log('return match', match);
       return match[0];
+    })
+    .catch(function (err) {
+      console.log('err', err);
     });
 
   };
