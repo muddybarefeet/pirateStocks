@@ -51,7 +51,8 @@ var Matches = React.createClass({
                 <th>Title</th>
                 <th>Type</th>
                 <th>Start Date</th>
-                <th>End Date</th>
+                <th>Duration</th>
+                <th>Starting Gold</th>
                 <th>My Portfolio Value</th>
                 <th>Opponents Portfolio Value</th>
                 <th>Gauge</th>
@@ -74,8 +75,9 @@ var Matches = React.createClass({
                                 <td>{match[1]}</td>
                                 <td>{match[2]}</td>
                                 <td>{match[3]}</td>
-                                <td>To be worked out</td>
-                                <td>To be worked out</td>
+                                <td>{match[4]}</td>
+                                <td></td>
+                                <td>{match[5]}</td>
                                 <td></td>
                                 <td><button value={match} type="button" className="btn btn-primary" onClick={that.handleClick}>To Portfolio</button></td>
                               </tr>);
@@ -95,3 +97,5 @@ var Matches = React.createClass({
 });
 
 module.exports = Matches;
+
+

@@ -6,6 +6,7 @@ var CHANGE_EVENT = "change";
 
 var _userMatches = {
   matches: [],
+  pastMatches: [],
   startDate: null,
   endDate: null
 };
@@ -33,19 +34,36 @@ var matchesStore = Object.assign(new EventEmitter(), {
 AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. Store wants to know if it does anything. Payload 
   var action = payload.action;//payload is the object of data coming from dispactcher //action is the object passed from the actions file
 
-  if(action.actionType === "CREATE_MATCH") {
+  var formatMatch = function (match) {
+    return [
+      match.title,
+      match.type,
+      match.startdate,
+      match.duration,
+      match.starting_funds,
+      match.opponentCash,
+      // match.userCash, TO BE ADDED ON SORTING SELL
+      match.creator_id,
+      match.winner,
+      match.created_at,
+      match.status,
+      match.m_id
+    ];
+  };
 
-    _userMatches.matches.push([
+  if(action.actionType === "CREATE_MATCH") { //needed??
+
+    _userMatches.pendingMatches.push([
       action.data.title,
       action.data.type,
       moment(action.data.startdate).fromNow(),
       moment(action.data.enddate).fromNow(),
       action.data.starting_funds,
-      action.data.status,
       action.data.challengee,
       action.data.creator_id,
       action.data.winner,
       action.data.created_at,
+      action.data.status,
       action.data.m_id
     ]);
 
@@ -55,20 +73,14 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
 
   if(action.actionType === "GET_USER_MATCHES") {
 
-    _userMatches.matches = action.data.map(function (match) {
-      return [
-        match.title,
-        match.type,
-        moment(match.startdate).fromNow(),
-        moment(match.enddate).fromNow(),
-        match.starting_funds,
-        match.status,
-        match.challengee,
-        match.creator_id,
-        match.winner,
-        match.created_at,
-        match.m_id
-      ];
+    action.data.forEach(function (match) {
+
+      if (match.status === 'pending' || match.status === 'active') {
+        _userMatches.matches.push(formatMatch(match));
+      } else {
+        _userMatches.pastMatches.push(formatMatch(match));
+      }
+
     });
 
     matchesStore.emitChange();

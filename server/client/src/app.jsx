@@ -18,7 +18,7 @@ var Portfolio = require('./components/portfolio/index.jsx');
 var Search = require('./components/portfolio/searchStocks/index.jsx');
 var Join = require('./components/matchesToJoin.jsx');
 var Matches = require('./components/matches/index.jsx');
-
+var pastMatches = require('./components/matches/past.jsx');
 
 var App = React.createClass({
 
@@ -45,7 +45,7 @@ var App = React.createClass({
           <li className="active"><Link to="/matches">Yer Battles</Link></li>
           <li><Link to="/join">Join a New Battle</Link></li>
           <li><Link to="/create">Design a Battle</Link></li>
-          <li><a href="#">Past Battles</a></li>
+          <li><a href="/pastMatches">Past Battles</a></li>
         </ul>
       </div>
     )
@@ -93,6 +93,7 @@ ReactDOM.render(
       <Route path="/home" component={Home} />
       <Route path="join" component={Join}/>
       <Route path="/matches" component={Matches} />
+      <Route path="/pastMatches" component={pastMatches} />
       <Route path="/matches/portfolio/:id" component={Portfolio} />
       <Route path="/matches/portfolio/:id/search" component={Search} />
       <Route path="create" component={Create} />

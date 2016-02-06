@@ -64,6 +64,7 @@
 	var Search = __webpack_require__(388);
 	var Join = __webpack_require__(391);
 	var Matches = __webpack_require__(394);
+	var pastMatches = __webpack_require__(397);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -123,7 +124,7 @@
 	          null,
 	          React.createElement(
 	            'a',
-	            { href: '#' },
+	            { href: '/pastMatches' },
 	            'Past Battles'
 	          )
 	        )
@@ -189,6 +190,7 @@
 	    React.createElement(Route, { path: '/home', component: Home }),
 	    React.createElement(Route, { path: 'join', component: Join }),
 	    React.createElement(Route, { path: '/matches', component: Matches }),
+	    React.createElement(Route, { path: '/pastMatches', component: pastMatches }),
 	    React.createElement(Route, { path: '/matches/portfolio/:id', component: Portfolio }),
 	    React.createElement(Route, { path: '/matches/portfolio/:id/search', component: Search }),
 	    React.createElement(Route, { path: 'create', component: Create })
@@ -40980,6 +40982,7 @@
 
 	var _userMatches = {
 	  matches: [],
+	  pastMatches: [],
 	  startDate: null,
 	  endDate: null
 	};
@@ -41008,9 +41011,16 @@
 	  //'subscribes' to the dispatcher. Store wants to know if it does anything. Payload
 	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
 
-	  if (action.actionType === "CREATE_MATCH") {
+	  var formatMatch = function (match) {
+	    return [match.title, match.type, match.startdate, match.duration, match.starting_funds, match.opponentCash,
+	    // match.userCash, TO BE ADDED ON SORTING SELL
+	    match.creator_id, match.winner, match.created_at, match.status, match.m_id];
+	  };
 
-	    _userMatches.matches.push([action.data.title, action.data.type, moment(action.data.startdate).fromNow(), moment(action.data.enddate).fromNow(), action.data.starting_funds, action.data.status, action.data.challengee, action.data.creator_id, action.data.winner, action.data.created_at, action.data.m_id]);
+	  if (action.actionType === "CREATE_MATCH") {
+	    //needed??
+
+	    _userMatches.pendingMatches.push([action.data.title, action.data.type, moment(action.data.startdate).fromNow(), moment(action.data.enddate).fromNow(), action.data.starting_funds, action.data.challengee, action.data.creator_id, action.data.winner, action.data.created_at, action.data.status, action.data.m_id]);
 
 	    localStorage.setItem('matchId', action.data.m_id);
 	    matchesStore.emitChange();
@@ -41018,8 +41028,13 @@
 
 	  if (action.actionType === "GET_USER_MATCHES") {
 
-	    _userMatches.matches = action.data.map(function (match) {
-	      return [match.title, match.type, moment(match.startdate).fromNow(), moment(match.enddate).fromNow(), match.starting_funds, match.status, match.challengee, match.creator_id, match.winner, match.created_at, match.m_id];
+	    action.data.forEach(function (match) {
+
+	      if (match.status === 'pending' || match.status === 'active') {
+	        _userMatches.matches.push(formatMatch(match));
+	      } else {
+	        _userMatches.pastMatches.push(formatMatch(match));
+	      }
 	    });
 
 	    matchesStore.emitChange();
@@ -44670,7 +44685,12 @@
 	            React.createElement(
 	              'th',
 	              null,
-	              'End Date'
+	              'Duration'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Starting Gold'
 	            ),
 	            React.createElement(
 	              'th',
@@ -44739,12 +44759,13 @@
 	          React.createElement(
 	            'td',
 	            null,
-	            'To be worked out'
+	            match[4]
 	          ),
+	          React.createElement('td', null),
 	          React.createElement(
 	            'td',
 	            null,
-	            'To be worked out'
+	            match[5]
 	          ),
 	          React.createElement('td', null),
 	          React.createElement(
@@ -44771,6 +44792,200 @@
 	});
 
 	module.exports = Matches;
+
+/***/ },
+/* 395 */,
+/* 396 */,
+/* 397 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var matchActions = __webpack_require__(231);
+	var matchesStore = __webpack_require__(333);
+
+	var PastMatches = React.createClass({
+	  displayName: 'PastMatches',
+
+	  getInitialState: function () {
+	    return {};
+	  },
+
+	  componentWillMount: function () {
+	    matchActions.getUserMatches();
+	  },
+
+	  componentDidMount: function () {
+	    matchesStore.addChangeListener(this._onChangeEvent);
+	  },
+
+	  componentWillUnmount: function () {
+	    matchesStore.removeChangeListener(this._onChangeEvent);
+	  },
+
+	  _onChangeEvent: function () {
+	    var newMatches = matchesStore.getMatchData().pastMatches;
+	    if (newMatches.length !== 0) {
+	      this.setState({
+	        pastMatches: matchesStore.getMatchData().pastMatches
+	      });
+	    }
+	  },
+
+	  handleClick: function (event) {
+	    var match = event.target.value.split(',');
+	    var matchId = match[match.length - 1];
+	    //trigger the store to get the correct match
+	    window.location.hash = "#/matches/portfolio/" + matchId;
+	  },
+
+	  render: function () {
+
+	    var arrayOfMatches = [];
+	    var toDisplay;
+	    var matchTable = React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        { className: 'centreTitle' },
+	        'Battles'
+	      ),
+	      React.createElement(
+	        'table',
+	        { className: 'table' },
+	        React.createElement(
+	          'thead',
+	          null,
+	          React.createElement(
+	            'tr',
+	            null,
+	            React.createElement(
+	              'th',
+	              null,
+	              'Title'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Type'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Start Date'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Duration'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Starting Gold'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'My Portfolio Value'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Opponents Portfolio Value'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Gauge'
+	            ),
+	            React.createElement('th', null)
+	          )
+	        ),
+	        React.createElement(
+	          'tbody',
+	          null,
+	          arrayOfMatches
+	        )
+	      )
+	    );
+
+	    if (!this.state.matches) {
+	      toDisplay = React.createElement(
+	        'p',
+	        { key: 0 },
+	        'Oh arr! Ye ',
+	        "'",
+	        'ave nah created or joined any matches yet, get t',
+	        "'",
+	        ' t',
+	        "'",
+	        ' it handsomely!'
+	      );
+	    } else {
+	      var that = this;
+	      this.state.matches.map(function (match, index) {
+	        arrayOfMatches.push(React.createElement(
+	          'tr',
+	          { key: index },
+	          React.createElement(
+	            'td',
+	            null,
+	            match[0]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[1]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[2]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[3]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[4]
+	          ),
+	          React.createElement('td', null),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[5]
+	          ),
+	          React.createElement('td', null),
+	          React.createElement(
+	            'td',
+	            null,
+	            React.createElement(
+	              'button',
+	              { value: match, type: 'button', className: 'btn btn-primary', onClick: that.handleClick },
+	              'To Portfolio'
+	            )
+	          )
+	        ));
+	      });
+	      toDisplay = matchTable;
+	    }
+
+	    return React.createElement(
+	      'div',
+	      { className: 'container' },
+	      toDisplay
+	    );
+	  }
+
+	});
+
+	module.exports = PastMatches;
 
 /***/ }
 /******/ ]);

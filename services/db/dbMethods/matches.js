@@ -1,7 +1,7 @@
 var Promise = require('bluebird');
+var moment = require('moment');
 
 var tradesMethods = require('./trades.js');
-var utils = require('./utils.js');
 
 module.exports = function (knex) {
   var module = {};
@@ -131,36 +131,54 @@ module.exports = function (knex) {
     .table('matches')
     .where('creator_id', userId)
     .orWhere('challengee', userId)
-    .then(function (matches) {
+    .orderBy('startdate', 'desc')
+    .then(function (matches) { //sort and get the available cash
       //now want to map thought them and find the opponent and get their portfolio value
-      matches.map(function (match) {
+      return Promise.map(matches, function (match) {
 
         var opponentId;
-
         if (match.creator_id !== userId) { //if the creator is not the user then use this id to get the opponents portfolio value
           opponentId = match.creator_id;
         } else { //challangee is the id you need to use to get the opponents portfolio value
           opponentId = match.challangee;
         }
-        // var x = tradesMethods.getPortfolio(userId, match.m_id);
-        //want to call the function to get the opponents portfolio and get their available cash and do the same for the user
-        console.log('tradesMethods', utils.getPortfolio(userId, match.m_id));
-        // return x;
-        // return tradesMethods.getPortfolio(userId, match.m_id)
-        // .then(function (portfolio) {
-        //   console.log('userPortfolio', portfolio);
-        //   match.userVal = portfolio.available_cash;
-        //   return null;
-        // })
-        // .then(function () {
-        //   return tradesMethods.getPortfolio(opponentId, match.m_id);
-        // })
-        // .then(function (opponentPortfolio) {
-        //   console.log('opponentPortfolio', opponentPortfolio);
-        //   match.opponentVal = opponentPortfolio.available_cash;
-        //   return;
-        // });
-        //MAY WANT TO EDIT THE MONEY HERE TO 2DP??
+
+        //select all from the trades table for the user and opponent in order and return the newest then add as prop to match
+        return knex.select()
+        .from('trades')
+        .where('user_id', opponentId)
+        .orderBy('created_at', 'desc')//check this is in the right order!!! not need asc!!
+        .limit(1)
+        .then(function (trade) {
+          if (trade.length > 0) {
+            match.opponentCash = '$' + trade.available_cash.toFixed(2);
+          } else {
+            match.opponentCash = '$' + match.starting_funds;
+          }
+          return null;
+        })
+        .then(function () {
+          return knex.select()
+          .from('trades')
+          .where('user_id', userId)
+          .orderBy('created_at', 'desc')
+          .limit(1)
+          .then(function (trade) {
+            if (trade.length === 1) {
+              if (trade.available_cash) {//for the moment until sort out the sell function
+                match.userCash = '$' + trade.available_cash.toFixed(2);
+              }
+            } else {
+              match.userCash = '$' + match.starting_funds;
+            }
+            //format the rest of the data
+            match.starting_funds = '$' + match.starting_funds;
+            //find duration
+            match.duration = getDuarion(match.startdate, match.enddate);
+            match.startdate = moment(new Date (match.startdate)).fromNow();
+            return match;
+          });
+        });
 
       })
       .catch(function (err) {
@@ -169,6 +187,18 @@ module.exports = function (knex) {
 
     });
 
+  };
+
+  var getDuarion = function (startDate, endDate) {
+    var start = moment(new Date (startDate));
+    var end = moment(new Date(endDate));
+    var diff = end.diff(start, "days");
+    console.log('diff', diff);
+    if (diff === 1) {
+      return diff + " day";
+    } else {
+      return diff + " days";
+    }
   };
 
   return module;

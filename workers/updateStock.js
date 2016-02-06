@@ -109,30 +109,30 @@ var updateStockPricesToLatest = function (services) {
 
 var parseStockData = function (prices) {
   return [].concat.apply([], prices) //do I need apply!?
-    .map(function (stock) {
-      return {
-        symbol: stock.symbol,
-        bid: stock.Bid,
-        ask: stock.Ask,
-        change: stock.Change,
-        days_low: stock.DaysLow,
-        days_high: stock.DaysHigh,
-        year_low: stock.YearLow,
-        year_high: stock.YearHigh,
-        earnings_share: stock.EarningsShare,
-        eps_estimate_current_year: stock.EPSEstimateCurrentYear,
-        eps_estimate_next_year: stock.EPSEstimateNextYear,
-        market_capitalization: stock.MarketCapitalization,
-        ebitda: stock.EBITDA,
-        days_range: stock.DaysRange,
-        open: stock.open,
-        previous_close: stock.PreviousClose,
-        pe_ratio: stock.PERatio,
-        peg_ratio: stock.PEGRatio,
-        volume: stock.PEGRatio,
-        percent_change: stock.PercentChange
-      };
-    });
+  .map(function (stock) {
+    return {
+      symbol: stock.symbol,
+      bid: stock.Bid,
+      ask: stock.Ask,
+      change: stock.Change,
+      days_low: stock.DaysLow,
+      days_high: stock.DaysHigh,
+      year_low: stock.YearLow,
+      year_high: stock.YearHigh,
+      earnings_share: stock.EarningsShare,
+      eps_estimate_current_year: stock.EPSEstimateCurrentYear,
+      eps_estimate_next_year: stock.EPSEstimateNextYear,
+      market_capitalization: stock.MarketCapitalization,
+      ebitda: stock.EBITDA,
+      days_range: stock.DaysRange,
+      open: stock.open,
+      previous_close: stock.PreviousClose,
+      pe_ratio: stock.PERatio,
+      peg_ratio: stock.PEGRatio,
+      volume: stock.PEGRatio,
+      percent_change: stock.PercentChange
+    };
+  });
 };
 
 module.exports = function (services) {

@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "dbup": "knex migrate:latest --knexfile dbMigrations/index.js; knex seed:run --knexfile dbMigrations/index.js",
-    "dbdown": "dbMigrations/index.js"
+    "dbdown": "knex migrate:rollback --knexfile dbMigrations/index.js"
   },
   "repository": {
     "type": "git",
