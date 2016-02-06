@@ -10,7 +10,7 @@ var CreateMatchActions = {
     .post('matches/create', {title: title, type: type, funds: funds, start: start, end: end}, jwt)
     .end(function(err, response){
       console.log('response from create', response);
-      if (response) {
+      if (response.status === 200) {
         response = response.body.data;
         AppDispatcher.handleServerAction({
           actionType: "CREATE_MATCH",

@@ -178,9 +178,7 @@ module.exports = function (knex) {
           .limit(1)
           .then(function (trade) {
             if (trade.length === 1) {
-              if (trade.available_cash) {//for the moment until sort out the sell function
-                match.userCash = '$' + trade.available_cash.toFixed(2);
-              }
+                match.userCash = '$' + trade[0].available_cash.toFixed(2);
             } else {
               match.userCash = '$' + match.starting_funds;
             }
@@ -190,6 +188,7 @@ module.exports = function (knex) {
             match.duration = getDuarion(match.startdate, match.enddate);
             match.startdate = moment(new Date (match.startdate)).fromNow();
             match.type = formatType(match.type);
+            console.log('match rteurn from trades table to battles', match);
             return match;
           });
         });

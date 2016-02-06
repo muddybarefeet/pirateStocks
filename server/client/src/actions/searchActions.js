@@ -9,7 +9,7 @@ var searchActions = {
     requestHelper
     .get('stocks/?search=' + queryStr, jwt)
     .end(function (err, response){
-      if (!err) {
+      if (response.status === 200) {
         response = response.body.data;
         AppDispatcher.handleServerAction({
           actionType: "SEARCH_STOCK_DATA",
@@ -26,7 +26,7 @@ var searchActions = {
     requestHelper
     .get('stocks/'+ symbol, jwt)
     .end(function (err, response) {
-      if (!err) {
+      if (response.status === 200) {
         response = response.body.data;
         AppDispatcher.handleServerAction({
           actionType: "GET_ONE_STOCK",

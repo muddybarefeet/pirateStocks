@@ -25019,7 +25019,7 @@
 	  sendLogin: function (email, password) {
 
 	    requestHelper.post('users/login', { email: email, password: password }).end(function (err, response) {
-	      if (response) {
+	      if (response.status === 200) {
 	        userData = response.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "USER_LOGIN",
@@ -25034,7 +25034,7 @@
 	  sendSignup: function (username, email, password) {
 
 	    requestHelper.post('users/signup', { username: username, email: email, password: password }).end(function (err, response) {
-	      if (response) {
+	      if (response.status === 200) {
 	        userData = response.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "USER_SIGNUP",
@@ -27211,7 +27211,7 @@
 	  getUserMatches: function () {
 
 	    requestHelper.get('matches/user', jwt).end(function (err, response) {
-	      if (!err) {
+	      if (response.status === 200) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "GET_USER_MATCHES",
@@ -27226,7 +27226,7 @@
 	  getMatchPortfolio: function (matchId) {
 
 	    requestHelper.get('trades/' + matchId, jwt).end(function (err, response) {
-	      if (response) {
+	      if (response.status === 200) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "GET_USER_MATCH",
@@ -41010,9 +41010,7 @@
 	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
 
 	  var formatMatch = function (match) {
-	    return [match.title, match.type, match.startdate, match.duration, match.starting_funds, match.opponentCash,
-	    // match.userCash, TO BE ADDED ON SORTING SELL
-	    match.creator_id, match.winner, match.created_at, match.status, match.m_id];
+	    return [match.title, match.type, match.startdate, match.duration, match.starting_funds, match.userCash, match.opponentCash, match.creator_id, match.winner, match.created_at, match.status, match.m_id];
 	  };
 
 	  if (action.actionType === "CREATE_MATCH") {
@@ -41077,7 +41075,7 @@
 
 	    requestHelper.post('matches/create', { title: title, type: type, funds: funds, start: start, end: end }, jwt).end(function (err, response) {
 	      console.log('response from create', response);
-	      if (response) {
+	      if (response.status === 200) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "CREATE_MATCH",
@@ -44255,7 +44253,7 @@
 
 	  searchStockDb: function (queryStr) {
 	    requestHelper.get('stocks/?search=' + queryStr, jwt).end(function (err, response) {
-	      if (!err) {
+	      if (response.status === 200) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "SEARCH_STOCK_DATA",
@@ -44269,7 +44267,7 @@
 
 	  getOneStocksDetails: function (symbol) {
 	    requestHelper.get('stocks/' + symbol, jwt).end(function (err, response) {
-	      if (!err) {
+	      if (response.status === 200) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "GET_ONE_STOCK",
@@ -44580,7 +44578,7 @@
 	  getJoinableMatches: function () {
 
 	    requestHelper.get('matches/joinable', jwt).end(function (err, response) {
-	      if (!err) {
+	      if (response.status === 200) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "GET_JOINABLE_MATCHES",
@@ -44595,7 +44593,7 @@
 	  joinMatch: function (matchId) {
 	    requestHelper.put('matches/join/' + matchId, jwt).end(function (err, response) {
 	      console.log('response from join', response);
-	      if (response) {
+	      if (response.status === 200) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "GET_USER_MATCH",
@@ -44775,11 +44773,15 @@
 	            null,
 	            match[4]
 	          ),
-	          React.createElement('td', null),
 	          React.createElement(
 	            'td',
 	            null,
 	            match[5]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[6]
 	          ),
 	          React.createElement('td', null),
 	          React.createElement(

@@ -9,7 +9,7 @@ var authActions = {
     requestHelper
     .post('users/login', {email: email, password: password})
     .end(function (err, response) {
-      if (response) {
+      if (response.status === 200) {
         userData = response.body.data;
         AppDispatcher.handleServerAction({
           actionType: "USER_LOGIN",
@@ -27,7 +27,7 @@ var authActions = {
     requestHelper
     .post('users/signup', {username: username, email: email, password: password})
     .end(function (err, response) {
-      if (response) {
+      if (response.status === 200) {
         userData = response.body.data;
         AppDispatcher.handleServerAction({
           actionType: "USER_SIGNUP",

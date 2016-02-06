@@ -10,7 +10,7 @@ var joinMatchActions = {
     requestHelper
     .get('matches/joinable', jwt)
     .end(function(err, response){
-      if (!err) {
+      if (response.status === 200) {
         response = response.body.data;
         AppDispatcher.handleServerAction({
           actionType: "GET_JOINABLE_MATCHES",
@@ -28,7 +28,7 @@ var joinMatchActions = {
     .put('matches/join/' + matchId, jwt)
     .end(function (err, response) {
       console.log('response from join', response);
-      if (response) {
+      if (response.status === 200) {
         response = response.body.data;
         AppDispatcher.handleServerAction({
             actionType: "GET_USER_MATCH",

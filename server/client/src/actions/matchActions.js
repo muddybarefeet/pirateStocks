@@ -9,7 +9,7 @@ var matchActions = {
     requestHelper
     .get('matches/user', jwt)
     .end(function(err, response){
-      if (!err) {
+      if (response.status === 200) {
         response = response.body.data;
         AppDispatcher.handleServerAction({
           actionType: "GET_USER_MATCHES",
@@ -27,7 +27,7 @@ var matchActions = {
     requestHelper
     .get('trades/'+ matchId, jwt)
     .end(function (err, response) {
-      if (response) {
+      if (response.status === 200) {
         response = response.body.data;
         AppDispatcher.handleServerAction({
             actionType: "GET_USER_MATCH",

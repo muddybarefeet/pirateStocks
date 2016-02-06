@@ -41,8 +41,8 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
       match.startdate,
       match.duration,
       match.starting_funds,
+      match.userCash,
       match.opponentCash,
-      // match.userCash, TO BE ADDED ON SORTING SELL
       match.creator_id,
       match.winner,
       match.created_at,

@@ -76,8 +76,8 @@ var Matches = React.createClass({
                                 <td>{match[2]}</td>
                                 <td>{match[3]}</td>
                                 <td>{match[4]}</td>
-                                <td></td>
                                 <td>{match[5]}</td>
+                                <td>{match[6]}</td>
                                 <td></td>
                                 <td><button value={match} type="button" className="btn btn-primary" onClick={that.handleClick}>To Portfolio</button></td>
                               </tr>);
