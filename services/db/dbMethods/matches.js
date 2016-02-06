@@ -43,13 +43,13 @@ module.exports = function (knex) {
     startDate = standardizeStart(startDate);
     endDate = standardizeEnd(endDate);
 
-    if (startDate >= endDate){
-      throw new Error('End date can not occur before start date.');
-    }
+    // if (startDate >= endDate){
+    //   throw new Error('End date can not occur before start date.');
+    // }
 
-    if (startDate < today){
-      throw new Error('Start date can be before today.');
-    }
+    // if (startDate < today){
+    //   throw new Error('Start date can be before today.');
+    // }
 
     if (type === SOLO) {
       challengee = userId;
@@ -73,7 +73,7 @@ module.exports = function (knex) {
       return match[0];
     })
     .catch(function (err) {
-      console.log('err', err);
+      return err;
     });
 
   };
@@ -193,9 +193,6 @@ module.exports = function (knex) {
           });
         });
 
-      })
-      .catch(function (err) {
-        console.log('err in get user matches', err);
       });
 
     });

@@ -41026,22 +41026,20 @@
 
 	  if (action.actionType === "GET_USER_MATCHES") {
 
+	    var matches = [];
+	    var past = [];
+
 	    action.data.forEach(function (match, index) {
 
 	      if (match.status === 'pending' || match.status === 'active') {
-	        if (index === 0) {
-	          _userMatches.matches = [formatMatch(match)];
-	        } else {
-	          _userMatches.matches.push(formatMatch(match));
-	        }
+	        matches.push(formatMatch(match));
 	      } else if (status === 'complete') {
-	        if (index === 0) {
-	          _userMatches.pastMatches = [formatMatch(match)];
-	        } else {
-	          _userMatches.pastMatches.push(formatMatch(match));
-	        }
+	        past.push(formatMatch(match));
 	      }
 	    });
+
+	    _userMatches.matches = matches;
+	    _userMatches.pastMatches = past;
 
 	    matchesStore.emitChange();
 	  }

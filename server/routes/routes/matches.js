@@ -57,7 +57,6 @@ module.exports = function (services) {
       
       services.db.matches.joinMatch(req.matchId, req.__userId)
         .then(function (match) {
-          console.log('match', match);
           if (match === null) {
             res.status(400).json({
               message: 'unable to join match. Please try another'
@@ -84,6 +83,7 @@ module.exports = function (services) {
 
       services.db.matches.createMatch(req.__userId, startFunds, type, startDate, endDate, title)
         .then(function (match) {
+          console.log('in match route', match);
           console.log('route make match', match);
           return res.status(200).json({
             data: match
