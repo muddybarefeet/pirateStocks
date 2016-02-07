@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var checkAuth = require('./../../../services/jwts/index.js').checkAuth;
+var classes = require('./classes.js');
 
 module.exports = function (services) {
 
@@ -59,26 +60,22 @@ module.exports = function (services) {
   //-----------------------------------
     .post(function (req, res) {
 
-      console.log('in post route', req.__userId, req.body.numShares);
+      console.log('in post route sell', req.body.action);
 
-      var userId = req.__userId;
-      var matchId = req.matchId;
-      var numShares = req.body.numShares;
-      var action = req.body.action;
-      var stockTicker = req.body.symbol;
-
-      var actions = {
-        'buy': services.db.trades.buy,
-        'sell': services.db.trades.sell
-      };
-
-      if (actions[action] === undefined) {
+      var validate = new classes.checkTradeShares(req.__userId, req.body.matchId, req.body.numShares, req.body.action, req.body.symbol, req.body.numSharesHave);
+      console.log('validate', validate);
+      
+      if (validate.err === true) {
         res.status(400).json({
-          message: 'Not a valid action'
+          message: "Ye do nah 'ave this amount o' booty t' sell."
         });
-      }
+      } else {
+        var actions = {
+          'buy': services.db.trades.buy,
+          'sell': services.db.trades.sell
+        };
 
-      actions[action](userId, matchId, numShares, stockTicker)
+        actions[req.body.action](validate.userId, validate.matchId, validate.numShares, validate.stockTicker)
         .then(function (data) {
           res.status(200).json({
             data: data
@@ -89,6 +86,8 @@ module.exports = function (services) {
             message: err
           });
         });
+      }
+
 
     });
 

@@ -7,6 +7,8 @@ var numeral = require('numeral');
 
 var Portfolio = React.createClass({
 
+  numberInput: null,
+
   getInitialState: function () {
     return {
       totalValue: portfolioStore.getMatchData().totalValue,
@@ -39,38 +41,68 @@ var Portfolio = React.createClass({
 
   _onChangeEvent: function () {
     var match = portfolioStore.getMatchData();//getPortfolioData
+    if (this.state.errorMessage !== null) {
+      this.state.errorMessage = null;
+    } else {
+      this.state.errorMessage = match.errorMessage;
+    }
     this.setState({
-      totalValue: portfolioStore.getMatchData().totalValue,
-      availableCash: portfolioStore.getMatchData().availableCash,
-      stocks: portfolioStore.getMatchData().stocks,
-      matchTitle: portfolioStore.getMatchData().matchTitle,
+      totalValue: match.totalValue,
+      availableCash: match.availableCash,
+      stocks: match.stocks,
+      matchTitle: match.matchTitle,
       qtySell: ""
     });
+    this.render();
   },
 
-  handleSellStocksChange: function (event) {
+  handleSellStocksChange: function (eventNum) {
+    console.log('stock qty', eventNum.target.value)
     this.setState({
-      qtySell: event.target.value
+      qtySell: eventNum.target.value
     })
+    numberInput = eventNum.target.value;
   },
 
   handleSellClick: function (event) {
+    var numShares = event.target.parentElement.childNodes[7].textContent;
+    numShares = parseInt(numShares.split(": ")[1]);
+    var symbol = event.target.parentElement.childNodes[1].textContent;
+    matchActions.makeSell(this.state.portfolioId, this.state.qtySell, symbol, 'sell', numShares);
     this.setState({
       qtySell: ""
-    })
-    this.refs.amountSell.value = "";
-    var symbol = event.target.parentElement.childNodes[1].textContent;
-    matchActions.makeTrade(this.state.portfolioId, this.state.qtySell, symbol, 'sell');
+    });
+    this.scrollToTop(10);
+  },
+
+  scrollToTop: function (scrollDuration) {
+    var scrollStep = -window.scrollY / (scrollDuration / 15),
+      scrollInterval = setInterval(function(){
+      if ( window.scrollY != 0 ) {
+          window.scrollBy( 0, scrollStep );
+      }
+      else clearInterval(scrollInterval); 
+    },15);
   },
 
   render: function () {
+
+    var errorToDisplay;
+    var error = (
+      <div className="alert alert-danger" role="alert">{this.state.errorMessage}</div>
+    );
+
+    if (this.state.errorMessage !== null) {
+      errorToDisplay = error;
+    }
 
     var arrayOfStocks;
 
     if (this.state.stocks) {
       var that = this;
       arrayOfStocks = this.state.stocks.map(function (stock, index) {
-        return (<div className="card" key={index}>
+        return (
+          <div className="card" key={index}>
                   <div className="card-block">
                     
                     <ul className="list-group list-group-flush">
@@ -87,7 +119,7 @@ var Portfolio = React.createClass({
 
                           <div className="form-group">
                             <label htmlFor="number">Qty:</label>
-                            <input type="number" ref="amountSell" className="form-control" onChange={that.handleSellStocksChange} />
+                            <input className="amountSell" type="number" ref="amountSell" className="form-control" onChange={that.handleSellStocksChange} />
                           </div>
                           <button type="button" className="btn btn-primary" onClick={that.handleSellClick} >Sell</button>
 
@@ -114,6 +146,7 @@ var Portfolio = React.createClass({
         <h4>Yer {"'"}ave ${numeral(this.state.availableCash).format('0,0.00')} gold ter spend</h4>
         <h4>Yer current chest o{"'"} gold values ${numeral(this.state.totalValue).format('0,0.00')}</h4>
 
+        {errorToDisplay}
 
         {arrayOfStocks}
 

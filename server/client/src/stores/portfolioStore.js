@@ -7,7 +7,8 @@ var _currentMatch = {
   totalValue: null,
   availableCash: null,
   stocks: null,
-  matchTitle: null
+  matchTitle: null,
+  errorMessage: null
 };
 
 var portfolioStore = Object.assign(new EventEmitter(), {
@@ -85,6 +86,11 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
     _currentMatch.availableCash = action.data.portfolio.available_cash;
     _currentMatch.matchTitle = action.data.portfolio.title;
     
+    portfolioStore.emitChange();
+  }
+
+  if (action.actionType === "MAKE_SELL_ERROR") {
+    _currentMatch.errorMessage = action.message;
     portfolioStore.emitChange();
   }
 

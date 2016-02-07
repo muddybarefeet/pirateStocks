@@ -40,19 +40,23 @@ var matchActions = {
 
   },
 
-  makeTrade: function (matchId, qty, symbol, action) {
+  makeSell: function (matchId, qty, symbol, action, numSharesHave) {
     requestHelper
-    .post('trades/' + matchId, {matchId: matchId, numShares: qty, symbol: symbol, action: action }, jwt)
+    .post('trades/' + matchId, {matchId: matchId, numShares: qty, symbol: symbol, action: action, numSharesHave: numSharesHave}, jwt)
     .end(function (err, response) {
-      console.log('in trade RESPONSE', response);
-      if (!err) {
+      if (response.status !== 200) {
+      console.log('in trade RESPONSE err', response);
+        response = response.body.message;
+        AppDispatcher.handleServerAction({
+          actionType: "MAKE_SELL_ERROR",
+          message: response
+        });
+      } else {
         response = response.body.data;
         AppDispatcher.handleServerAction({
           actionType: "MAKE_TRADE",
           data: response
         });
-      } else {
-        console.log('err', err);
       }
     });
   

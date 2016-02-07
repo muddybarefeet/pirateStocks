@@ -76,7 +76,7 @@ module.exports = function (services) {
     .post(function (req, res) {
       
 
-      var matchDetails = new classes.checkcreateMatchDetails(req.body.start, req.body.end, req.body.type, req.body.title, req.body.funds);
+      var validate = new classes.checkcreateMatchDetails(req.body.start, req.body.end, req.body.type, req.body.title, req.body.funds);
       console.log('return from utils',matchDetails);
 
       if(!matchDetails.endDate && !matchDetails.startDate) {
@@ -97,7 +97,7 @@ module.exports = function (services) {
         });
       }
 
-      services.db.matches.createMatch(req.__userId, startFunds, type, startDate, endDate, title)
+      services.db.matches.createMatch(req.__userId, validate.funds, validate.type, validate.startDate, validate.endDate, validate.title)
       .then(function (match) {
         console.log('route make match', match);
         return res.status(200).json({

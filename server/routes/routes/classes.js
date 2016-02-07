@@ -20,12 +20,32 @@ var classes = {};
   //   return JSON.stringify(result);
   // }
 
+//check that the match dates are valid
 var checkcreateMatchDetails = function (startDate, endDate, type, title, funds) {
   this.title = capitalizeTitle(title);
   this.funds = funds;
   this.type = type;
   this.startDate = checkStart(startDate);
   this.endDate = checkEndDate(endDate, startDate);
+};
+
+//check that the user's sell is valid(that they own the number of shares thay they are trying to sell)
+var checkTradeShares = function (userId, matchId, numShares, action, symbol, numSharesHave) {
+  this.userId = userId;
+  this.matchId = matchId;
+  this.numShares = numShares;
+  this.action = action;
+  this.stockTicker = symbol;
+  this.err = doesUserHaveEnoughShares(numShares, numSharesHave);
+};
+
+//helper functions for above methods
+var doesUserHaveEnoughShares = function (toSell, owns) {
+  if (toSell > owns) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 var checkStart = function (startDate) {
@@ -52,5 +72,6 @@ var capitalizeTitle = function (title) {
 };
 
 classes.checkcreateMatchDetails = checkcreateMatchDetails;
+classes.checkTradeShares = checkTradeShares;
 
 module.exports = classes;

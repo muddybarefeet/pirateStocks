@@ -50,9 +50,6 @@ module.exports = function (knex) {
         res.year_high,
         res.year_low
       );
-    })
-    .catch(function (err) {
-      return null;
     });
 
   };
@@ -77,12 +74,7 @@ module.exports = function (knex) {
         var available_cash = portfolio.available_cash;
 
         if (stock === null) {
-          throw new Error('stock symbol does not exist');
-        }
-
-        if (stock.ask * numShares > available_cash) {
-          console.log('available Cash', available_cash);
-          throw new Error('insufficent funds');
+          throw new Error('Treasure symbol does nah exist.');
         }
 
         available_cash -= stock.ask * numShares;
@@ -110,10 +102,6 @@ module.exports = function (knex) {
           trade: trade,
           portfolio: portfolio
         };
-      })
-      .catch(function (err) {
-        console.log('err in buy',err);
-        return err;
       });
   };
 
@@ -171,10 +159,6 @@ module.exports = function (knex) {
           trade: trade,
           portfolio: port
         };
-      })
-      .catch(function (err) {
-        console.log('err in trade', err);
-        return null;
       });
   };
 
@@ -297,10 +281,6 @@ module.exports = function (knex) {
         var match = tuple[0];
         var trades = tuple[1];
         return module.reduceTradesToPortfolio(trades, match.starting_funds, matchTitle);
-      })
-      .catch(function (err) {
-        console.error(err);
-        return null;
       });
   };
 
