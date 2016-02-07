@@ -1,5 +1,6 @@
 var Promise = require('bluebird');
 var classes = require('./classes.js');
+var numeral = require('numeral');
 
 module.exports = function (knex) {
 
@@ -221,7 +222,7 @@ module.exports = function (knex) {
     }, {});
 
     return {
-      available_cash: availableCash,
+      available_cash: numeral(availableCash).format('0,0.00'),
       stocks: stocks,
       title: matchTitle
     };

@@ -7,7 +7,7 @@ var numeral = require('numeral');
 
 var Portfolio = React.createClass({
 
-  numberInput: null,
+  // numberInput: null,
 
   getInitialState: function () {
     return {
@@ -57,18 +57,17 @@ var Portfolio = React.createClass({
   },
 
   handleSellStocksChange: function (eventNum) {
-    console.log('stock qty', eventNum.target.value)
     this.setState({
       qtySell: eventNum.target.value
     })
-    numberInput = eventNum.target.value;
+    // numberInput = eventNum.target.value;
   },
 
   handleSellClick: function (event) {
     var numShares = event.target.parentElement.childNodes[7].textContent;
     numShares = parseInt(numShares.split(": ")[1]);
     var symbol = event.target.parentElement.childNodes[1].textContent;
-    matchActions.makeSell(this.state.portfolioId, this.state.qtySell, symbol, 'sell', numShares);
+    matchActions.makeTrade(this.state.portfolioId, this.state.qtySell, symbol, 'sell', numShares);
     this.setState({
       qtySell: ""
     });

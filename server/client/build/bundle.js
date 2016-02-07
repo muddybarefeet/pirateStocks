@@ -27238,13 +27238,13 @@
 	    });
 	  },
 
-	  makeSell: function (matchId, qty, symbol, action, numSharesHave) {
+	  makeTrade: function (matchId, qty, symbol, action, numSharesHave) {
+	    var actionType = "MAKE_" + action.toUpperCase() + "_ERROR";
 	    requestHelper.post('trades/' + matchId, { matchId: matchId, numShares: qty, symbol: symbol, action: action, numSharesHave: numSharesHave }, jwt).end(function (err, response) {
 	      if (response.status !== 200) {
-	        console.log('in trade RESPONSE err', response);
 	        response = response.body.message;
 	        AppDispatcher.handleServerAction({
-	          actionType: "MAKE_SELL_ERROR",
+	          actionType: actionType,
 	          message: response
 	        });
 	      } else {
@@ -43750,7 +43750,7 @@
 	var Portfolio = React.createClass({
 	  displayName: 'Portfolio',
 
-	  numberInput: null,
+	  // numberInput: null,
 
 	  getInitialState: function () {
 	    return {
@@ -43800,18 +43800,17 @@
 	  },
 
 	  handleSellStocksChange: function (eventNum) {
-	    console.log('stock qty', eventNum.target.value);
 	    this.setState({
 	      qtySell: eventNum.target.value
 	    });
-	    numberInput = eventNum.target.value;
+	    // numberInput = eventNum.target.value;
 	  },
 
 	  handleSellClick: function (event) {
 	    var numShares = event.target.parentElement.childNodes[7].textContent;
 	    numShares = parseInt(numShares.split(": ")[1]);
 	    var symbol = event.target.parentElement.childNodes[1].textContent;
-	    matchActions.makeSell(this.state.portfolioId, this.state.qtySell, symbol, 'sell', numShares);
+	    matchActions.makeTrade(this.state.portfolioId, this.state.qtySell, symbol, 'sell', numShares);
 	    this.setState({
 	      qtySell: ""
 	    });
@@ -43996,14 +43995,25 @@
 	var searchActions = __webpack_require__(388);
 	var searchStore = __webpack_require__(389);
 	var matchActions = __webpack_require__(231);
+	var portfolioStore = __webpack_require__(395);
 
 	var Search = React.createClass({
 	  displayName: 'Search',
 
 	  getInitialState: function () {
 	    return {
-	      clicked: false
+	      clicked: false,
+	      portfolioId: this.props.location.pathname.split('/').splice(-2, 1).toString()
 	    };
+	  },
+
+	  componentDidMount: function () {
+	    matchActions.getMatchPortfolio(this.state.portfolioId);
+	    searchStore.addChangeListener(this._onChangeEvent);
+	  },
+
+	  componentWillUnmount: function () {
+	    searchStore.removeChangeListener(this._onChangeEvent);
 	  },
 
 	  search: function (event) {
@@ -44028,24 +44038,16 @@
 	    var fnCalled = setTimeout(oncePerSec, 1000);
 	  },
 
-	  componentDidMount: function () {
-	    this.setState({
-	      matchId: this.props.location.pathname.split('/').splice(-2, 1)
-	    });
-	    searchStore.addChangeListener(this._onChangeEvent);
-	  },
-
-	  componentWillUnmount: function () {
-	    searchStore.removeChangeListener(this._onChangeEvent);
-	  },
-
 	  _onChangeEvent: function () {
 	    var stocks = searchStore.getStocksData();
+	    var that = this;
 	    this.setState({
 	      current: stocks.current,
-	      oneStock: stocks.oneStock
+	      oneStock: stocks.oneStock,
+	      availableCash: portfolioStore.getMatchData().availableCash
+	    }, function () {
+	      that.render();
 	    });
-	    this.render();
 	  },
 
 	  handleClick: function (event) {
@@ -44079,6 +44081,18 @@
 	    var stocks = [];
 	    var stockInfo;
 	    var totalCost;
+	    var userCash;
+
+	    if (this.state.availableCash) {
+	      userCash = React.createElement(
+	        'p',
+	        { className: 'card-text' },
+	        'Total loot t',
+	        "'",
+	        ' spend: $',
+	        this.state.availableCash
+	      );
+	    }
 
 	    if (this.state.current && !this.state.clicked) {
 	      var that = this;
@@ -44103,7 +44117,7 @@
 	        React.createElement(
 	          'p',
 	          { className: 'card-text' },
-	          'Total Cost: $',
+	          'Shares Total: $',
 	          this.state.total
 	        )
 	      );
@@ -44164,24 +44178,25 @@
 	                  React.createElement(
 	                    'p',
 	                    { className: 'card-text' },
-	                    'Year High: ',
+	                    'Year High: $',
 	                    stock[6]
 	                  ),
 	                  React.createElement(
 	                    'p',
 	                    { className: 'card-text' },
-	                    'Year Low: ',
+	                    'Year Low: $',
 	                    stock[7]
 	                  ),
 	                  React.createElement(
 	                    'p',
 	                    { className: 'card-text' },
-	                    'Ask: ',
+	                    'Ask: $',
 	                    stock[8]
 	                  ),
 	                  React.createElement(
 	                    'div',
 	                    { className: 'form-group' },
+	                    userCash,
 	                    React.createElement(
 	                      'label',
 	                      { htmlFor: 'number' },
@@ -44214,7 +44229,7 @@
 	      React.createElement(
 	        Link,
 	        { to: '/portfolio' },
-	        'Return to Yer Gold'
+	        'Return to Yer Treasure'
 	      ),
 	      React.createElement(
 	        'div',
@@ -44224,7 +44239,7 @@
 	          { htmlFor: 'search' },
 	          'Oggle th',
 	          "'",
-	          ' stocks ye can lay yer dirty hands on:'
+	          ' stocks yer can lay yer dirty hands on:'
 	        ),
 	        React.createElement('input', { type: 'search', ref: 'stockName', className: 'form-control', onKeyUp: this.search })
 	      ),

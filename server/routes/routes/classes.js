@@ -67,7 +67,7 @@ var checkEndDate = function (endDate, startDate) {
 };
 
 var capitalizeTitle = function (title) {
-   //split at the spaces and cap first letter
+  //split at the spaces and cap first letter
   return title.split(' ').map(function (word) {
     return word.slice(0,1).toUpperCase()+word.slice(1);
   }).toString().replace(/,/g, ' ');

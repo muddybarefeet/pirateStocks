@@ -37,7 +37,7 @@ module.exports = function (services) {
 
     });
 
-  //Get Portfolio :) done
+  //Get Portfolio
   //-----------------------------------
   router.route('/:matchId')
     .get(function (req, res) {
@@ -56,7 +56,7 @@ module.exports = function (services) {
         
     })
 
-  //Buy and Sell Route :) done
+  //Buy and Sell Route
   //-----------------------------------
     .post(function (req, res) {
 

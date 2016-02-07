@@ -4,13 +4,24 @@ var Link = require('react-router').Link;
 var searchActions = require('./../../../actions/searchActions.js');
 var searchStore = require('./../../../stores/searchStore.js');
 var matchActions = require('./../../../actions/matchActions.js');
+var portfolioStore = require('./../../../stores/portfolioStore.js');
 
 var Search = React.createClass({
 
   getInitialState: function () {
     return {
-      clicked: false
+      clicked: false,
+      portfolioId: this.props.location.pathname.split('/').splice(-2, 1).toString()
     };
+  },
+
+  componentDidMount: function () {
+    matchActions.getMatchPortfolio(this.state.portfolioId); 
+    searchStore.addChangeListener(this._onChangeEvent);
+  },
+
+  componentWillUnmount: function () {
+    searchStore.removeChangeListener(this._onChangeEvent);
   },
 
   search: function (event) {
@@ -35,24 +46,16 @@ var Search = React.createClass({
     var fnCalled = setTimeout(oncePerSec, 1000);
   },
 
-  componentDidMount: function () {
-    this.setState({
-      matchId: this.props.location.pathname.split('/').splice(-2, 1)
-    });
-    searchStore.addChangeListener(this._onChangeEvent);
-  },
-
-  componentWillUnmount: function () {
-    searchStore.removeChangeListener(this._onChangeEvent);
-  },
-
   _onChangeEvent: function () {
     var stocks = searchStore.getStocksData();
+    var that = this;
     this.setState({
       current: stocks.current,
-      oneStock: stocks.oneStock
+      oneStock: stocks.oneStock,
+      availableCash: portfolioStore.getMatchData().availableCash
+    }, function () {
+      that.render();
     });
-    this.render();
   },
 
   handleClick: function (event) {
@@ -86,18 +89,27 @@ var Search = React.createClass({
     var stocks = [];
     var stockInfo;
     var totalCost;
+    var userCash;
+
+    if (this.state.availableCash) {
+      userCash = (
+        <p className="card-text">Total loot t{"'"} spend: ${this.state.availableCash}</p>
+      );
+    }
 
     if (this.state.current && !this.state.clicked) {
       var that = this;
       stocks = this.state.current.map(function (stock, index) {
-        return (<div key={index} onClick={that.handleClick}><li>{stock}</li></div>);
+        return (
+          <div key={index} onClick={that.handleClick}><li>{stock}</li></div>
+        );
       });
     }
 
     //to be implemented when know how to get the ask price!! :( )
     if (this.state.total > 0) {
       totalCost = (<div>
-        <p className="card-text">Total Cost: ${this.state.total}</p>
+        <p className="card-text">Shares Total: ${this.state.total}</p>
       </div>);
     }
 
@@ -117,11 +129,12 @@ var Search = React.createClass({
                     <p className="card-text">Sector: {stock[3]}</p>
                     <p className="card-text">Exchange:{stock[4]}</p>
                     <p className="card-text">Percentage High: {stock[5]}</p>
-                    <p className="card-text">Year High: {stock[6]}</p>
-                    <p className="card-text">Year Low: {stock[7]}</p>
-                    <p className="card-text">Ask: {stock[8]}</p>
+                    <p className="card-text">Year High: ${stock[6]}</p>
+                    <p className="card-text">Year Low: ${stock[7]}</p>
+                    <p className="card-text">Ask: ${stock[8]}</p>
 
                     <div className="form-group">
+                      {userCash}
                       <label htmlFor="number">Qty:</label>
                       {totalCost}
                       <input className="form-control" onChange={that.handleBuyStocksChange} />
@@ -141,10 +154,10 @@ var Search = React.createClass({
       <div className="container">
 
         <h1>Search Stocks Page</h1>
-        <Link to="/portfolio">Return to Yer Gold</Link>
+        <Link to="/portfolio">Return to Yer Treasure</Link>
 
         <div className="form-group">
-          <label htmlFor="search">Oggle th{"'"} stocks ye can lay yer dirty hands on:</label>
+          <label htmlFor="search">Oggle th{"'"} stocks yer can lay yer dirty hands on:</label>
           <input type="search" ref="stockName" className="form-control" onKeyUp={this.search} />
         </div>
 
