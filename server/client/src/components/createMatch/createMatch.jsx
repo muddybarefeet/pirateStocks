@@ -74,9 +74,8 @@ var Create = React.createClass({
   handleClick: function (action) {
     if (!this.state.matchTitle || !this.state.typeOfMatch || !this.state.totalFunds || !this.state.startDate || !this.state.endDate) {
       //need to throw an err if any of the fields do not hold a value
-      console.log(this.state.typeOfMatch)
       this.setState({
-        errorMessage: "Please pick all yer battle details, 'n look t' it lively!"
+        errorMessage: "Please pick all yer battle details, 'n look t' it lively! Yer goin' t' 'ave t' make all yer choices again."
       });
     } else {
       createMatchActions.createMatch(this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, this.state.startDate, this.state.endDate);
@@ -84,6 +83,7 @@ var Create = React.createClass({
         clicked: true
       })
     }
+    this.refs.title.value = "";
   },
 
   render: function () {
@@ -110,7 +110,7 @@ var Create = React.createClass({
 
                   <div className="form-group">
                     <h4>Battle Title:</h4>
-                    <input type="email" className="form-control" onChange={this.handleTitleChange} />
+                    <input type="email" className="form-control" ref="title" onChange={this.handleTitleChange} />
                   </div>
 
                   <div className="row container">
