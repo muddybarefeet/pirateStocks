@@ -36,8 +36,7 @@ module.exports = function (knex) {
     .where(knex.raw('stocks.symbol = UPPER(?)', [symbol]))
     .then(function (response) {
       if (response.length !== 1) {
-        throw new Error('unexepected response length: ' +
-          response.length);
+        throw new Error('unexepected response length: ' + response.length);
       }
       res = response[0];
       return new classes.SingleStock(
@@ -60,7 +59,6 @@ module.exports = function (knex) {
   module.buy = function (userId, matchId, numShares, stockTicker) {
 
     var trade;
-    console.log('symbol', stockTicker);
     return Promise.all([
         //get the details of the stock you want to buy and gets the users portfolio
         module.getStock(stockTicker),
@@ -69,6 +67,7 @@ module.exports = function (knex) {
       //takes results and checks user authorised to buy specified stock/stock symbol is valid
       //if all is allowed then new buy is inserted into the trades table with the available_funds updated
       .then(function (tuple) {
+
         var stock = tuple[0];
         var portfolio = tuple[1];
 
@@ -79,6 +78,10 @@ module.exports = function (knex) {
         }
 
         available_cash -= stock.ask * numShares;
+
+        if (available_cash < 0) {
+          throw new Error("Ye 'ave nah got enough gold t' spend.");
+        }
 
         return createTrade({
           user_id: userId,
@@ -98,7 +101,6 @@ module.exports = function (knex) {
       })
       .then(function(portfolio){
         //return both the trade that occured and the new portfolio
-        console.log('return from buy', trade, portfolio);
         return {
           trade: trade,
           portfolio: portfolio
@@ -111,7 +113,6 @@ module.exports = function (knex) {
   module.sell = function (userId, matchId, numShares, stockTicker) {
 
     var trade;
-    console.log('in sell');
     return Promise.all([
         //get information for a specific stock and the users portfolio for the match
         module.getStock(stockTicker),
@@ -120,7 +121,6 @@ module.exports = function (knex) {
       //take the return data and check that the trade is valid/stock exists
       //if all fine the avaiable cash updated and data is inserted
       .then(function (tuple) {
-        console.log('TUPLE', tuple);
         var stock = tuple[0];
         var portfolio = tuple[1];
         var stocks = portfolio.stocks;
@@ -155,7 +155,6 @@ module.exports = function (knex) {
       })
       .then(function(port){
         //trade and portfolio sent back to the user
-        console.log('return from sell', trade, port);
         return {
           trade: trade,
           portfolio: port
@@ -277,7 +276,6 @@ module.exports = function (knex) {
       ])
       //pass the results from above to the reduceTradesToPortfolio which returns a users portfolio for the match in
       .then(function (tuple) {
-        //WHAT TO RETURN THE MATCH TITLE IN THIS ROUTE!!!
         var matchTitle = tuple[0].title;
         var match = tuple[0];
         var trades = tuple[1];

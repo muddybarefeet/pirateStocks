@@ -30,24 +30,25 @@ var checkcreateMatchDetails = function (startDate, endDate, type, title, funds) 
 };
 
 //check that the user's sell is valid(that they own the number of shares thay they are trying to sell)
-var checkTradeShares = function (userId, matchId, numShares, action, symbol, numSharesHave) {
+var checkTradeShares = function (userId, matchId, numShares, action, symbol, numSharesAvailableCash) {
   this.userId = userId;
   this.matchId = matchId;
   this.numShares = numShares;
   this.action = action;
   this.stockTicker = symbol;
-  this.err = doesUserHaveEnoughShares(numShares, numSharesHave);
+  this.err = doesUserHaveEnoughSharesOrCash(numShares, numSharesAvailableCash, action);
 };
 
 //helper functions for above methods
-var doesUserHaveEnoughShares = function (toSell, owns) {
-  if (toSell > owns) {
-    return "Ye do nah 'ave this amount o' booty t' sell.";
-  } else if (toSell <= 0) {
-    return "Ye cannot sell less than naught or naught shares! Oggle yer input, 'n try again.";
-  } else {
-    return null;
+var doesUserHaveEnoughSharesOrCash = function (numShares, numHasOrAvailableCash, action) {
+  if (action === 'sell') {
+    if (numShares > numHasOrAvailableCash) {
+      return "Ye do nah 'ave this amount o' booty t' sell.";
+    } else if (numShares <= 0) {
+      return "Ye cannot sell less than naught or naught shares! Oggle yer input, 'n try again.";
+    }
   }
+  return null;
 };
 
 var checkStart = function (startDate) {
