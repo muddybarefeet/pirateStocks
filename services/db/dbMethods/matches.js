@@ -43,14 +43,6 @@ module.exports = function (knex) {
     startDate = standardizeStart(startDate);
     endDate = standardizeEnd(endDate);
 
-    if (startDate >= endDate){
-      throw new Error('End date can not occur before start date.');
-    }
-
-    if (startDate < today){
-      throw new Error('Start date can be before today.');
-    }
-
     if (type === SOLO) {
       challengee = userId;
       if (startDate === today){
@@ -188,7 +180,6 @@ module.exports = function (knex) {
             match.startdate = moment(new Date (match.startdate)).fromNow();
             match.enddate = moment(new Date (match.enddate)).fromNow();
             match.type = formatType(match.type);
-            console.log('match rteurn from trades table to battles', match);
             return match;
           });
         });
@@ -203,7 +194,6 @@ module.exports = function (knex) {
     var start = moment(new Date (startDate));
     var end = moment(new Date(endDate));
     var diff = end.diff(start, "days");
-    console.log('diff', diff);
     if (diff === 1) {
       return diff + " day";
     } else {

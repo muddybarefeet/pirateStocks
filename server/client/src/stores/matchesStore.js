@@ -8,7 +8,8 @@ var _userMatches = {
   matches: [],
   pastMatches: [],
   startDate: null,
-  endDate: null
+  endDate: null,
+  errorMessage: null
 };
 
 var matchesStore = Object.assign(new EventEmitter(), {
@@ -103,6 +104,11 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
     _userMatches.endDate = action.date;
     matchesStore.emitChange();
 
+  }
+
+  if (action.actionType === "CREATE_MATCH_ERR") {
+    _userMatches.errorMessage = action.message;
+    matchesStore.emitChange();
   }
 
 });

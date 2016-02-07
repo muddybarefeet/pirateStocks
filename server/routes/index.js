@@ -36,9 +36,11 @@ module.exports = function (services) {
   });
 
   routes.forEach(function (fileName) {
-    var file = require('./routes/' + fileName)(services);
-    var newName = fileName.split('.')[0];
-    router.use('/' + newName, file);
+    if (fileName !== 'classes.js') {
+      var file = require('./routes/' + fileName)(services);
+      var newName = fileName.split('.')[0];
+      router.use('/' + newName, file);
+    }
   });
 
   return router;

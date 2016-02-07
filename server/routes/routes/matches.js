@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var checkAuth = require('./../../../services/jwts/index.js').checkAuth;
-
+var classes = require('./classes.js');
 
 module.exports = function (services) {
 
@@ -75,11 +75,27 @@ module.exports = function (services) {
   router.route('/create')
     .post(function (req, res) {
       
-      var startFunds = req.body.funds;
-      var startDate = req.body.start;
-      var endDate = req.body.end;
-      var type = req.body.type;
-      var title = req.body.title;
+
+      var matchDetails = new classes.checkcreateMatchDetails(req.body.start, req.body.end, req.body.type, req.body.title, req.body.funds);
+      console.log('return from utils',matchDetails);
+
+      if(!matchDetails.endDate && !matchDetails.startDate) {
+        return res.status(400).json({
+          message: "Yer Battle dates be nah possible, 'ave another skewer at it!"
+        });
+      }
+
+      if(!matchDetails.endDate) {
+        return res.status(400).json({
+          message: "End date can nah occur afore start date."
+        });
+      }
+
+      if(!matchDetails.startDate) {
+        return res.status(400).json({
+          message: "Start date can nah occur afore today."
+        });
+      }
 
       services.db.matches.createMatch(req.__userId, startFunds, type, startDate, endDate, title)
       .then(function (match) {

@@ -64,7 +64,7 @@
 	var Search = __webpack_require__(388);
 	var Join = __webpack_require__(391);
 	var Matches = __webpack_require__(394);
-	var PastMatches = __webpack_require__(397);
+	var PastMatches = __webpack_require__(395);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -27295,9 +27295,10 @@
 	    this.setState({
 	      matches: matchesStore.getMatchData().matches,
 	      startDate: matchesStore.getMatchData().startDate,
-	      endDate: matchesStore.getMatchData().endDate
+	      endDate: matchesStore.getMatchData().endDate,
+	      errorMessage: matchesStore.getMatchData().errorMessage
 	    });
-	    if (this.state.clicked) {
+	    if (this.state.clicked && this.state.errorMessage !== null) {
 	      this.setState({
 	        clicked: false
 	      });
@@ -27314,12 +27315,6 @@
 	    });
 	  },
 
-	  handleTypeChange: function (event) {
-	    this.setState({
-	      typeOfMatch: event.target.value
-	    });
-	  },
-
 	  handleFundsChange: function (event) {
 	    var funds = numeral().unformat(event.target.value);
 	    this.setState({
@@ -27327,15 +27322,45 @@
 	    });
 	  },
 
-	  //get the date with refs can I add them on the state? Would be neater REVISIT!
-	  handleClick: function (action) {
-	    createMatchActions.createMatch(this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, this.state.startDate, this.state.endDate);
+	  handleTypeChange: function (event) {
+	    var type = event.target.value;
+	    if (type === "Head to Cutlass") {
+	      type = 'head';
+	    } else {
+	      type = 'solo';
+	    }
 	    this.setState({
-	      clicked: true
+	      typeOfMatch: type
 	    });
 	  },
 
+	  handleClick: function (action) {
+	    if (!this.state.matchTitle || !this.state.typeOfMatch || !this.state.totalFunds || !this.state.startDate || !this.state.endDate) {
+	      //need to throw an err if any of the fields do not hold a value
+	      console.log(this.state.typeOfMatch);
+	      this.setState({
+	        errorMessage: "Please pick all yer battle details, 'n look t' it lively!"
+	      });
+	    } else {
+	      createMatchActions.createMatch(this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, this.state.startDate, this.state.endDate);
+	      this.setState({
+	        clicked: true
+	      });
+	    }
+	  },
+
 	  render: function () {
+
+	    var showErrDiv;
+	    var err = React.createElement(
+	      'div',
+	      { className: 'alert alert-danger', role: 'alert' },
+	      this.state.errorMessage
+	    );
+
+	    if (this.state.errorMessage) {
+	      showErrDiv = err;
+	    }
 
 	    return React.createElement(
 	      'div',
@@ -27348,6 +27373,7 @@
 	          { className: ' centreTitle' },
 	          'Create Match'
 	        ),
+	        showErrDiv,
 	        React.createElement(
 	          'div',
 	          { className: 'card-block' },
@@ -27366,13 +27392,13 @@
 	                  React.createElement(
 	                    'h4',
 	                    null,
-	                    'Match Title:'
+	                    'Battle Title:'
 	                  ),
 	                  React.createElement('input', { type: 'email', className: 'form-control', onChange: this.handleTitleChange })
 	                ),
 	                React.createElement(
 	                  'div',
-	                  { className: 'row' },
+	                  { className: 'row container' },
 	                  React.createElement(
 	                    'div',
 	                    { className: 'col-sm-4' },
@@ -27385,29 +27411,28 @@
 	                    React.createElement(
 	                      'h4',
 	                      null,
-	                      'Finish Date:'
-	                    ),
-	                    React.createElement(DateTimePicker, { end: 'endDate' })
-	                  ),
-	                  React.createElement(
-	                    'div',
-	                    { className: 'col-sm-4', onChange: this.handleTypeChange },
-	                    React.createElement(
-	                      'h4',
-	                      null,
-	                      'Type of Match:'
+	                      'Type o',
+	                      "'",
+	                      ' Battle:'
 	                    ),
 	                    React.createElement(
-	                      'label',
-	                      { className: 'checkbox-inline' },
-	                      React.createElement('input', { type: 'checkbox', id: 'inlineCheckbox1', value: 'solo' }),
-	                      'Solo'
-	                    ),
-	                    React.createElement(
-	                      'label',
-	                      { className: 'checkbox-inline' },
-	                      React.createElement('input', { type: 'checkbox', id: 'inlineCheckbox2', value: 'head' }),
-	                      'Head to Head'
+	                      'select',
+	                      { className: 'form-control', onChange: this.handleTypeChange },
+	                      React.createElement(
+	                        'option',
+	                        null,
+	                        'Chose Yer Battle Type'
+	                      ),
+	                      React.createElement(
+	                        'option',
+	                        null,
+	                        'Solo'
+	                      ),
+	                      React.createElement(
+	                        'option',
+	                        null,
+	                        'Head to Cutlass'
+	                      )
 	                    )
 	                  ),
 	                  React.createElement(
@@ -27416,7 +27441,13 @@
 	                    React.createElement(
 	                      'h4',
 	                      null,
-	                      'Funds:'
+	                      'Finish Date:'
+	                    ),
+	                    React.createElement(DateTimePicker, { end: 'endDate' }),
+	                    React.createElement(
+	                      'h4',
+	                      null,
+	                      'Starting Gold:'
 	                    ),
 	                    React.createElement(
 	                      'select',
@@ -27424,7 +27455,7 @@
 	                      React.createElement(
 	                        'option',
 	                        null,
-	                        'Pick Your Start Funds'
+	                        'Pick Yer Starting Gold'
 	                      ),
 	                      React.createElement(
 	                        'option',
@@ -40985,7 +41016,8 @@
 	  matches: [],
 	  pastMatches: [],
 	  startDate: null,
-	  endDate: null
+	  endDate: null,
+	  errorMessage: null
 	};
 
 	var matchesStore = Object.assign(new EventEmitter(), {
@@ -41057,6 +41089,11 @@
 	    _userMatches.endDate = action.date;
 	    matchesStore.emitChange();
 	  }
+
+	  if (action.actionType === "CREATE_MATCH_ERR") {
+	    _userMatches.errorMessage = action.message;
+	    matchesStore.emitChange();
+	  }
 	});
 
 	module.exports = matchesStore;
@@ -41074,15 +41111,20 @@
 	  createMatch: function (title, type, funds, start, end) {
 
 	    requestHelper.post('matches/create', { title: title, type: type, funds: funds, start: start, end: end }, jwt).end(function (err, response) {
-	      console.log('response from create', response);
-	      if (response.status === 200) {
+	      if (response.status !== 200) {
+	        console.log('response from create', response);
+	        response = response.body.message;
+	        AppDispatcher.handleServerAction({
+	          actionType: "CREATE_MATCH_ERR",
+	          message: response
+	        });
+	      } else {
+	        console.log('response from create2', response);
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
 	          actionType: "CREATE_MATCH",
 	          data: response
 	        });
-	      } else {
-	        console.log('err', err);
 	      }
 	    });
 	  },
@@ -44810,9 +44852,7 @@
 	module.exports = Matches;
 
 /***/ },
-/* 395 */,
-/* 396 */,
-/* 397 */
+/* 395 */
 /***/ function(module, exports, __webpack_require__) {
 
 	

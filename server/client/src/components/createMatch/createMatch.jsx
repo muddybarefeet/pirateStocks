@@ -32,9 +32,10 @@ var Create = React.createClass({
     this.setState({
       matches: matchesStore.getMatchData().matches,
       startDate: matchesStore.getMatchData().startDate,
-      endDate: matchesStore.getMatchData().endDate
+      endDate: matchesStore.getMatchData().endDate, 
+      errorMessage: matchesStore.getMatchData().errorMessage
     })
-    if (this.state.clicked) {
+    if (this.state.clicked && this.state.errorMessage !== null ) {
       this.setState({
         clicked: false
       });
@@ -51,12 +52,6 @@ var Create = React.createClass({
     });
   },
 
-  handleTypeChange: function (event) {
-    this.setState({
-      typeOfMatch: event.target.value
-    });
-  },
-
   handleFundsChange: function (event) {
     var funds = numeral().unformat(event.target.value);
     this.setState({
@@ -64,56 +59,78 @@ var Create = React.createClass({
     });
   },
 
-  //get the date with refs can I add them on the state? Would be neater REVISIT!
-  handleClick: function (action) {
-    createMatchActions.createMatch(this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, this.state.startDate, this.state.endDate);
+  handleTypeChange: function (event) {
+    var type = event.target.value;
+    if (type === "Head to Cutlass") {
+      type = 'head';
+    } else {
+      type = 'solo';
+    }
     this.setState({
-      clicked: true
-    })
+      typeOfMatch: type
+    });
+  },
+
+  handleClick: function (action) {
+    if (!this.state.matchTitle || !this.state.typeOfMatch || !this.state.totalFunds || !this.state.startDate || !this.state.endDate) {
+      //need to throw an err if any of the fields do not hold a value
+      console.log(this.state.typeOfMatch)
+      this.setState({
+        errorMessage: "Please pick all yer battle details, 'n look t' it lively!"
+      });
+    } else {
+      createMatchActions.createMatch(this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, this.state.startDate, this.state.endDate);
+      this.setState({
+        clicked: true
+      })
+    }
   },
 
   render: function () {
+
+    var showErrDiv;
+    var err = (
+      <div className="alert alert-danger" role="alert">{this.state.errorMessage}</div>
+    );
+
+    if (this.state.errorMessage) {
+      showErrDiv = err;
+    }
 
     return (
       <div className="container">
 
         <div className="container">
           <h1 className=" centreTitle">Create Match</h1>
-            
+            {showErrDiv}
           <div className="card-block">
             <ul className="list-group list-group-flush">
               <li className="list-group-item container">
                 <div>
 
                   <div className="form-group">
-                    <h4>Match Title:</h4>
+                    <h4>Battle Title:</h4>
                     <input type="email" className="form-control" onChange={this.handleTitleChange} />
                   </div>
 
-                  <div className="row">
+                  <div className="row container">
                     <div className="col-sm-4">
                       <h4>Start Date:</h4>
-                      <DateTimePicker start="startDate"/>
-                      <h4>Finish Date:</h4>
-                      <DateTimePicker end="endDate" />
+                      <DateTimePicker start="startDate" />
+                      <h4>Type o{"'"} Battle:</h4>
+                      <select className="form-control" onChange={this.handleTypeChange}>
+                        <option>Chose Yer Battle Type</option>
+                        <option>Solo</option>
+                        <option>Head to Cutlass</option>
+                      </select>
                     </div>
 
-                    <div className="col-sm-4" onChange={this.handleTypeChange}>
-                      <h4>Type of Match:</h4>
-                      <label className="checkbox-inline">
-                        <input type="checkbox" id="inlineCheckbox1" value="solo" />Solo
-                      </label>
-
-                      <label className="checkbox-inline">
-                        <input type="checkbox" id="inlineCheckbox2" value="head" />Head to Head
-                      </label>
-                      
-                      </div>
-
                     <div className="col-sm-4 form-group">
-                      <h4>Funds:</h4>
+                      <h4>Finish Date:</h4>
+                      <DateTimePicker end="endDate" />
+                      <h4>Starting Gold:</h4>
                       <select className="form-control" onChange={this.handleFundsChange}>
-                        <option>Pick Your Start Funds</option>
+                        <option>Pick Yer Starting Gold</option>
                         <option>$500</option>
                         <option>$1,000</option>
                         <option>$5,000</option>

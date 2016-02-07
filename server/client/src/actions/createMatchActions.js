@@ -9,15 +9,20 @@ var CreateMatchActions = {
     requestHelper
     .post('matches/create', {title: title, type: type, funds: funds, start: start, end: end}, jwt)
     .end(function(err, response){
-      console.log('response from create', response);
-      if (response.status === 200) {
+      if (response.status !== 200) {
+        console.log('response from create', response);
+        response = response.body.message;
+        AppDispatcher.handleServerAction({
+          actionType: "CREATE_MATCH_ERR",
+          message: response
+        });
+      } else {
+        console.log('response from create2', response);
         response = response.body.data;
         AppDispatcher.handleServerAction({
           actionType: "CREATE_MATCH",
           data: response
         });
-      } else {
-        console.log('err', err);
       }
     });
 
