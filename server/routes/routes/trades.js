@@ -65,9 +65,9 @@ module.exports = function (services) {
       var validate = new classes.checkTradeShares(req.__userId, req.body.matchId, req.body.numShares, req.body.action, req.body.symbol, req.body.numSharesHave);
       console.log('validate', validate);
       
-      if (validate.err === true) {
+      if (validate.err !== null) {
         res.status(400).json({
-          message: "Ye do nah 'ave this amount o' booty t' sell."
+          message: validate.err
         });
       } else {
         var actions = {

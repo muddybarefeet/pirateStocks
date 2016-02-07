@@ -42,9 +42,11 @@ var checkTradeShares = function (userId, matchId, numShares, action, symbol, num
 //helper functions for above methods
 var doesUserHaveEnoughShares = function (toSell, owns) {
   if (toSell > owns) {
-    return true;
+    return "Ye do nah 'ave this amount o' booty t' sell.";
+  } else if (toSell <= 0) {
+    return "Ye cannot sell less than naught or naught shares! Oggle yer input, 'n try again.";
   } else {
-    return false;
+    return null;
   }
 };
 
