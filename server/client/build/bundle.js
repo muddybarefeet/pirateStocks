@@ -61,10 +61,10 @@
 
 	var Create = __webpack_require__(232);
 	var Portfolio = __webpack_require__(386);
-	var Search = __webpack_require__(387);
-	var Join = __webpack_require__(390);
-	var Matches = __webpack_require__(393);
-	var PastMatches = __webpack_require__(394);
+	var Search = __webpack_require__(388);
+	var Join = __webpack_require__(391);
+	var Matches = __webpack_require__(394);
+	var PastMatches = __webpack_require__(395);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -27238,13 +27238,15 @@
 	    });
 	  },
 
-	  makeSell: function (matchId, qty, symbol, action, numSharesHave) {
+	  makeTrade: function (matchId, qty, symbol, action, numSharesHave) {
+	    var actionType = "MAKE_" + action + "_ERROR";
 	    requestHelper.post('trades/' + matchId, { matchId: matchId, numShares: qty, symbol: symbol, action: action, numSharesHave: numSharesHave }, jwt).end(function (err, response) {
+	      console.log('in trade RESPONSE', response);
 	      if (response.status !== 200) {
 	        console.log('in trade RESPONSE err', response);
 	        response = response.body.message;
 	        AppDispatcher.handleServerAction({
-	          actionType: "MAKE_SELL_ERROR",
+	          actionType: actionType,
 	          message: response
 	        });
 	      } else {
@@ -43743,7 +43745,7 @@
 	
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var portfolioStore = __webpack_require__(395);
+	var portfolioStore = __webpack_require__(387);
 	var matchActions = __webpack_require__(231);
 	var numeral = __webpack_require__(233);
 
@@ -43811,7 +43813,7 @@
 	    var numShares = event.target.parentElement.childNodes[7].textContent;
 	    numShares = parseInt(numShares.split(": ")[1]);
 	    var symbol = event.target.parentElement.childNodes[1].textContent;
-	    matchActions.makeSell(this.state.portfolioId, this.state.qtySell, symbol, 'sell', numShares);
+	    matchActions.makeTrade(this.state.portfolioId, this.state.qtySell, symbol, 'sell', numSharesHave);
 	    this.setState({
 	      qtySell: ""
 	    });
@@ -43991,10 +43993,94 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	
+	var AppDispatcher = __webpack_require__(220);
+	var EventEmitter = __webpack_require__(230).EventEmitter;
+	var CHANGE_EVENT = "change";
+
+	var _currentMatch = {
+	  totalValue: null,
+	  availableCash: null,
+	  stocks: null,
+	  matchTitle: null,
+	  errorMessage: null
+	};
+
+	var portfolioStore = Object.assign(new EventEmitter(), {
+
+	  getMatchData: function () {
+	    return _currentMatch;
+	  },
+
+	  emitChange: function () {
+	    this.emit(CHANGE_EVENT);
+	  },
+
+	  addChangeListener: function (callback) {
+	    this.addListener(CHANGE_EVENT, callback);
+	  },
+
+	  removeChangeListener: function (callback) {
+	    this.removeListener(CHANGE_EVENT, callback);
+	  }
+
+	});
+
+	AppDispatcher.register(function (payload) {
+	  //'subscribes' to the dispatcher. Store wants to know if it does anything. Payload
+	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
+
+	  if (action.actionType === "GET_USER_MATCH") {
+
+	    var capFirstLetter = function (matchTitle) {
+	      return matchTitle.charAt(0).toUpperCase() + matchTitle.slice(1);
+	    };
+
+	    var stocksBought = action.data.stocks;
+
+	    if (stocksBought) {
+	      _currentMatch.stocks = action.data.stocks.map(function (stock) {
+	        return [stock.name, stock.symbol, stock.ask, stock.gain_loss, stock.marketValue, stock.percent_change, stock.price, stock.shares];
+	      });
+	    }
+
+	    _currentMatch.totalValue = action.data.totalValue;
+	    _currentMatch.availableCash = action.data.available_cash;
+	    _currentMatch.matchTitle = capFirstLetter(action.data.title);
+
+	    portfolioStore.emitChange();
+	  }
+
+	  if (action.actionType === "MAKE_TRADE") {
+
+	    var stocks = action.data.portfolio.stocks;
+	    _currentMatch.stocks = stocks.map(function (stock) {
+	      return [stock.name, stock.symbol, stock.ask, stock.gain_loss, stock.marketValue, stock.percent_change, stock.price, stock.shares];
+	    });
+
+	    _currentMatch.totalValue = action.data.portfolio.totalValue;
+	    _currentMatch.availableCash = action.data.portfolio.available_cash;
+	    _currentMatch.matchTitle = action.data.portfolio.title;
+
+	    portfolioStore.emitChange();
+	  }
+
+	  if (action.actionType === "MAKE_SELL_ERROR") {
+	    _currentMatch.errorMessage = action.message;
+	    portfolioStore.emitChange();
+	  }
+	});
+
+	module.exports = portfolioStore;
+
+/***/ },
+/* 388 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var searchActions = __webpack_require__(388);
-	var searchStore = __webpack_require__(389);
+	var searchActions = __webpack_require__(389);
+	var searchStore = __webpack_require__(390);
 	var matchActions = __webpack_require__(231);
 
 	var Search = React.createClass({
@@ -44068,10 +44154,11 @@
 	  },
 
 	  handleBuyClick: function (event) {
+	    console.log('buying', matchActions);
 	    //trigger action to trades and return new portfolio to the portfolio store
 	    matchActions.makeTrade(this.state.matchId, this.state.qtyBuy, this.state.oneStock[0][1], 'buy');
-	    var location = this.props.location.pathname.split('/').splice(-2, 1);
-	    window.location.hash = "#/matches/portfolio/" + location;
+	    // var location = this.props.location.pathname.split('/').splice(-2,1);
+	    // window.location.hash = "#/matches/portfolio/"+location;
 	  },
 
 	  render: function () {
@@ -44213,7 +44300,7 @@
 	      ),
 	      React.createElement(
 	        Link,
-	        { to: '/portfolio' },
+	        { to: "/portfolio/" + this.state.matchId },
 	        'Return to Yer Gold'
 	      ),
 	      React.createElement(
@@ -44242,7 +44329,7 @@
 	module.exports = Search;
 
 /***/ },
-/* 388 */
+/* 389 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(220);
@@ -44285,7 +44372,7 @@
 	module.exports = searchActions;
 
 /***/ },
-/* 389 */
+/* 390 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -44343,7 +44430,7 @@
 	module.exports = searchStore;
 
 /***/ },
-/* 390 */
+/* 391 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//TODO: relace get data with refs so i can empty the text fields??
@@ -44351,8 +44438,8 @@
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var authActions = __webpack_require__(219);
-	var joinMatchStore = __webpack_require__(391);
-	var joinMatchActions = __webpack_require__(392);
+	var joinMatchStore = __webpack_require__(392);
+	var joinMatchActions = __webpack_require__(393);
 	var matchActions = __webpack_require__(231);
 
 	var MatchesToJoin = React.createClass({
@@ -44516,7 +44603,7 @@
 	module.exports = MatchesToJoin;
 
 /***/ },
-/* 391 */
+/* 392 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -44566,7 +44653,7 @@
 	module.exports = joinMatchStore;
 
 /***/ },
-/* 392 */
+/* 393 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -44611,7 +44698,7 @@
 	module.exports = joinMatchActions;
 
 /***/ },
-/* 393 */
+/* 394 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -44811,7 +44898,7 @@
 	module.exports = Matches;
 
 /***/ },
-/* 394 */
+/* 395 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -44996,90 +45083,6 @@
 	});
 
 	module.exports = PastMatches;
-
-/***/ },
-/* 395 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	var AppDispatcher = __webpack_require__(220);
-	var EventEmitter = __webpack_require__(230).EventEmitter;
-	var CHANGE_EVENT = "change";
-
-	var _currentMatch = {
-	  totalValue: null,
-	  availableCash: null,
-	  stocks: null,
-	  matchTitle: null,
-	  errorMessage: null
-	};
-
-	var portfolioStore = Object.assign(new EventEmitter(), {
-
-	  getMatchData: function () {
-	    return _currentMatch;
-	  },
-
-	  emitChange: function () {
-	    this.emit(CHANGE_EVENT);
-	  },
-
-	  addChangeListener: function (callback) {
-	    this.addListener(CHANGE_EVENT, callback);
-	  },
-
-	  removeChangeListener: function (callback) {
-	    this.removeListener(CHANGE_EVENT, callback);
-	  }
-
-	});
-
-	AppDispatcher.register(function (payload) {
-	  //'subscribes' to the dispatcher. Store wants to know if it does anything. Payload
-	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
-
-	  if (action.actionType === "GET_USER_MATCH") {
-
-	    var capFirstLetter = function (matchTitle) {
-	      return matchTitle.charAt(0).toUpperCase() + matchTitle.slice(1);
-	    };
-
-	    var stocksBought = action.data.stocks;
-
-	    if (stocksBought) {
-	      _currentMatch.stocks = action.data.stocks.map(function (stock) {
-	        return [stock.name, stock.symbol, stock.ask, stock.gain_loss, stock.marketValue, stock.percent_change, stock.price, stock.shares];
-	      });
-	    }
-
-	    _currentMatch.totalValue = action.data.totalValue;
-	    _currentMatch.availableCash = action.data.available_cash;
-	    _currentMatch.matchTitle = capFirstLetter(action.data.title);
-
-	    portfolioStore.emitChange();
-	  }
-
-	  if (action.actionType === "MAKE_TRADE") {
-
-	    var stocks = action.data.portfolio.stocks;
-	    _currentMatch.stocks = stocks.map(function (stock) {
-	      return [stock.name, stock.symbol, stock.ask, stock.gain_loss, stock.marketValue, stock.percent_change, stock.price, stock.shares];
-	    });
-
-	    _currentMatch.totalValue = action.data.portfolio.totalValue;
-	    _currentMatch.availableCash = action.data.portfolio.available_cash;
-	    _currentMatch.matchTitle = action.data.portfolio.title;
-
-	    portfolioStore.emitChange();
-	  }
-
-	  if (action.actionType === "MAKE_SELL_ERROR") {
-	    _currentMatch.errorMessage = action.message;
-	    portfolioStore.emitChange();
-	  }
-	});
-
-	module.exports = portfolioStore;
 
 /***/ }
 /******/ ]);

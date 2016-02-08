@@ -68,7 +68,7 @@ var Portfolio = React.createClass({
     var numShares = event.target.parentElement.childNodes[7].textContent;
     numShares = parseInt(numShares.split(": ")[1]);
     var symbol = event.target.parentElement.childNodes[1].textContent;
-    matchActions.makeSell(this.state.portfolioId, this.state.qtySell, symbol, 'sell', numShares);
+    matchActions.makeTrade(this.state.portfolioId, this.state.qtySell, symbol, 'sell', numSharesHave);
     this.setState({
       qtySell: ""
     });

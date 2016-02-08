@@ -60,33 +60,41 @@ module.exports = function (services) {
   //-----------------------------------
     .post(function (req, res) {
 
-      console.log('in post route sell', req.body.action);
+      var validate;
 
-      var validate = new classes.checkTradeShares(req.__userId, req.body.matchId, req.body.numShares, req.body.action, req.body.symbol, req.body.numSharesHave);
-      console.log('validate', validate);
-      
-      if (validate.err !== null) {
-        res.status(400).json({
-          message: validate.err
-        });
-      } else {
-        var actions = {
-          'buy': services.db.trades.buy,
-          'sell': services.db.trades.sell
-        };
-
-        actions[req.body.action](validate.userId, validate.matchId, validate.numShares, validate.stockTicker)
-        .then(function (data) {
-          res.status(200).json({
-            data: data
-          });
-        })
-        .catch(function (err) {
+      if (req.body.numSharesHave) {
+        
+        validate = new classes.checkTradeShares(req.__userId, req.body.matchId, req.body.numShares, req.body.action, req.body.symbol, req.body.numSharesHave);
+        
+        if (validate.err !== null) {
           res.status(400).json({
-            message: err
+            message: validate.err
           });
-        });
+        }
+
+      } else {
+
+        validate =  new classes.checkTradeShares(req.__userId, req.body.matchId, req.body.numShares, req.body.action, req.body.symbol);
+
       }
+
+      var actions = {
+        'buy': services.db.trades.buy,
+        'sell': services.db.trades.sell
+      };
+
+      actions[req.body.action](validate.userId, validate.matchId, validate.numShares, validate.stockTicker)
+      .then(function (data) {
+        res.status(200).json({
+          data: data
+        });
+      })
+      .catch(function (err) {
+        res.status(400).json({
+          message: err
+        });
+      });
+
 
 
     });

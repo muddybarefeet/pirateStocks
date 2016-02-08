@@ -59,7 +59,7 @@ module.exports = function (knex) {
   module.buy = function (userId, matchId, numShares, stockTicker) {
 
     var trade;
-    console.log('symbol', stockTicker);
+    console.log('symbol', stockTicker, userId, matchId, numShares);
     return Promise.all([
         //get the details of the stock you want to buy and gets the users portfolio
         module.getStock(stockTicker),
@@ -68,16 +68,17 @@ module.exports = function (knex) {
       //takes results and checks user authorised to buy specified stock/stock symbol is valid
       //if all is allowed then new buy is inserted into the trades table with the available_funds updated
       .then(function (tuple) {
+        console.log('tuple', tuple);
         var stock = tuple[0];
         var portfolio = tuple[1];
 
-        var available_cash = portfolio.available_cash;
+        var available_cash = numeral(portfolio.available_cash).format('0,0.00');
 
         if (stock === null) {
           throw new Error('Treasure symbol does nah exist.');
         }
 
-        available_cash -= stock.ask * numShares;
+        available_cash -= numeral(stock.ask * numShares).format('0,0.00');
 
         return createTrade({
           user_id: userId,
@@ -91,6 +92,7 @@ module.exports = function (knex) {
 
       })
       .then(function(resp){
+        console.log('return from trade insert', resp);
         //the trade that just occured is stored and the newly updated portfolio is got again from the database
         trade = resp;
         return module.getPortfolio(userId, matchId);

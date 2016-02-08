@@ -75,10 +75,11 @@ var Search = React.createClass({
   },
 
   handleBuyClick: function (event) {
+    console.log('buying', matchActions)
     //trigger action to trades and return new portfolio to the portfolio store
     matchActions.makeTrade(this.state.matchId, this.state.qtyBuy, this.state.oneStock[0][1], 'buy');
-    var location = this.props.location.pathname.split('/').splice(-2,1);
-    window.location.hash = "#/matches/portfolio/"+location;
+    // var location = this.props.location.pathname.split('/').splice(-2,1);
+    // window.location.hash = "#/matches/portfolio/"+location;
   },
 
   render: function () {
@@ -141,7 +142,7 @@ var Search = React.createClass({
       <div className="container">
 
         <h1>Search Stocks Page</h1>
-        <Link to="/portfolio">Return to Yer Gold</Link>
+        <Link to={"/portfolio/"+this.state.matchId}>Return to Yer Gold</Link>
 
         <div className="form-group">
           <label htmlFor="search">Oggle th{"'"} stocks ye can lay yer dirty hands on:</label>

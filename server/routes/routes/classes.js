@@ -36,7 +36,9 @@ var checkTradeShares = function (userId, matchId, numShares, action, symbol, num
   this.numShares = numShares;
   this.action = action;
   this.stockTicker = symbol;
-  this.err = doesUserHaveEnoughShares(numShares, numSharesHave);
+  if (numSharesHave) {
+    this.err = doesUserHaveEnoughShares(numShares, numSharesHave);
+  }
 };
 
 //helper functions for above methods
