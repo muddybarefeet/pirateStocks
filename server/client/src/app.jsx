@@ -39,22 +39,12 @@ var App = React.createClass({
     var logout;
     var userGreeting;
 
-    var pills = (
-      <div className="container">
-        <ul className="nav nav-pills">
-          <li className="active"><Link to="/matches">Yer Battles</Link></li>
-          <li><Link to="/pastMatches">Past Battles</Link></li>
-        </ul>
-      </div>
-    )
-
     var logoutButton = (
       <button style={{"float":"right", marginTop: '10px'}} type="button" className="btn btn-primary" onClick={this.logout}>Logout</button>
     );
 
 
     if (localStorage.jwt) {
-      toShowNav = pills;
       logout = logoutButton;
     }
 
@@ -76,6 +66,8 @@ var App = React.createClass({
             <form className="nav navbar-nav navbar-right" role="search">
               <li><Link to="/join">Join a New Battle</Link></li>
               <li><Link to="/create">Design a Battle</Link></li>
+              <li><Link to="/matches">Yer Battles</Link></li>
+              <li><Link to="/pastMatches">Past Battles</Link></li>
               {logout}
             </form>
           </div>
