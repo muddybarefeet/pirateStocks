@@ -4,8 +4,8 @@ var titleGen = {};
 
 var adjectives = [
   'Blue',
-  'Belly',
-  'Barnicle',
+  'Green-Tinged',
+  'Barnicled',
   'Salty',
   'Sloshed',
   'Eye-patched',
@@ -26,7 +26,7 @@ var adjectives = [
   'Rum-Soaked',
   'Landlubber',
   'Swaggering',
-  'Scalawag',
+  'Scalawagering',
   'Lawless',
   'Fearsome',
   'Ruthless'

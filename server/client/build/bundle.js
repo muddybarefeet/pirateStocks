@@ -27290,7 +27290,6 @@
 	  },
 
 	  componentWillMount: function () {
-	    console.log('title getting');
 	    createMatchActions.randomTitle();
 	  },
 
@@ -27309,15 +27308,16 @@
 	      endDate: matchesStore.getMatchData().endDate,
 	      errorMessage: matchesStore.getMatchData().errorMessage,
 	      title: matchesStore.getMatchData().title
+	    }, function () {
+	      if (this.state.clicked && this.state.errorMessage === null) {
+	        this.setState({
+	          clicked: false
+	        });
+	        var lastMatch = this.state.matches[this.state.matches.length - 1];
+	        var matchId = lastMatch[lastMatch.length - 1];
+	        window.location.hash = "#/matches/portfolio/" + matchId;
+	      }
 	    });
-	    if (this.state.clicked && this.state.errorMessage !== null) {
-	      this.setState({
-	        clicked: false
-	      });
-	      var lastMatch = this.state.matches[this.state.matches.length - 1];
-	      var matchId = lastMatch[lastMatch.length - 1];
-	      window.location.hash = "#/matches/portfolio/" + matchId;
-	    }
 	  },
 
 	  //methods to add form fields data to the state
@@ -27347,18 +27347,17 @@
 	  },
 
 	  handleClick: function (action) {
-	    if (!this.state.matchTitle || !this.state.typeOfMatch || !this.state.totalFunds || !this.state.startDate || !this.state.endDate) {
+	    if (!this.state.typeOfMatch || !this.state.totalFunds || !this.state.startDate || !this.state.endDate) {
 	      //need to throw an err if any of the fields do not hold a value
 	      this.setState({
-	        errorMessage: "Please pick all yer battle details, 'n look t' it lively! Yer goin' t' 'ave t' make all yer choices again."
+	        errorMessage: "Remember t' pick all yer battle details, 'n look t' it lively!"
 	      });
 	    } else {
-	      createMatchActions.createMatch(this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, this.state.startDate, this.state.endDate);
+	      createMatchActions.createMatch(this.state.title, this.state.typeOfMatch, this.state.totalFunds, this.state.startDate, this.state.endDate);
 	      this.setState({
 	        clicked: true
 	      });
 	    }
-	    this.refs.title.value = "";
 	  },
 
 	  render: function () {
@@ -41055,21 +41054,17 @@
 	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
 
 	  var formatMatch = function (match) {
-	    return [match.title, match.type, match.startdate, match.enddate, match.duration, match.starting_funds, match.userCash, match.opponentCash, match.winner, match.status, match.m_id];
+	    return [match.title, match.type, match.startdate, match.enddate, match.duration, match.starting_funds, match.userCash, match.opponentCash, match.winner, //-----------------> to be updated when have workers working
+	    match.status, match.m_id];
 	  };
 
 	  if (action.actionType === "CREATE_MATCH") {
-	    //needed??
+	    _userMatches.matches.push([action.data.title, action.data.type, action.data.startdate, action.data.enddate, action.data.starting_funds, action.data.status, action.data.m_id]);
 
-	    _userMatches.matches.push([action.data.title, action.data.type, moment(action.data.startdate).fromNow(), moment(action.data.enddate).fromNow(), action.data.starting_funds, action.data.challengee, action.data.winner, //-----------------> to be updated
-	    action.data.status, action.data.m_id]);
-
-	    localStorage.setItem('matchId', action.data.m_id); //CHANGE?
 	    matchesStore.emitChange();
 	  }
 
 	  if (action.actionType === "MATCH_TITLE") {
-	    console.log('in store title', action.data);
 	    _userMatches.title = action.data;
 	    matchesStore.emitChange();
 	  }

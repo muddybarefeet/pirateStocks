@@ -78,21 +78,20 @@ module.exports = function (services) {
       
 
       var validate = new classes.checkcreateMatchDetails(req.body.start, req.body.end, req.body.type, req.body.title, req.body.funds);
-      console.log('return from utils',matchDetails);
 
-      if(!matchDetails.endDate && !matchDetails.startDate) {
+      if(!validate.endDate && !validate.startDate) {
         return res.status(400).json({
           message: "Yer Battle dates be nah possible, 'ave another skewer at it!"
         });
       }
 
-      if(!matchDetails.endDate) {
+      if(!validate.endDate) {
         return res.status(400).json({
           message: "End date can nah occur afore start date."
         });
       }
 
-      if(!matchDetails.startDate) {
+      if(!validate.startDate) {
         return res.status(400).json({
           message: "Start date can nah occur afore today."
         });

@@ -21,7 +21,6 @@ var Create = React.createClass({
   },
 
   componentWillMount: function () {
-    console.log('title getting')
     createMatchActions.randomTitle();
   },
 
@@ -40,15 +39,16 @@ var Create = React.createClass({
       endDate: matchesStore.getMatchData().endDate, 
       errorMessage: matchesStore.getMatchData().errorMessage,
       title: matchesStore.getMatchData().title
+    }, function () {
+      if (this.state.clicked && this.state.errorMessage === null ) {
+        this.setState({
+          clicked: false
+        });
+        var lastMatch = this.state.matches[this.state.matches.length-1];
+        var matchId = lastMatch[lastMatch.length-1];
+        window.location.hash="#/matches/portfolio/" + matchId;
+      }
     })
-    if (this.state.clicked && this.state.errorMessage !== null ) {
-      this.setState({
-        clicked: false
-      });
-      var lastMatch = this.state.matches[this.state.matches.length-1];
-      var matchId = lastMatch[lastMatch.length-1];
-      window.location.hash="#/matches/portfolio/" + matchId;
-    }
   },
 
   //methods to add form fields data to the state
@@ -78,18 +78,17 @@ var Create = React.createClass({
   },
 
   handleClick: function (action) {
-    if (!this.state.matchTitle || !this.state.typeOfMatch || !this.state.totalFunds || !this.state.startDate || !this.state.endDate) {
+    if (!this.state.typeOfMatch || !this.state.totalFunds || !this.state.startDate || !this.state.endDate) {
       //need to throw an err if any of the fields do not hold a value
       this.setState({
-        errorMessage: "Please pick all yer battle details, 'n look t' it lively! Yer goin' t' 'ave t' make all yer choices again."
+        errorMessage: "Remember t' pick all yer battle details, 'n look t' it lively!"
       });
     } else {
-      createMatchActions.createMatch(this.state.matchTitle, this.state.typeOfMatch, this.state.totalFunds, this.state.startDate, this.state.endDate);
+      createMatchActions.createMatch(this.state.title, this.state.typeOfMatch, this.state.totalFunds, this.state.startDate, this.state.endDate);
       this.setState({
         clicked: true
       })
     }
-    this.refs.title.value = "";
   },
 
   render: function () {

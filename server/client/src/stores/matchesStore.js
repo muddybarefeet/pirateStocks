@@ -46,32 +46,27 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
       match.starting_funds,
       match.userCash,
       match.opponentCash,
-      match.winner,
+      match.winner, //-----------------> to be updated when have workers working
       match.status,
       match.m_id
     ];
   };
 
-  if(action.actionType === "CREATE_MATCH") { //needed??
-
+  if(action.actionType === "CREATE_MATCH") {
     _userMatches.matches.push([
       action.data.title,
       action.data.type,
-      moment(action.data.startdate).fromNow(),
-      moment(action.data.enddate).fromNow(),
+      action.data.startdate,
+      action.data.enddate,
       action.data.starting_funds,
-      action.data.challengee,
-      action.data.winner,//-----------------> to be updated
       action.data.status,
       action.data.m_id
     ]);
 
-    localStorage.setItem('matchId', action.data.m_id);//CHANGE?
     matchesStore.emitChange();
   }
 
   if (action.actionType === "MATCH_TITLE") {
-    console.log('in store title', action.data);
     _userMatches.title = action.data;
     matchesStore.emitChange();
   }
