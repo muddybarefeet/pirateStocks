@@ -2,15 +2,26 @@
 var React = require('react');
 var Link = require('react-router').Link;
 var searchActions = require('./../../../actions/searchActions.js');
-var searchStore = require('./../../../stores/searchStore.js');
 var matchActions = require('./../../../actions/matchActions.js');
+var searchStore = require('./../../../stores/searchStore.js');
+var portfolioStore = require('./../../../stores/portfolioStore.js');
 
 var Search = React.createClass({
 
   getInitialState: function () {
     return {
-      clicked: false
+      clicked: false,
+      portfolioId: this.props.location.pathname.split('/').splice(-2, 1).toString()
     };
+  },
+
+  componentDidMount: function () {
+    matchActions.getMatchPortfolio(this.state.portfolioId);
+     this.setState({
+      matchId: this.props.location.pathname.split('/').splice(-2, 1)
+    });
+    searchStore.addChangeListener(this._onChangeEvent);
+    portfolioStore.addChangeListener(this._onPortfolioChangeEvent);
   },
 
   search: function (event) {
@@ -35,15 +46,9 @@ var Search = React.createClass({
     var fnCalled = setTimeout(oncePerSec, 1000);
   },
 
-  componentDidMount: function () {
-    this.setState({
-      matchId: this.props.location.pathname.split('/').splice(-2, 1)
-    });
-    searchStore.addChangeListener(this._onChangeEvent);
-  },
-
   componentWillUnmount: function () {
     searchStore.removeChangeListener(this._onChangeEvent);
+    portfolioStore.removeChangeListener(this._onPortfolioChangeEvent);
   },
 
   _onChangeEvent: function () {
@@ -51,6 +56,13 @@ var Search = React.createClass({
     this.setState({
       current: stocks.current,
       oneStock: stocks.oneStock
+    });
+    this.render();
+  },
+
+  _onPortfolioChangeEvent: function () {
+    this.setState({
+      availableCash: portfolioStore.getMatchData().availableCash
     });
     this.render();
   },
@@ -75,9 +87,8 @@ var Search = React.createClass({
   },
 
   handleBuyClick: function (event) {
-    console.log('buying', matchActions)
     //trigger action to trades and return new portfolio to the portfolio store
-    matchActions.makeTrade(this.state.matchId, this.state.qtyBuy, this.state.oneStock[0][1], 'buy');
+    matchActions.makeTrade(this.state.matchId[0], this.state.qtyBuy, this.state.oneStock[0][1], 'buy');
     // var location = this.props.location.pathname.split('/').splice(-2,1);
     // window.location.hash = "#/matches/portfolio/"+location;
   },
@@ -87,6 +98,7 @@ var Search = React.createClass({
     var stocks = [];
     var stockInfo;
     var totalCost;
+    var userCash;
 
     if (this.state.current && !this.state.clicked) {
       var that = this;
@@ -102,6 +114,12 @@ var Search = React.createClass({
       </div>);
     }
 
+    if (this.state.availableCash) {
+      userCash = (<div>
+        <p className="card-text">Yer Gold: ${this.state.availableCash}</p>
+      </div>);
+    }
+
     if (this.state.oneStock && this.state.clicked) {
       var that = this;
       stockInfo = this.state.oneStock.map(function (stock, index) {
@@ -112,6 +130,7 @@ var Search = React.createClass({
               <ul className="list-group list-group-flush">
                 <li className="list-group-item">
                   <div>
+                    {userCash}
                     <h4 className="card-title centreTitle">{stock[0]}</h4>
                     <h6 className="card-subtitle text-muted centreTitle">{stock[1]}</h6>
                     <p className="card-text">Industry: {stock[2]}</p>
@@ -121,7 +140,6 @@ var Search = React.createClass({
                     <p className="card-text">Year High: {stock[6]}</p>
                     <p className="card-text">Year Low: {stock[7]}</p>
                     <p className="card-text">Ask: {stock[8]}</p>
-
                     <div className="form-group">
                       <label htmlFor="number">Qty:</label>
                       {totalCost}

@@ -1,20 +1,20 @@
 
-var React = require('react');
+// var React = require('react');
 
 
-var PortfolioCard = React.createClass({
+// var PortfolioCard = React.createClass({
 
-  render: function () {
+//   render: function () {
 
-    return (
-      <div className="container">
+//     return (
+//       <div className="container">
 
-        {this.props}
+//         {this.props}
 
-      </div>
-    );
-  }
+//       </div>
+//     );
+//   }
 
-});
+// });
 
-module.exports = PortfolioCard;
+// module.exports = PortfolioCard;

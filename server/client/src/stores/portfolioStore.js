@@ -35,14 +35,8 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
   var action = payload.action;//payload is the object of data coming from dispactcher //action is the object passed from the actions file
   
   if(action.actionType === "GET_USER_MATCH") {
-    
-    var capFirstLetter  = function (matchTitle) {
-      return matchTitle.charAt(0).toUpperCase() + matchTitle.slice(1);
-    };
 
-    var stocksBought = action.data.stocks;
-
-    if (stocksBought) {
+    if (action.data.stocks) {
       _currentMatch.stocks = action.data.stocks.map(function (stock) {
         return [
           stock.name,
@@ -60,7 +54,7 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
 
     _currentMatch.totalValue = action.data.totalValue;
     _currentMatch.availableCash = action.data.available_cash;
-    _currentMatch.matchTitle = capFirstLetter(action.data.title);
+    _currentMatch.matchTitle = action.data.title;
 
     portfolioStore.emitChange();
 

@@ -82,7 +82,7 @@ module.exports = function (services) {
         'buy': services.db.trades.buy,
         'sell': services.db.trades.sell
       };
-
+      console.log('route matche id', validate.matchId)
       actions[req.body.action](validate.userId, validate.matchId, validate.numShares, validate.stockTicker)
       .then(function (data) {
         res.status(200).json({

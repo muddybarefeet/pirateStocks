@@ -86,33 +86,6 @@
 	    var logout;
 	    var userGreeting;
 
-	    var pills = React.createElement(
-	      'div',
-	      { className: 'container' },
-	      React.createElement(
-	        'ul',
-	        { className: 'nav nav-pills' },
-	        React.createElement(
-	          'li',
-	          { className: 'active' },
-	          React.createElement(
-	            Link,
-	            { to: '/matches' },
-	            'Yer Battles'
-	          )
-	        ),
-	        React.createElement(
-	          'li',
-	          null,
-	          React.createElement(
-	            Link,
-	            { to: '/pastMatches' },
-	            'Past Battles'
-	          )
-	        )
-	      )
-	    );
-
 	    var logoutButton = React.createElement(
 	      'button',
 	      { style: { "float": "right", marginTop: '10px' }, type: 'button', className: 'btn btn-primary', onClick: this.logout },
@@ -120,7 +93,6 @@
 	    );
 
 	    if (localStorage.jwt) {
-	      toShowNav = pills;
 	      logout = logoutButton;
 	    }
 
@@ -175,6 +147,24 @@
 	                Link,
 	                { to: '/create' },
 	                'Design a Battle'
+	              )
+	            ),
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                Link,
+	                { to: '/matches' },
+	                'Yer Battles'
+	              )
+	            ),
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                Link,
+	                { to: '/pastMatches' },
+	                'Past Battles'
 	              )
 	            ),
 	            logout
@@ -26890,14 +26880,14 @@
 	  if (action.actionType === "USER_SIGNUP") {
 	    localStorage.setItem('jwt', action.data.jwt);
 	    localStorage.setItem("username", action.data.username);
+	    authStore.emitChange();
 	  }
 
 	  if (action.actionType === "USER_LOGIN") {
 	    localStorage.setItem("jwt", action.data.jwt);
 	    localStorage.setItem("username", action.data.username);
+	    authStore.emitChange();
 	  }
-
-	  authStore.emitChange();
 	});
 
 	module.exports = authStore;
@@ -43838,18 +43828,17 @@
 	    this.setState({
 	      qtySell: ""
 	    });
-	    // this.scrollToTop(10);
+	    this.scrollToTop(10);
 	  },
 
-	  // scrollToTop: function (scrollDuration) {
-	  //   var scrollStep = -window.scrollY / (scrollDuration / 15),
-	  //     scrollInterval = setInterval(function(){
-	  //     if ( window.scrollY != 0 ) {
-	  //         window.scrollBy( 0, scrollStep );
-	  //     }
-	  //     else clearInterval(scrollInterval);
-	  //   },15);
-	  // },
+	  scrollToTop: function (scrollDuration) {
+	    var scrollStep = -window.scrollY / (scrollDuration / 15),
+	        scrollInterval = setInterval(function () {
+	      if (window.scrollY != 0) {
+	        window.scrollBy(0, scrollStep);
+	      } else clearInterval(scrollInterval);
+	    }, 15);
+	  },
 
 	  render: function () {
 
@@ -44053,13 +44042,7 @@
 
 	  if (action.actionType === "GET_USER_MATCH") {
 
-	    var capFirstLetter = function (matchTitle) {
-	      return matchTitle.charAt(0).toUpperCase() + matchTitle.slice(1);
-	    };
-
-	    var stocksBought = action.data.stocks;
-
-	    if (stocksBought) {
+	    if (action.data.stocks) {
 	      _currentMatch.stocks = action.data.stocks.map(function (stock) {
 	        return [stock.name, stock.symbol, stock.ask, stock.gain_loss, stock.marketValue, stock.percent_change, stock.price, stock.shares];
 	      });
@@ -44067,7 +44050,7 @@
 
 	    _currentMatch.totalValue = action.data.totalValue;
 	    _currentMatch.availableCash = action.data.available_cash;
-	    _currentMatch.matchTitle = capFirstLetter(action.data.title);
+	    _currentMatch.matchTitle = action.data.title;
 
 	    portfolioStore.emitChange();
 	  }
@@ -44101,16 +44084,27 @@
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var searchActions = __webpack_require__(389);
-	var searchStore = __webpack_require__(390);
 	var matchActions = __webpack_require__(231);
+	var searchStore = __webpack_require__(390);
+	var portfolioStore = __webpack_require__(387);
 
 	var Search = React.createClass({
 	  displayName: 'Search',
 
 	  getInitialState: function () {
 	    return {
-	      clicked: false
+	      clicked: false,
+	      portfolioId: this.props.location.pathname.split('/').splice(-2, 1).toString()
 	    };
+	  },
+
+	  componentDidMount: function () {
+	    matchActions.getMatchPortfolio(this.state.portfolioId);
+	    this.setState({
+	      matchId: this.props.location.pathname.split('/').splice(-2, 1)
+	    });
+	    searchStore.addChangeListener(this._onChangeEvent);
+	    portfolioStore.addChangeListener(this._onPortfolioChangeEvent);
 	  },
 
 	  search: function (event) {
@@ -44135,15 +44129,9 @@
 	    var fnCalled = setTimeout(oncePerSec, 1000);
 	  },
 
-	  componentDidMount: function () {
-	    this.setState({
-	      matchId: this.props.location.pathname.split('/').splice(-2, 1)
-	    });
-	    searchStore.addChangeListener(this._onChangeEvent);
-	  },
-
 	  componentWillUnmount: function () {
 	    searchStore.removeChangeListener(this._onChangeEvent);
+	    portfolioStore.removeChangeListener(this._onPortfolioChangeEvent);
 	  },
 
 	  _onChangeEvent: function () {
@@ -44151,6 +44139,13 @@
 	    this.setState({
 	      current: stocks.current,
 	      oneStock: stocks.oneStock
+	    });
+	    this.render();
+	  },
+
+	  _onPortfolioChangeEvent: function () {
+	    this.setState({
+	      availableCash: portfolioStore.getMatchData().availableCash
 	    });
 	    this.render();
 	  },
@@ -44175,9 +44170,8 @@
 	  },
 
 	  handleBuyClick: function (event) {
-	    console.log('buying', matchActions);
 	    //trigger action to trades and return new portfolio to the portfolio store
-	    matchActions.makeTrade(this.state.matchId, this.state.qtyBuy, this.state.oneStock[0][1], 'buy');
+	    matchActions.makeTrade(this.state.matchId[0], this.state.qtyBuy, this.state.oneStock[0][1], 'buy');
 	    // var location = this.props.location.pathname.split('/').splice(-2,1);
 	    // window.location.hash = "#/matches/portfolio/"+location;
 	  },
@@ -44187,6 +44181,7 @@
 	    var stocks = [];
 	    var stockInfo;
 	    var totalCost;
+	    var userCash;
 
 	    if (this.state.current && !this.state.clicked) {
 	      var that = this;
@@ -44217,6 +44212,19 @@
 	      );
 	    }
 
+	    if (this.state.availableCash) {
+	      userCash = React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'p',
+	          { className: 'card-text' },
+	          'Yer Gold: $',
+	          this.state.availableCash
+	        )
+	      );
+	    }
+
 	    if (this.state.oneStock && this.state.clicked) {
 	      var that = this;
 	      stockInfo = this.state.oneStock.map(function (stock, index) {
@@ -44235,6 +44243,7 @@
 	                React.createElement(
 	                  'div',
 	                  null,
+	                  userCash,
 	                  React.createElement(
 	                    'h4',
 	                    { className: 'card-title centreTitle' },

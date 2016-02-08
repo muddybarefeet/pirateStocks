@@ -71,18 +71,18 @@ var Portfolio = React.createClass({
     this.setState({
       qtySell: ""
     });
-    // this.scrollToTop(10);
+    this.scrollToTop(10);
   },
 
-  // scrollToTop: function (scrollDuration) {
-  //   var scrollStep = -window.scrollY / (scrollDuration / 15),
-  //     scrollInterval = setInterval(function(){
-  //     if ( window.scrollY != 0 ) {
-  //         window.scrollBy( 0, scrollStep );
-  //     }
-  //     else clearInterval(scrollInterval); 
-  //   },15);
-  // },
+  scrollToTop: function (scrollDuration) {
+    var scrollStep = -window.scrollY / (scrollDuration / 15),
+      scrollInterval = setInterval(function(){
+      if ( window.scrollY != 0 ) {
+          window.scrollBy( 0, scrollStep );
+      }
+      else clearInterval(scrollInterval); 
+    },15);
+  },
 
   render: function () {
 
