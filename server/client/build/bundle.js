@@ -27239,7 +27239,7 @@
 	  },
 
 	  makeTrade: function (matchId, qty, symbol, action, numSharesHave) {
-	    var actionType = "MAKE_" + action + "_ERROR";
+	    var actionType = "MAKE_" + action.toUpperCase() + "_ERROR";
 	    requestHelper.post('trades/' + matchId, { matchId: matchId, numShares: qty, symbol: symbol, action: action, numSharesHave: numSharesHave }, jwt).end(function (err, response) {
 	      console.log('in trade RESPONSE', response);
 	      if (response.status !== 200) {
@@ -43802,7 +43802,6 @@
 	  },
 
 	  handleSellStocksChange: function (eventNum) {
-	    console.log('stock qty', eventNum.target.value);
 	    this.setState({
 	      qtySell: eventNum.target.value
 	    });
@@ -43810,24 +43809,25 @@
 	  },
 
 	  handleSellClick: function (event) {
-	    var numShares = event.target.parentElement.childNodes[7].textContent;
-	    numShares = parseInt(numShares.split(": ")[1]);
+	    var numSharesHave = event.target.parentElement.childNodes[7].textContent;
+	    numSharesHave = parseInt(numSharesHave.split(": ")[1]);
 	    var symbol = event.target.parentElement.childNodes[1].textContent;
 	    matchActions.makeTrade(this.state.portfolioId, this.state.qtySell, symbol, 'sell', numSharesHave);
 	    this.setState({
 	      qtySell: ""
 	    });
-	    this.scrollToTop(10);
+	    // this.scrollToTop(10);
 	  },
 
-	  scrollToTop: function (scrollDuration) {
-	    var scrollStep = -window.scrollY / (scrollDuration / 15),
-	        scrollInterval = setInterval(function () {
-	      if (window.scrollY != 0) {
-	        window.scrollBy(0, scrollStep);
-	      } else clearInterval(scrollInterval);
-	    }, 15);
-	  },
+	  // scrollToTop: function (scrollDuration) {
+	  //   var scrollStep = -window.scrollY / (scrollDuration / 15),
+	  //     scrollInterval = setInterval(function(){
+	  //     if ( window.scrollY != 0 ) {
+	  //         window.scrollBy( 0, scrollStep );
+	  //     }
+	  //     else clearInterval(scrollInterval);
+	  //   },15);
+	  // },
 
 	  render: function () {
 
@@ -44051,7 +44051,6 @@
 	  }
 
 	  if (action.actionType === "MAKE_TRADE") {
-
 	    var stocks = action.data.portfolio.stocks;
 	    _currentMatch.stocks = stocks.map(function (stock) {
 	      return [stock.name, stock.symbol, stock.ask, stock.gain_loss, stock.marketValue, stock.percent_change, stock.price, stock.shares];

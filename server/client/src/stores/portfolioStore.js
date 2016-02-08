@@ -67,7 +67,6 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
   }
 
   if(action.actionType === "MAKE_TRADE") {
-
     var stocks = action.data.portfolio.stocks;
     _currentMatch.stocks = stocks.map(function (stock) {
       return [

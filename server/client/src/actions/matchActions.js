@@ -41,7 +41,7 @@ var matchActions = {
   },
 
   makeTrade: function (matchId, qty, symbol, action, numSharesHave) {
-    var actionType = "MAKE_"+action+"_ERROR";
+    var actionType = "MAKE_"+action.toUpperCase()+"_ERROR";
     requestHelper
     .post('trades/' + matchId, {matchId: matchId, numShares: qty, symbol: symbol, action: action, numSharesHave: numSharesHave}, jwt)
     .end(function (err, response) {

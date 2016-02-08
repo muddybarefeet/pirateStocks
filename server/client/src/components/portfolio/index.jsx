@@ -57,7 +57,6 @@ var Portfolio = React.createClass({
   },
 
   handleSellStocksChange: function (eventNum) {
-    console.log('stock qty', eventNum.target.value)
     this.setState({
       qtySell: eventNum.target.value
     })
@@ -65,25 +64,25 @@ var Portfolio = React.createClass({
   },
 
   handleSellClick: function (event) {
-    var numShares = event.target.parentElement.childNodes[7].textContent;
-    numShares = parseInt(numShares.split(": ")[1]);
+    var numSharesHave = event.target.parentElement.childNodes[7].textContent;
+    numSharesHave = parseInt(numSharesHave.split(": ")[1]);
     var symbol = event.target.parentElement.childNodes[1].textContent;
     matchActions.makeTrade(this.state.portfolioId, this.state.qtySell, symbol, 'sell', numSharesHave);
     this.setState({
       qtySell: ""
     });
-    this.scrollToTop(10);
+    // this.scrollToTop(10);
   },
 
-  scrollToTop: function (scrollDuration) {
-    var scrollStep = -window.scrollY / (scrollDuration / 15),
-      scrollInterval = setInterval(function(){
-      if ( window.scrollY != 0 ) {
-          window.scrollBy( 0, scrollStep );
-      }
-      else clearInterval(scrollInterval); 
-    },15);
-  },
+  // scrollToTop: function (scrollDuration) {
+  //   var scrollStep = -window.scrollY / (scrollDuration / 15),
+  //     scrollInterval = setInterval(function(){
+  //     if ( window.scrollY != 0 ) {
+  //         window.scrollBy( 0, scrollStep );
+  //     }
+  //     else clearInterval(scrollInterval); 
+  //   },15);
+  // },
 
   render: function () {
 
