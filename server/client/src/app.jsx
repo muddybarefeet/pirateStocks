@@ -43,8 +43,6 @@ var App = React.createClass({
       <div className="container">
         <ul className="nav nav-pills">
           <li className="active"><Link to="/matches">Yer Battles</Link></li>
-          <li><Link to="/join">Join a New Battle</Link></li>
-          <li><Link to="/create">Design a Battle</Link></li>
           <li><Link to="/pastMatches">Past Battles</Link></li>
         </ul>
       </div>
@@ -61,7 +59,7 @@ var App = React.createClass({
     }
 
     if (localStorage.username) {
-      userGreeting = (<div style={{marginTop: '24px', marginRight: '10px', fontSize: "15px", textDecoration: "none", color: "white", float:'right'}}>Ahoy: {localStorage.username}</div>);
+      userGreeting = (<div style={{marginTop: '24px', marginRight: '10px', fontSize: "15px", textDecoration: "none", color: "white", float:'right'}}>Ahoy: {localStorage.username + "!"}</div>);
     }
 
     return (
@@ -72,8 +70,14 @@ var App = React.createClass({
             <div className="navbar-header" style={{marginTop: '20px'}}>
               <Link to="/home" style={{fontSize: "22px", textDecoration: "none", color: "white"}}>Pirate Stocks</Link>
             </div>
-            {logout}
-            {userGreeting}
+            <form className="nav navbar-nav navbar-left" role="search">
+              {userGreeting}
+            </form>
+            <form className="nav navbar-nav navbar-right" role="search">
+              <li><Link to="/join">Join a New Battle</Link></li>
+              <li><Link to="/create">Design a Battle</Link></li>
+              {logout}
+            </form>
           </div>
         </nav>
         {toShowNav}

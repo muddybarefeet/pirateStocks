@@ -106,24 +106,6 @@
 	          null,
 	          React.createElement(
 	            Link,
-	            { to: '/join' },
-	            'Join a New Battle'
-	          )
-	        ),
-	        React.createElement(
-	          'li',
-	          null,
-	          React.createElement(
-	            Link,
-	            { to: '/create' },
-	            'Design a Battle'
-	          )
-	        ),
-	        React.createElement(
-	          'li',
-	          null,
-	          React.createElement(
-	            Link,
 	            { to: '/pastMatches' },
 	            'Past Battles'
 	          )
@@ -147,7 +129,7 @@
 	        'div',
 	        { style: { marginTop: '24px', marginRight: '10px', fontSize: "15px", textDecoration: "none", color: "white", float: 'right' } },
 	        'Ahoy: ',
-	        localStorage.username
+	        localStorage.username + "!"
 	      );
 	    }
 
@@ -169,8 +151,34 @@
 	              'Pirate Stocks'
 	            )
 	          ),
-	          logout,
-	          userGreeting
+	          React.createElement(
+	            'form',
+	            { className: 'nav navbar-nav navbar-left', role: 'search' },
+	            userGreeting
+	          ),
+	          React.createElement(
+	            'form',
+	            { className: 'nav navbar-nav navbar-right', role: 'search' },
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                Link,
+	                { to: '/join' },
+	                'Join a New Battle'
+	              )
+	            ),
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                Link,
+	                { to: '/create' },
+	                'Design a Battle'
+	              )
+	            ),
+	            logout
+	          )
 	        )
 	      ),
 	      toShowNav,
