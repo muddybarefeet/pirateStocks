@@ -43913,10 +43913,10 @@
 	                    { className: 'form-group' },
 	                    React.createElement(
 	                      'label',
-	                      { htmlFor: 'number' },
+	                      null,
 	                      'Qty:'
 	                    ),
-	                    React.createElement('input', { className: 'amountSell', type: 'number', ref: 'amountSell', className: 'form-control', onChange: that.handleSellStocksChange })
+	                    React.createElement('input', { className: 'amountSell', type: 'text', ref: 'amountSell', className: 'form-control', onChange: that.handleSellStocksChange })
 	                  ),
 	                  React.createElement(
 	                    'button',

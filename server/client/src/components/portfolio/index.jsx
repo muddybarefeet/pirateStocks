@@ -117,8 +117,8 @@ var Portfolio = React.createClass({
                           <p className="card-text">Number of Stocks: {stock[7]}</p>
 
                           <div className="form-group">
-                            <label htmlFor="number">Qty:</label>
-                            <input className="amountSell" type="number" ref="amountSell" className="form-control" onChange={that.handleSellStocksChange} />
+                            <label>Qty:</label>
+                            <input className="amountSell" type="text" ref="amountSell" className="form-control" onChange={that.handleSellStocksChange} />
                           </div>
                           <button type="button" className="btn btn-primary" onClick={that.handleSellClick} >Sell</button>
 
