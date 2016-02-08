@@ -27289,6 +27289,11 @@
 	    };
 	  },
 
+	  componentWillMount: function () {
+	    console.log('title getting');
+	    createMatchActions.randomTitle();
+	  },
+
 	  componentDidMount: function () {
 	    matchesStore.addChangeListener(this._onChangeEvent);
 	  },
@@ -27302,7 +27307,8 @@
 	      matches: matchesStore.getMatchData().matches,
 	      startDate: matchesStore.getMatchData().startDate,
 	      endDate: matchesStore.getMatchData().endDate,
-	      errorMessage: matchesStore.getMatchData().errorMessage
+	      errorMessage: matchesStore.getMatchData().errorMessage,
+	      title: matchesStore.getMatchData().title
 	    });
 	    if (this.state.clicked && this.state.errorMessage !== null) {
 	      this.setState({
@@ -27398,9 +27404,9 @@
 	                  React.createElement(
 	                    'h4',
 	                    null,
-	                    'Battle Title:'
-	                  ),
-	                  React.createElement('input', { type: 'email', className: 'form-control', ref: 'title', onChange: this.handleTitleChange })
+	                    'Ahoy! Yer next battle be : ',
+	                    this.state.title
+	                  )
 	                ),
 	                React.createElement(
 	                  'div',
@@ -27501,9 +27507,6 @@
 	});
 
 	module.exports = Create;
-
-	/*                 {<label className="radio-inline"><p>solo</p><input type="radio" value="solo"></input></label>
-	                        <label className="radio-inline"><p>h</p><input type="radio" name="optradio"></input></label>}*/
 
 /***/ },
 /* 233 */
@@ -41023,7 +41026,8 @@
 	  pastMatches: [],
 	  startDate: null,
 	  endDate: null,
-	  errorMessage: null
+	  errorMessage: null,
+	  title: null
 	};
 
 	var matchesStore = Object.assign(new EventEmitter(), {
@@ -41060,7 +41064,13 @@
 	    _userMatches.matches.push([action.data.title, action.data.type, moment(action.data.startdate).fromNow(), moment(action.data.enddate).fromNow(), action.data.starting_funds, action.data.challengee, action.data.winner, //-----------------> to be updated
 	    action.data.status, action.data.m_id]);
 
-	    localStorage.setItem('matchId', action.data.m_id);
+	    localStorage.setItem('matchId', action.data.m_id); //CHANGE?
+	    matchesStore.emitChange();
+	  }
+
+	  if (action.actionType === "MATCH_TITLE") {
+	    console.log('in store title', action.data);
+	    _userMatches.title = action.data;
 	    matchesStore.emitChange();
 	  }
 
@@ -41132,6 +41142,15 @@
 	          data: response
 	        });
 	      }
+	    });
+	  },
+
+	  randomTitle: function () {
+	    requestHelper.get('matches/title', jwt).end(function (err, response) {
+	      AppDispatcher.handleClientAction({
+	        actionType: "MATCH_TITLE",
+	        data: response.body.data
+	      });
 	    });
 	  },
 

@@ -1,4 +1,4 @@
-//function to convert csv into json
+
 var moment = require('moment');
 
 var classes = {};

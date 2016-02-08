@@ -36,7 +36,7 @@ module.exports = function (services) {
   });
 
   routes.forEach(function (fileName) {
-    if (fileName !== 'classes.js') {
+    if (fileName !== 'classes.js' && fileName !== 'titleGenerator.js') {
       var file = require('./routes/' + fileName)(services);
       var newName = fileName.split('.')[0];
       router.use('/' + newName, file);

@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var checkAuth = require('./../../../services/jwts/index.js').checkAuth;
 var classes = require('./classes.js');
+var titleGenerator = require('./titleGenerator.js');
 
 module.exports = function (services) {
 
@@ -108,6 +109,16 @@ module.exports = function (services) {
         return res.status(400).json({
           message: err
         });
+      });
+
+    });
+
+    //generate random match title
+    router.route('/title')
+    .get(function (req, res) {
+      
+      res.status(200).json({
+        data: titleGenerator.getTitle()
       });
 
     });

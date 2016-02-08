@@ -20,6 +20,11 @@ var Create = React.createClass({
     }
   },
 
+  componentWillMount: function () {
+    console.log('title getting')
+    createMatchActions.randomTitle();
+  },
+
   componentDidMount: function () {
     matchesStore.addChangeListener(this._onChangeEvent);
   },
@@ -33,7 +38,8 @@ var Create = React.createClass({
       matches: matchesStore.getMatchData().matches,
       startDate: matchesStore.getMatchData().startDate,
       endDate: matchesStore.getMatchData().endDate, 
-      errorMessage: matchesStore.getMatchData().errorMessage
+      errorMessage: matchesStore.getMatchData().errorMessage,
+      title: matchesStore.getMatchData().title
     })
     if (this.state.clicked && this.state.errorMessage !== null ) {
       this.setState({
@@ -109,8 +115,7 @@ var Create = React.createClass({
                 <div>
 
                   <div className="form-group">
-                    <h4>Battle Title:</h4>
-                    <input type="email" className="form-control" ref="title" onChange={this.handleTitleChange} />
+                    <h4>Ahoy! Yer next battle be : {this.state.title}</h4>
                   </div>
 
                   <div className="row container">
@@ -157,6 +162,4 @@ var Create = React.createClass({
 
 module.exports = Create;
 
-/*                 {<label className="radio-inline"><p>solo</p><input type="radio" value="solo"></input></label>
-                        <label className="radio-inline"><p>h</p><input type="radio" name="optradio"></input></label>}*/
 

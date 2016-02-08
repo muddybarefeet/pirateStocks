@@ -28,6 +28,17 @@ var CreateMatchActions = {
 
   },
 
+  randomTitle: function () {
+    requestHelper
+    .get('matches/title', jwt)
+    .end(function (err, response) {
+      AppDispatcher.handleClientAction({
+        actionType: "MATCH_TITLE",
+        data: response.body.data
+      });
+    });
+  },
+
   getStartDate: function (date) {
     AppDispatcher.handleClientAction({
       actionType: "START_DATE",

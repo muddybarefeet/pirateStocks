@@ -9,7 +9,8 @@ var _userMatches = {
   pastMatches: [],
   startDate: null,
   endDate: null,
-  errorMessage: null
+  errorMessage: null,
+  title: null
 };
 
 var matchesStore = Object.assign(new EventEmitter(), {
@@ -65,7 +66,13 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
       action.data.m_id
     ]);
 
-    localStorage.setItem('matchId', action.data.m_id);
+    localStorage.setItem('matchId', action.data.m_id);//CHANGE?
+    matchesStore.emitChange();
+  }
+
+  if (action.actionType === "MATCH_TITLE") {
+    console.log('in store title', action.data);
+    _userMatches.title = action.data;
     matchesStore.emitChange();
   }
 
