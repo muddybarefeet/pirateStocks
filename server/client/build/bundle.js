@@ -27209,7 +27209,6 @@
 	  getUserMatches: function () {
 
 	    requestHelper.get('matches/user', jwt).end(function (err, response) {
-	      console.log('response', response);
 	      if (response.status === 200) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -43994,7 +43993,7 @@
 	        'Yer ',
 	        "'",
 	        'ave $',
-	        this.state.availableCash,
+	        numeral(this.state.availableCash).format('0,0.00'),
 	        ' gold ter spend'
 	      ),
 	      React.createElement(
@@ -44003,7 +44002,7 @@
 	        'Yer current chest o',
 	        "'",
 	        ' gold values $',
-	        this.state.totalValue
+	        numeral(this.state.totalValue).format('0,0.00')
 	      ),
 	      errorToDisplay,
 	      arrayOfStocks
@@ -44345,7 +44344,7 @@
 	      ),
 	      React.createElement(
 	        Link,
-	        { to: "/portfolio/" + this.state.matchId },
+	        { to: "/matches/portfolio/" + this.state.matchId },
 	        'Return to Yer Gold'
 	      ),
 	      React.createElement(
@@ -44751,6 +44750,7 @@
 	var Link = __webpack_require__(159).Link;
 	var matchActions = __webpack_require__(231);
 	var matchesStore = __webpack_require__(333);
+	var numeral = __webpack_require__(233);
 
 	var Matches = React.createClass({
 	  displayName: 'Matches',
@@ -44904,17 +44904,17 @@
 	          React.createElement(
 	            'td',
 	            null,
-	            match[5]
+	            '$' + numeral(match[5]).format('0,0')
 	          ),
 	          React.createElement(
 	            'td',
 	            null,
-	            match[6]
+	            '$' + numeral(match[6]).format('0,0.00')
 	          ),
 	          React.createElement(
 	            'td',
 	            null,
-	            match[7]
+	            '$' + numeral(match[7]).format('0,0.00')
 	          ),
 	          React.createElement('td', null),
 	          React.createElement(

@@ -160,7 +160,7 @@ var Search = React.createClass({
       <div className="container">
 
         <h1>Search Stocks Page</h1>
-        <Link to={"/portfolio/"+this.state.matchId}>Return to Yer Gold</Link>
+        <Link to={"/matches/portfolio/"+this.state.matchId}>Return to Yer Gold</Link>
 
         <div className="form-group">
           <label htmlFor="search">Oggle th{"'"} stocks ye can lay yer dirty hands on:</label>

@@ -148,8 +148,8 @@ var Portfolio = React.createClass({
           <Link to={"/matches/portfolio/" + this.state.portfolioId + "/search"}>Check out yer pieces o{"'"} Eight</Link>
         </div>
 
-        <h4>Yer {"'"}ave ${this.state.availableCash} gold ter spend</h4>
-        <h4>Yer current chest o{"'"} gold values ${this.state.totalValue}</h4>
+        <h4>Yer {"'"}ave ${numeral(this.state.availableCash).format('0,0.00')} gold ter spend</h4>
+        <h4>Yer current chest o{"'"} gold values ${numeral(this.state.totalValue).format('0,0.00')}</h4>
 
         {errorToDisplay}
 
