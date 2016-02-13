@@ -84,11 +84,15 @@ var Search = React.createClass({
       qtyBuy: parseFloat(event.target.value),
       total: (parseFloat(event.target.parentElement.previousSibling.children[1].innerHTML) * parseFloat(event.target.value)).toFixed(2)
     }, function () {
-      if(this.state.availableCash < parseInt(this.state.total,10)) {
-        this.setState({
+      if(that.state.availableCash < parseInt(that.state.total,10)) {
+        that.setState({
           errorMessage: "Ye do nah 'ave enough doubloons t' buy this number o' stocks"
         }, function () {
           that.render();
+        });
+      } else {
+        that.setState({
+          errorMessage: null
         });
       }
     });
@@ -103,15 +107,6 @@ var Search = React.createClass({
     }
   },
 
-  // handleErr: function () {
-  //   var that = this;
-  //   setTimeout(function () {
-  //     that.setState({
-  //       errorMessage: null
-  //     });
-  //   }, 4000);
-  // },
-
   render: function () {
 
     var stocks = [];
@@ -121,7 +116,6 @@ var Search = React.createClass({
     var errorMessage;
 
     if (this.state.errorMessage) {
-      console.log('state', this.state.errorMessage)
       errorMessage = (
         <div className="alert alert-danger" role="alert">{this.state.errorMessage}</div>
       );
