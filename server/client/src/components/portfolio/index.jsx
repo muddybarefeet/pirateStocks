@@ -23,7 +23,6 @@ var Portfolio = React.createClass({
 
   componentDidMount: function () {
     if (this.state.portfolioId) {
-        console.log('in trigger to get match details');
         matchActions.getMatchPortfolio(this.state.portfolioId); 
     } /*else {*/
       //MAKE A NOT FOUND PAGE
@@ -42,15 +41,12 @@ var Portfolio = React.createClass({
     if (this.state.errorMessage !== null) {
       this.state.errorMessage = null;
     }
-    console.log('change2', match)
     this.setState({
       totalValue: match.totalValue,
       availableCash: match.availableCash,
       stocks: match.stocks,
       matchTitle: match.matchTitle,
       errorMessage: match.errorMessage
-    }, function () {
-      console.log('state', this.state)
     });
     this.render();
   },

@@ -27222,9 +27222,7 @@
 	  },
 
 	  getMatchPortfolio: function (matchId) {
-	    console.log('getMatchPortfolio');
 	    requestHelper.get('trades/' + matchId, jwt).end(function (err, response) {
-	      console.log('response', response);
 	      if (response.status === 200) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -27240,9 +27238,7 @@
 	  makeTrade: function (matchId, qty, symbol, action, numSharesHave) {
 	    var actionType = "MAKE_" + action.toUpperCase() + "_ERROR";
 	    requestHelper.post('trades/' + matchId, { matchId: matchId, numShares: qty, symbol: symbol, action: action, numSharesHave: numSharesHave }, jwt).end(function (err, response) {
-	      console.log('in trade RESPONSE', response);
 	      if (response.status !== 200) {
-	        console.log('in trade RESPONSE err', response);
 	        response = response.body.message;
 	        AppDispatcher.handleServerAction({
 	          actionType: actionType,
@@ -43792,7 +43788,6 @@
 
 	  componentDidMount: function () {
 	    if (this.state.portfolioId) {
-	      console.log('in trigger to get match details');
 	      matchActions.getMatchPortfolio(this.state.portfolioId);
 	    } /*else {*/
 	    //MAKE A NOT FOUND PAGE
@@ -43811,15 +43806,12 @@
 	    if (this.state.errorMessage !== null) {
 	      this.state.errorMessage = null;
 	    }
-	    console.log('change2', match);
 	    this.setState({
 	      totalValue: match.totalValue,
 	      availableCash: match.availableCash,
 	      stocks: match.stocks,
 	      matchTitle: match.matchTitle,
 	      errorMessage: match.errorMessage
-	    }, function () {
-	      console.log('state', this.state);
 	    });
 	    this.render();
 	  },
@@ -44193,8 +44185,8 @@
 	  handleBuyClick: function (event) {
 	    //trigger action to trades and return new portfolio to the portfolio store
 	    matchActions.makeTrade(this.state.matchId[0], this.state.qtyBuy, this.state.oneStock[0][1], 'buy');
-	    // var location = this.props.location.pathname.split('/').splice(-2,1);
-	    // window.location.hash = "#/matches/portfolio/"+location;
+	    var location = this.props.location.pathname.split('/').splice(-2, 1);
+	    window.location.hash = "#/matches/portfolio/" + location;
 	  },
 
 	  render: function () {

@@ -23,11 +23,9 @@ var matchActions = {
   },
 
   getMatchPortfolio: function (matchId) {
-    console.log('getMatchPortfolio');
     requestHelper
     .get('trades/'+ matchId, jwt)
     .end(function (err, response) {
-      console.log('response', response);
       if (response.status === 200) {
         response = response.body.data;
         AppDispatcher.handleServerAction({
@@ -46,9 +44,7 @@ var matchActions = {
     requestHelper
     .post('trades/' + matchId, {matchId: matchId, numShares: qty, symbol: symbol, action: action, numSharesHave: numSharesHave}, jwt)
     .end(function (err, response) {
-      console.log('in trade RESPONSE', response);
       if (response.status !== 200) {
-      console.log('in trade RESPONSE err', response);
         response = response.body.message;
         AppDispatcher.handleServerAction({
           actionType: actionType,
