@@ -59,7 +59,7 @@ module.exports = function (knex) {
   module.buy = function (userId, matchId, numShares, stockTicker) {
 
     var trade;
-    console.log('symbol', stockTicker, userId, matchId, numShares);
+
     return Promise.all([
         //get the details of the stock you want to buy and gets the users portfolio
         module.getStock(stockTicker),
@@ -68,17 +68,18 @@ module.exports = function (knex) {
       //takes results and checks user authorised to buy specified stock/stock symbol is valid
       //if all is allowed then new buy is inserted into the trades table with the available_funds updated
       .then(function (tuple) {
-        console.log('tuple', tuple);
+
         var stock = tuple[0];
         var portfolio = tuple[1];
 
-        var available_cash = numeral(portfolio.available_cash).format('0,0.00');
+        var available_cash = portfolio.available_cash;
+
+        available_cash -= stock.ask * numShares.toFixed(2);
 
         if (stock === null) {
+          console.log('in err than stock is null');
           throw new Error('Treasure symbol does nah exist.');
         }
-
-        available_cash -= numeral(stock.ask * numShares).format('0,0.00');
 
         return createTrade({
           user_id: userId,
@@ -92,14 +93,12 @@ module.exports = function (knex) {
 
       })
       .then(function(resp){
-        console.log('return from trade insert', resp);
         //the trade that just occured is stored and the newly updated portfolio is got again from the database
         trade = resp;
         return module.getPortfolio(userId, matchId);
       })
       .then(function(portfolio){
         //return both the trade that occured and the new portfolio
-        console.log('return from buy', trade, portfolio);
         return {
           trade: trade,
           portfolio: portfolio
@@ -183,6 +182,7 @@ module.exports = function (knex) {
 
 //Rolls up the users trades for a specific match into a portfolio
   module.reduceTradesToPortfolio = function (trades, startingFunds,title) {
+
     var availableCash = startingFunds;
     var matchTitle = title;
 
@@ -232,10 +232,10 @@ module.exports = function (knex) {
 
 //Gets/calculates the various number related fields of the stock
   var generatePortfolioMetrics = function (portfolio) {
+
     var portfolioValue = 0;
     var availableCash = portfolio.available_cash;
     var title = portfolio.title;
-
     var stocks = Object.keys(portfolio.stocks).map(function (stockSymbol) {
       var stockData = portfolio.stocks[stockSymbol];
       stockData.marketValue = Number((stockData.bid * stockData.shares).toFixed(2));
@@ -245,7 +245,7 @@ module.exports = function (knex) {
     });
 
     return {
-      totalValue: portfolioValue + availableCash,
+      totalValue: portfolioValue + availableCash.toFixed(2),
       available_cash: availableCash,
       stocks: stocks,
       title: title
@@ -255,8 +255,14 @@ module.exports = function (knex) {
 
 //Function that calls generatePortfolio and then the generatePortfolioMetrics function: called by buy and sell to compile a users portfolio
   module.getPortfolio = function (userId, matchId) {
+    console.log('in get trade');
     return generatePortfolio(userId, matchId)
-      .then(generatePortfolioMetrics);
+      .then(function (portfolio) {
+        return generatePortfolioMetrics(portfolio);
+      })
+      .then(function (data) {
+        return data;
+      });
   };
 
 //Get a Specific Match from the Matches Table
@@ -278,7 +284,6 @@ module.exports = function (knex) {
       ])
       //pass the results from above to the reduceTradesToPortfolio which returns a users portfolio for the match in
       .then(function (tuple) {
-        //WHAT TO RETURN THE MATCH TITLE IN THIS ROUTE!!!
         var matchTitle = tuple[0].title;
         var match = tuple[0];
         var trades = tuple[1];

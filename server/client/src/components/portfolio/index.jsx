@@ -23,11 +23,8 @@ var Portfolio = React.createClass({
 
   componentDidMount: function () {
     if (this.state.portfolioId) {
-      this.setState({
-        portfolioId: this.props.location.pathname.split('/').splice(-1, 1).toString()
-      }, function () {
+        console.log('in trigger to get match details');
         matchActions.getMatchPortfolio(this.state.portfolioId); 
-      });
     } /*else {*/
       //MAKE A NOT FOUND PAGE
       // window.location.hash = "#/notFound";
@@ -40,18 +37,20 @@ var Portfolio = React.createClass({
   },
 
   _onChangeEvent: function () {
+
     var match = portfolioStore.getMatchData();//getPortfolioData
     if (this.state.errorMessage !== null) {
       this.state.errorMessage = null;
-    } else {
-      this.state.errorMessage = match.errorMessage;
     }
+    console.log('change2', match)
     this.setState({
       totalValue: match.totalValue,
       availableCash: match.availableCash,
       stocks: match.stocks,
       matchTitle: match.matchTitle,
-      qtySell: ""
+      errorMessage: match.errorMessage
+    }, function () {
+      console.log('state', this.state)
     });
     this.render();
   },
@@ -152,8 +151,8 @@ var Portfolio = React.createClass({
           <Link to={"/matches/portfolio/" + this.state.portfolioId + "/search"}>Check out yer pieces o{"'"} Eight</Link>
         </div>
 
-        <h4>Yer {"'"}ave ${numeral(this.state.availableCash).format('0,0.00')} gold ter spend</h4>
-        <h4>Yer current chest o{"'"} gold values ${numeral(this.state.totalValue).format('0,0.00')}</h4>
+        <h4>Yer {"'"}ave ${this.state.availableCash} gold ter spend</h4>
+        <h4>Yer current chest o{"'"} gold values ${this.state.totalValue}</h4>
 
         {errorToDisplay}
 

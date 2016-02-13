@@ -27222,8 +27222,9 @@
 	  },
 
 	  getMatchPortfolio: function (matchId) {
-
+	    console.log('getMatchPortfolio');
 	    requestHelper.get('trades/' + matchId, jwt).end(function (err, response) {
+	      console.log('response', response);
 	      if (response.status === 200) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -43791,11 +43792,8 @@
 
 	  componentDidMount: function () {
 	    if (this.state.portfolioId) {
-	      this.setState({
-	        portfolioId: this.props.location.pathname.split('/').splice(-1, 1).toString()
-	      }, function () {
-	        matchActions.getMatchPortfolio(this.state.portfolioId);
-	      });
+	      console.log('in trigger to get match details');
+	      matchActions.getMatchPortfolio(this.state.portfolioId);
 	    } /*else {*/
 	    //MAKE A NOT FOUND PAGE
 	    // window.location.hash = "#/notFound";
@@ -43808,18 +43806,20 @@
 	  },
 
 	  _onChangeEvent: function () {
+
 	    var match = portfolioStore.getMatchData(); //getPortfolioData
 	    if (this.state.errorMessage !== null) {
 	      this.state.errorMessage = null;
-	    } else {
-	      this.state.errorMessage = match.errorMessage;
 	    }
+	    console.log('change2', match);
 	    this.setState({
 	      totalValue: match.totalValue,
 	      availableCash: match.availableCash,
 	      stocks: match.stocks,
 	      matchTitle: match.matchTitle,
-	      qtySell: ""
+	      errorMessage: match.errorMessage
+	    }, function () {
+	      console.log('state', this.state);
 	    });
 	    this.render();
 	  },
@@ -44000,7 +44000,7 @@
 	        'Yer ',
 	        "'",
 	        'ave $',
-	        numeral(this.state.availableCash).format('0,0.00'),
+	        this.state.availableCash,
 	        ' gold ter spend'
 	      ),
 	      React.createElement(
@@ -44009,7 +44009,7 @@
 	        'Yer current chest o',
 	        "'",
 	        ' gold values $',
-	        numeral(this.state.totalValue).format('0,0.00')
+	        this.state.totalValue
 	      ),
 	      errorToDisplay,
 	      arrayOfStocks

@@ -41,7 +41,7 @@ module.exports = function (services) {
   //-----------------------------------
   router.route('/:matchId')
     .get(function (req, res) {
-
+      console.log('in route to get portfolio');
       services.db.trades.getPortfolio(req.__userId, req.matchId)
         .then(function (portfolio) {
           res.status(200).json({
@@ -59,7 +59,6 @@ module.exports = function (services) {
   //Buy and Sell Route :) done
   //-----------------------------------
     .post(function (req, res) {
-
       var validate;
 
       if (req.body.numSharesHave) {
@@ -82,8 +81,8 @@ module.exports = function (services) {
         'buy': services.db.trades.buy,
         'sell': services.db.trades.sell
       };
-      console.log('route matche id', validate.matchId)
-      actions[req.body.action](validate.userId, validate.matchId, validate.numShares, validate.stockTicker)
+
+      actions[validate.action](validate.userId, validate.matchId, validate.numShares, validate.stockTicker)
       .then(function (data) {
         res.status(200).json({
           data: data

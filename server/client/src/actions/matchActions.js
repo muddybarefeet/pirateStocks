@@ -23,10 +23,11 @@ var matchActions = {
   },
 
   getMatchPortfolio: function (matchId) {
-
+    console.log('getMatchPortfolio');
     requestHelper
     .get('trades/'+ matchId, jwt)
     .end(function (err, response) {
+      console.log('response', response);
       if (response.status === 200) {
         response = response.body.data;
         AppDispatcher.handleServerAction({
