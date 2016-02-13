@@ -27358,6 +27358,16 @@
 	    }
 	  },
 
+	  handleErr: function () {
+	    var that = this;
+	    setTimeout(function () {
+	      that.setState({
+	        errorMessage: null
+	      });
+	    }, 3000);
+	    // this.render();
+	  },
+
 	  render: function () {
 
 	    var showErrDiv;
@@ -27369,6 +27379,7 @@
 
 	    if (this.state.errorMessage) {
 	      showErrDiv = err;
+	      this.handleErr();
 	    }
 
 	    return React.createElement(
@@ -43840,6 +43851,15 @@
 	    }, 15);
 	  },
 
+	  handleErr: function () {
+	    var that = this;
+	    setTimeout(function () {
+	      that.setState({
+	        errorMessage: null
+	      });
+	    }, 2000);
+	  },
+
 	  render: function () {
 
 	    var errorToDisplay;
@@ -43851,6 +43871,7 @@
 
 	    if (this.state.errorMessage !== null) {
 	      errorToDisplay = error;
+	      this.handleErr();
 	    }
 
 	    var arrayOfStocks;

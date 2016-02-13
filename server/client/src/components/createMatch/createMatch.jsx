@@ -91,6 +91,16 @@ var Create = React.createClass({
     }
   },
 
+  handleErr: function () {
+    var that = this;
+    setTimeout(function () {
+      that.setState({
+        errorMessage: null
+      });
+    }, 3000);
+    // this.render();
+  },
+
   render: function () {
 
     var showErrDiv;
@@ -100,6 +110,7 @@ var Create = React.createClass({
 
     if (this.state.errorMessage) {
       showErrDiv = err;
+      this.handleErr();
     }
 
     return (

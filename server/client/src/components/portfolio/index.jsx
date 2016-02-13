@@ -84,6 +84,15 @@ var Portfolio = React.createClass({
     },15);
   },
 
+  handleErr: function () {
+    var that = this;
+    setTimeout(function () {
+      that.setState({
+        errorMessage: null
+      });
+    }, 2000);
+  },
+
   render: function () {
 
     var errorToDisplay;
@@ -93,6 +102,7 @@ var Portfolio = React.createClass({
 
     if (this.state.errorMessage !== null) {
       errorToDisplay = error;
+      this.handleErr();
     }
 
     var arrayOfStocks;
