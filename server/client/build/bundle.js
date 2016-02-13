@@ -44021,6 +44021,7 @@
 	var AppDispatcher = __webpack_require__(220);
 	var EventEmitter = __webpack_require__(230).EventEmitter;
 	var CHANGE_EVENT = "change";
+	var numeral = __webpack_require__(233);
 
 	var _currentMatch = {
 	  totalValue: null,
@@ -44062,8 +44063,8 @@
 	      });
 	    }
 
-	    _currentMatch.totalValue = action.data.totalValue;
-	    _currentMatch.availableCash = action.data.available_cash;
+	    _currentMatch.totalValue = numeral(action.data.totalValue).format('0,0.00');
+	    _currentMatch.availableCash = numeral(action.data.available_cash).format('0,0.00');
 	    _currentMatch.matchTitle = action.data.title;
 
 	    portfolioStore.emitChange();
@@ -44075,8 +44076,8 @@
 	      return [stock.name, stock.symbol, stock.ask, stock.gain_loss, stock.marketValue, stock.percent_change, stock.price, stock.shares];
 	    });
 
-	    _currentMatch.totalValue = action.data.portfolio.totalValue;
-	    _currentMatch.availableCash = action.data.portfolio.available_cash;
+	    _currentMatch.totalValue = numeral(action.data.portfolio.totalValue).format('0,0.00');
+	    _currentMatch.availableCash = numeral(action.data.portfolio.available_cash).format('0,0.00');
 	    _currentMatch.matchTitle = action.data.portfolio.title;
 
 	    portfolioStore.emitChange();

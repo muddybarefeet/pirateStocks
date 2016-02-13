@@ -2,6 +2,7 @@
 var AppDispatcher = require('./../dispatchers/appDispatcher.js');
 var EventEmitter = require('events').EventEmitter;
 var CHANGE_EVENT = "change";
+var numeral = require('numeral');
 
 var _currentMatch = {
   totalValue: null,
@@ -52,8 +53,8 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
     }
 
 
-    _currentMatch.totalValue = action.data.totalValue;
-    _currentMatch.availableCash = action.data.available_cash;
+    _currentMatch.totalValue = numeral(action.data.totalValue).format('0,0.00');
+    _currentMatch.availableCash = numeral(action.data.available_cash).format('0,0.00');
     _currentMatch.matchTitle = action.data.title;
 
     portfolioStore.emitChange();
@@ -75,8 +76,8 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
       ];
     });
 
-    _currentMatch.totalValue = action.data.portfolio.totalValue;
-    _currentMatch.availableCash = action.data.portfolio.available_cash;
+    _currentMatch.totalValue = numeral(action.data.portfolio.totalValue).format('0,0.00');
+    _currentMatch.availableCash = numeral(action.data.portfolio.available_cash).format('0,0.00');
     _currentMatch.matchTitle = action.data.portfolio.title;
     
     portfolioStore.emitChange();
