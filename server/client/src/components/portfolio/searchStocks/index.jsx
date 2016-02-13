@@ -5,6 +5,7 @@ var searchActions = require('./../../../actions/searchActions.js');
 var matchActions = require('./../../../actions/matchActions.js');
 var searchStore = require('./../../../stores/searchStore.js');
 var portfolioStore = require('./../../../stores/portfolioStore.js');
+var numeral = require('numeral');
 
 var Search = React.createClass({
 
@@ -132,13 +133,13 @@ var Search = React.createClass({
     //to be implemented when know how to get the ask price!! :( )
     if (this.state.total > 0) {
       totalCost = (<div>
-        <p className="card-text">Total Cost: ${this.state.total}</p>
+        <p className="card-text">Total Cost: ${numeral(this.state.total).format('0,0.00')}</p>
       </div>);
     }
 
     if (this.state.availableCash) {
       userCash = (<div>
-        <p className="card-text">Yer Gold: ${this.state.availableCash}</p>
+        <p className="card-text">Yer Gold: ${numeral(this.state.availableCash).format('0,0.00')}</p>
       </div>);
     }
 
