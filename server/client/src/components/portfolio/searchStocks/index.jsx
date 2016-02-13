@@ -79,19 +79,38 @@ var Search = React.createClass({
   },
 
   handleBuyStocksChange: function (event) {
+    var that = this;
     this.setState({
       qtyBuy: parseFloat(event.target.value),
       total: (parseFloat(event.target.parentElement.previousSibling.children[1].innerHTML) * parseFloat(event.target.value)).toFixed(2)
+    }, function () {
+      if(this.state.availableCash < parseInt(this.state.total,10)) {
+        this.setState({
+          errorMessage: "Ye do nah 'ave enough doubloons t' buy this number o' stocks"
+        }, function () {
+          that.render();
+        });
+      }
     });
-    this.render();
   },
 
   handleBuyClick: function (event) {
-    //trigger action to trades and return new portfolio to the portfolio store
-    matchActions.makeTrade(this.state.matchId[0], this.state.qtyBuy, this.state.oneStock[0][1], 'buy');
-    var location = this.props.location.pathname.split('/').splice(-2,1);
-    window.location.hash = "#/matches/portfolio/"+location;
+    if (!this.state.errorMessage) {
+      matchActions.makeTrade(this.state.matchId[0], this.state.qtyBuy, this.state.oneStock[0][1], 'buy');
+      //trigger action to trades and return new portfolio to the portfolio store
+      var location = this.props.location.pathname.split('/').splice(-2,1);
+      window.location.hash = "#/matches/portfolio/"+location;
+    }
   },
+
+  // handleErr: function () {
+  //   var that = this;
+  //   setTimeout(function () {
+  //     that.setState({
+  //       errorMessage: null
+  //     });
+  //   }, 4000);
+  // },
 
   render: function () {
 
@@ -99,6 +118,15 @@ var Search = React.createClass({
     var stockInfo;
     var totalCost;
     var userCash;
+    var errorMessage;
+
+    if (this.state.errorMessage) {
+      console.log('state', this.state.errorMessage)
+      errorMessage = (
+        <div className="alert alert-danger" role="alert">{this.state.errorMessage}</div>
+      );
+      // this.handleErr();
+    }
 
     if (this.state.current && !this.state.clicked) {
       var that = this;
@@ -166,7 +194,7 @@ var Search = React.createClass({
           <label htmlFor="search">Oggle th{"'"} stocks ye can lay yer dirty hands on:</label>
           <input type="search" ref="stockName" className="form-control" onKeyUp={this.search} />
         </div>
-
+        {errorMessage}
         <ul>{stocks}</ul>
 
         {stockInfo}
