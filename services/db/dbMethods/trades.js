@@ -244,8 +244,9 @@ module.exports = function (knex) {
       return stockData;
     });
 
+    var totVal = portfolioValue + availableCash;
     return {
-      totalValue: portfolioValue + availableCash.toFixed(2),
+      totalValue: totVal.toFixed(2),
       available_cash: availableCash,
       stocks: stocks,
       title: title
