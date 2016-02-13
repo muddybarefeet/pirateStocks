@@ -27209,6 +27209,7 @@
 	  getUserMatches: function () {
 
 	    requestHelper.get('matches/user', jwt).end(function (err, response) {
+	      console.log('response', response);
 	      if (response.status === 200) {
 	        response = response.body.data;
 	        AppDispatcher.handleServerAction({
@@ -43788,6 +43789,7 @@
 
 	  componentDidMount: function () {
 	    if (this.state.portfolioId) {
+
 	      matchActions.getMatchPortfolio(this.state.portfolioId);
 	    } /*else {*/
 	    //MAKE A NOT FOUND PAGE

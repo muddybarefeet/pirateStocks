@@ -9,6 +9,7 @@ var matchActions = {
     requestHelper
     .get('matches/user', jwt)
     .end(function(err, response){
+      console.log('response', response)
       if (response.status === 200) {
         response = response.body.data;
         AppDispatcher.handleServerAction({

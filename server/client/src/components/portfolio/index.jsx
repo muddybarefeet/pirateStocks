@@ -23,6 +23,7 @@ var Portfolio = React.createClass({
 
   componentDidMount: function () {
     if (this.state.portfolioId) {
+
         matchActions.getMatchPortfolio(this.state.portfolioId); 
     } /*else {*/
       //MAKE A NOT FOUND PAGE
