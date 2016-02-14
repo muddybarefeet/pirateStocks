@@ -8,6 +8,8 @@ var _currentMatch = {
   availableCash: null,
   stocks: null,
   matchTitle: null,
+  startDate: null,
+  endDate: null,
   errorMessage: null
 };
 
@@ -35,7 +37,7 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
   var action = payload.action;//payload is the object of data coming from dispactcher //action is the object passed from the actions file
   
   if(action.actionType === "GET_USER_MATCH") {
-
+    
     if (action.data.stocks) {
       _currentMatch.stocks = action.data.stocks.map(function (stock) {
         return [
@@ -55,6 +57,8 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
     _currentMatch.totalValue = action.data.totalValue;
     _currentMatch.availableCash = action.data.available_cash;
     _currentMatch.matchTitle = action.data.title;
+    _currentMatch.startDate = action.data.startDate;
+    _currentMatch.endDate = action.data.endDate;
 
     portfolioStore.emitChange();
 

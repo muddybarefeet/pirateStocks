@@ -3,6 +3,7 @@ var React = require('react');
 var Link = require('react-router').Link;
 var portfolioStore = require('./../../stores/portfolioStore.js');
 var matchActions = require('./../../actions/matchActions.js');
+var StockChart = require('./stockGraph.jsx');
 var numeral = require('numeral');
 
 var Portfolio = React.createClass({
@@ -23,7 +24,6 @@ var Portfolio = React.createClass({
 
   componentDidMount: function () {
     if (this.state.portfolioId) {
-
         matchActions.getMatchPortfolio(this.state.portfolioId); 
     } /*else {*/
       //MAKE A NOT FOUND PAGE
@@ -47,9 +47,12 @@ var Portfolio = React.createClass({
       availableCash: match.availableCash,
       stocks: match.stocks,
       matchTitle: match.matchTitle,
+      startDate: match.startDate,
+      endDate: match.endDate,
       errorMessage: match.errorMessage
+    }, function () {
+      this.render();
     });
-    this.render();
   },
 
   handleSellStocksChange: function (eventNum) {
@@ -92,6 +95,8 @@ var Portfolio = React.createClass({
   render: function () {
 
     var errorToDisplay;
+    var date;
+
     var error = (
       <div className="alert alert-danger" role="alert">{this.state.errorMessage}</div>
     );
@@ -99,6 +104,10 @@ var Portfolio = React.createClass({
     if (this.state.errorMessage !== null) {
       errorToDisplay = error;
       this.handleErr();
+    }
+
+    if (this.state.startDate) {
+      date = this.state.startDate;
     }
 
     var arrayOfStocks;
@@ -121,6 +130,9 @@ var Portfolio = React.createClass({
                           <p className="card-text">Percentage Change: {stock[5]}</p>
                           <p className="card-text">Price: ${stock[6]}</p>
                           <p className="card-text">Number of Stocks: {stock[7]}</p>
+                          
+                          <StockChart symbol={stock[1]} startDate={date}/>
+
 
                           <div className="form-group">
                             <label>Qty:</label>

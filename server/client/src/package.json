@@ -9,6 +9,7 @@
   "author": "RP-3 <sarith21@gmail.com> (http://suchisthepowerofjs.com/)",
   "license": "ISC",
   "dependencies": {
+    "c3": "^0.4.11-rc4",
     "events": "^1.1.0",
     "flux": "^2.1.1",
     "merge": "^1.2.0",
