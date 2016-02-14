@@ -41,7 +41,7 @@ var App = React.createClass({
     var userGreeting;
 
     var logoutButton = (
-      <button style={{"float":"right", marginTop: '10px'}} type="button" className="btn btn-primary" onClick={this.logout}>Logout</button>
+      <li><a href="#"><span className="glyphicon glyphicon-log-in" onClick={this.logout} ></span> Logout</a></li>
     );
 
 
@@ -50,19 +50,20 @@ var App = React.createClass({
     }
 
     if (localStorage.username) {
-      userGreeting = (<div style={{textDecoration: "none", color: "white"}}>Ahoy: {localStorage.username + "!"}</div>);
+      userGreeting = (<li style={{textDecoration: "none", color: "white"}}>Ahoy: {localStorage.username + "!"}</li>);
     }
 
     return (
       <div>
-        <nav className="navbar navbar-fixed-top navbar-default" style={{backgroundImage: 'url('+'./../assets/images/woodHeader2.jpg'+')'}}>
+        <nav className="navbar navbar-fixed-top navbar-inverse" style={{backgroundImage: 'url('+'./../assets/images/woodHeader2.jpg'+')'}}>
           <div className="container-fluid">
             <div className="navbar-header">
-              <Link to="/home">Pirate Stocks</Link>
+              <Link className="navbar-brand" to="/home">Pirate Stocks</Link>
             </div>
-            <div className="nav navbar-nav navbar-left" role="search">
+
+            <ul className="nav navbar-nav navbar-left">
               {userGreeting}
-            </div>
+            </ul>
             
             <div className="nav navbar-nav navbar-right" role="search">
 

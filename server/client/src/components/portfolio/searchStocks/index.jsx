@@ -126,7 +126,7 @@ var Search = React.createClass({
     if (this.state.current && !this.state.clicked) {
       var that = this;
       stocks = this.state.current.map(function (stock, index) {
-        return (<div key={index} onClick={that.handleClick}><li className="highlight">{stock}</li></div>);
+        return (<div key={index} onClick={that.handleClick}><li className="highlight pointer">{stock}</li></div>);
       });
     }
 

@@ -50,8 +50,7 @@ var Matches = React.createClass({
               <tr>
                 <th>Name of Yer Battle</th>
                 <th>Type</th>
-                <th>Battle Starts</th>
-                <th>Length o{"'"} Battle</th>
+                <th>Battle Ends</th>
                 <th>Starting Gold</th>
                 <th>Yer Treasure{"'"}s Value</th>
                 <th>Opponents Treasure</th>
@@ -73,8 +72,7 @@ var Matches = React.createClass({
           arrayOfMatches.push(<tr key={index}>
                                 <td>{match[0]}</td>
                                 <td>{match[1]}</td>
-                                <td>{match[2]}</td>
-                                <td>{match[4]}</td>
+                                <td>{match[3]}</td>
                                 <td>{'$'+numeral(match[5]).format('0,0')}</td>
                                 <td>{'$'+numeral(match[6]).format('0,0.00')}</td>
                                 <td>{'$'+numeral(match[7]).format('0,0.00')}</td>
