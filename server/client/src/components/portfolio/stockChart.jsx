@@ -6,7 +6,7 @@ var chartActions = require('./../../actions/chartActions.js');
 var chartStore = require('./../../stores/chartStore.js');
 
 //Chart used in each stock card to show the stock performance over the last year
-var StockChart = React.createClass ({
+var StockGraph = React.createClass ({
 
   getInitialState: function () {
     return {
@@ -83,4 +83,4 @@ var StockChart = React.createClass ({
   }
 });
 
-module.exports = StockChart;
+module.exports = StockGraph;

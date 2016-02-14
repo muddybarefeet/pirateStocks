@@ -6,6 +6,7 @@ var matchActions = require('./../../../actions/matchActions.js');
 var searchStore = require('./../../../stores/searchStore.js');
 var portfolioStore = require('./../../../stores/portfolioStore.js');
 var numeral = require('numeral');
+var StockChart = require('./../stockChart.jsx');
 
 var Search = React.createClass({
 
@@ -120,7 +121,6 @@ var Search = React.createClass({
       errorMessage = (
         <div className="alert alert-danger" role="alert">{this.state.errorMessage}</div>
       );
-      // this.handleErr();
     }
 
     if (this.state.current && !this.state.clicked) {
@@ -154,21 +154,39 @@ var Search = React.createClass({
                 <li className="list-group-item">
                   <div>
                     {userCash}
+
                     <h4 className="card-title centreTitle">{stock[0]}</h4>
                     <h6 className="card-subtitle text-muted centreTitle">{stock[1]}</h6>
-                    <p className="card-text">Industry: {stock[2]}</p>
-                    <p className="card-text">Sector: {stock[3]}</p>
-                    <p className="card-text">Exchange:{stock[4]}</p>
-                    <p className="card-text">Percentage High: {stock[5]}</p>
-                    <p className="card-text">Year High: {stock[6]}</p>
-                    <p className="card-text">Year Low: {stock[7]}</p>
-                    <p className="card-text">Ask: {stock[8]}</p>
-                    <div className="form-group">
-                      <label htmlFor="number">Qty:</label>
-                      {totalCost}
-                      <input className="form-control" onChange={that.handleBuyStocksChange} />
+                    
+                    <div className="row">
+                    
+                      <div className="col-md-3">
+                        <p className="card-text">Industry: {stock[2]}</p>
+                        <p className="card-text">Sector: {stock[3]}</p>
+                        <p className="card-text">Exchange:{stock[4]}</p>
+                        <p className="card-text">Percentage High: {stock[5]}</p>
+                        <p className="card-text">Year High: {"$"+stock[6]}</p>
+                        <p className="card-text">Year Low: {"$"+stock[7]}</p>
+                        <p className="card-text">Ask: {"$"+stock[8]}</p>
+
+                        <div className="form-group">
+                          <label htmlFor="number">Qty:</label>
+                          {totalCost}
+                          <input className="form-control" onChange={that.handleBuyStocksChange} />
+                        </div>
+
+                        <button type="button" className="btn btn-primary" onClick={that.handleBuyClick} >Buy</button>
+                        
+                      </div>
+
+                      <div className="col-md-9">
+
+                        <StockChart symbol={stock[1]} startDate={new Date()}/>
+
+                      </div>
+
                     </div>
-                    <button type="button" className="btn btn-primary" onClick={that.handleBuyClick} >Buy</button>
+
                   </div>
                 </li>
               </ul>

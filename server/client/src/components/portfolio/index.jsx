@@ -3,7 +3,7 @@ var React = require('react');
 var Link = require('react-router').Link;
 var portfolioStore = require('./../../stores/portfolioStore.js');
 var matchActions = require('./../../actions/matchActions.js');
-var StockChart = require('./stockGraph.jsx');
+var StockChart = require('./stockChart.jsx');
 var numeral = require('numeral');
 
 var Portfolio = React.createClass({
@@ -38,7 +38,7 @@ var Portfolio = React.createClass({
 
   _onChangeEvent: function () {
 
-    var match = portfolioStore.getMatchData();//getPortfolioData
+    var match = portfolioStore.getMatchData();
     if (this.state.errorMessage !== null) {
       this.state.errorMessage = null;
     }
@@ -121,7 +121,7 @@ var Portfolio = React.createClass({
                     
                     <ul className="list-group list-group-flush">
                       <li className="list-group-item">
-                        
+
                         <div>
 
                           <h4 className="card-title centreTitle">{stock[0]}</h4>
@@ -129,26 +129,30 @@ var Portfolio = React.createClass({
 
                           <div className="row">
 
-                            <div className="col-md-3">
+                            <div className="col-md-6">
+
                               <p className="card-text">Ask: ${stock[2]}</p>
                               <p className="card-text">Gain/Loss: ${stock[3]}</p>
                               <p className="card-text">Market Value: ${stock[4]}</p>
                               <p className="card-text">Percentage Change: {stock[5]}</p>
                               <p className="card-text">Price: ${stock[6]}</p>
                               <p className="card-text">Number of Stocks: {stock[7]}</p>
+
                               <div className="form-group">
                                 <label>Qty:</label>
                                 <input className="amountSell" type="text" ref="amountSell" className="form-control" onChange={that.handleSellStocksChange} />
                               </div>
                               <button type="button" className="btn btn-primary" onClick={that.handleSellClick} >Sell</button>
+
                             </div>
 
-                            <div className="col-md-9">
+                            <div className="col-md-6">
+
                               <StockChart symbol={stock[1]} startDate={date}/>
+
                             </div>
 
                           </div>
-
 
                         </div>
 
