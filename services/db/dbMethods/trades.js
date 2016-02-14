@@ -181,7 +181,7 @@ module.exports = function (knex) {
   };
 
 //Rolls up the users trades for a specific match into a portfolio
-  module.reduceTradesToPortfolio = function (trades, startingFunds,title) {
+  module.reduceTradesToPortfolio = function (trades, startingFunds,title, startDate, endDate) {
 
     var availableCash = startingFunds;
     var matchTitle = title;
@@ -225,7 +225,9 @@ module.exports = function (knex) {
     return {
       available_cash: availableCash,
       stocks: stocks,
-      title: matchTitle
+      title: matchTitle,
+      startDate: startDate,
+      endDate: endDate
     };
 
   };
@@ -249,7 +251,9 @@ module.exports = function (knex) {
       totalValue: totVal.toFixed(2),
       available_cash: availableCash,
       stocks: stocks,
-      title: title
+      title: title,
+      startDate: portfolio.startDate,
+      endDate: portfolio.endDate
     };
 
   };
@@ -286,9 +290,12 @@ module.exports = function (knex) {
       //pass the results from above to the reduceTradesToPortfolio which returns a users portfolio for the match in
       .then(function (tuple) {
         var matchTitle = tuple[0].title;
+        var startDate = tuple[0].startdate;
+        var endDate = tuple[0].enddate;
+
         var match = tuple[0];
         var trades = tuple[1];
-        return module.reduceTradesToPortfolio(trades, match.starting_funds, matchTitle);
+        return module.reduceTradesToPortfolio(trades, match.starting_funds, matchTitle, startDate, endDate);
       });
   };
 

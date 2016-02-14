@@ -1,7 +1,7 @@
 var knex = require('knex');
 var config = require('./../../config.js');
 var rp = require('request-promise');
-
+var utils = require('./utils.js');
 //if there is an environmental variable set (this will be the word 'deployment') then the envirnment will be deployment
 
 var yahooMethods = {};
@@ -95,6 +95,11 @@ yahooMethods.getStockData = function (stockSymbol, startDate) {
     //reverse date arrays so earliest data is at the start
     returnObj.dates = dates.reverse();
     returnObj.close = close.reverse();
+
+    // //make array of close data start with 'close' as first element for c3 
+    returnObj.close.unshift('close');
+    // //make the array of dates have x at start for c3
+    returnObj.dates.unshift('x');
 
     return returnObj;
 

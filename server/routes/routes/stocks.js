@@ -62,7 +62,7 @@ module.exports = function (services) {
       services.yahoo.getStockData(stockSymbol, startDate)
       .then(function (stockData) {
         res.json({
-          data: response
+          data: stockData
         });
       })
       .catch(function (err) {
