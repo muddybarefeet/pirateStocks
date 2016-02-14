@@ -126,10 +126,10 @@ var Portfolio = React.createClass({
 
                           <h4 className="card-title centreTitle">{stock[0]}</h4>
                           <h6 className="card-subtitle text-muted centreTitle">{stock[1]}</h6>
-
+                          <hr></hr>
                           <div className="row">
 
-                            <div className="col-md-6">
+                            <div className="col-md-3">
 
                               <p className="card-text">Ask: ${stock[2]}</p>
                               <p className="card-text">Gain/Loss: ${stock[3]}</p>
@@ -146,7 +146,7 @@ var Portfolio = React.createClass({
 
                             </div>
 
-                            <div className="col-md-6">
+                            <div className="col-md-9">
 
                               <StockChart symbol={stock[1]} startDate={date}/>
 

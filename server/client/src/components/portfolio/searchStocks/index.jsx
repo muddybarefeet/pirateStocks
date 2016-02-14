@@ -126,7 +126,7 @@ var Search = React.createClass({
     if (this.state.current && !this.state.clicked) {
       var that = this;
       stocks = this.state.current.map(function (stock, index) {
-        return (<div key={index} onClick={that.handleClick}><li>{stock}</li></div>);
+        return (<div key={index} onClick={that.handleClick}><li className="highlight">{stock}</li></div>);
       });
     }
 
@@ -153,11 +153,15 @@ var Search = React.createClass({
               <ul className="list-group list-group-flush">
                 <li className="list-group-item">
                   <div>
-                    {userCash}
 
-                    <h4 className="card-title centreTitle">{stock[0]}</h4>
-                    <h6 className="card-subtitle text-muted centreTitle">{stock[1]}</h6>
-                    
+                    <div className="shiftRight">
+                      {userCash}
+                    </div>
+                    <div>
+                      <h4 className="card-title">{stock[0]}</h4>
+                      <h6 className="card-subtitle text-muted">{stock[1]}</h6>
+                    </div>
+                    <hr></hr>
                     <div className="row">
                     
                       <div className="col-md-3">
@@ -208,7 +212,7 @@ var Search = React.createClass({
           <input type="search" ref="stockName" className="form-control" onKeyUp={this.search} />
         </div>
         {errorMessage}
-        <ul>{stocks}</ul>
+        <ul className="listIndentation">{stocks}</ul>
 
         {stockInfo}
 
