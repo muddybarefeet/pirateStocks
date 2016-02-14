@@ -35,7 +35,6 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
 
     _chartData.close = action.data.close;
     _chartData.dates = action.data.dates;
-    console.log('store',_chartData, action.data);
 
     chartStore.emitChange();
   }

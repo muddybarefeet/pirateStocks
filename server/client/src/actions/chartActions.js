@@ -12,8 +12,7 @@ var chartActions = {
     .get('stocks/history/'+symbol+'/'+startDate, jwt)
     .end(function (err, response) {
       if (response.status === 200) {
-        
-        console.log('graph response',response);
+
         AppDispatcher.handleServerAction({
           actionType: "STOCK_CHART_DATA",
           data: response.body.data
