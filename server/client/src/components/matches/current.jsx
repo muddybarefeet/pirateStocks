@@ -44,8 +44,7 @@ var Matches = React.createClass({
     var arrayOfMatches = [];
     var toDisplay;
     var matchTable = 
-      (<div>
-        <h1 className="centreTitle">Battles</h1>           
+      (<div>         
           <table className="table">
             <thead>
               <tr>
@@ -88,6 +87,8 @@ var Matches = React.createClass({
 
     return (
       <div className="container">
+
+        <h1 className="centreTitle">Yer Current Battles</h1>  
 
         {toDisplay}
         

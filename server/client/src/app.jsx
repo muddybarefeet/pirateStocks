@@ -17,8 +17,9 @@ var Create = require('./components/createMatch/createMatch.jsx');
 var Portfolio = require('./components/portfolio/index.jsx');
 var Search = require('./components/portfolio/searchStocks/index.jsx');
 var Join = require('./components/matchesToJoin.jsx');
-var Matches = require('./components/matches/index.jsx');
+var Matches = require('./components/matches/current.jsx');
 var PastMatches = require('./components/matches/past.jsx');
+var PendingMatches = require('./components/matches/pending.jsx');
 
 var App = React.createClass({
 
@@ -49,33 +50,43 @@ var App = React.createClass({
     }
 
     if (localStorage.username) {
-      userGreeting = (<div style={{marginTop: '24px', marginRight: '10px', fontSize: "15px", textDecoration: "none", color: "white", float:'right'}}>Ahoy: {localStorage.username + "!"}</div>);
+      userGreeting = (<div style={{textDecoration: "none", color: "white"}}>Ahoy: {localStorage.username + "!"}</div>);
     }
 
     return (
-
       <div>
-        <nav className="navbar navbar-fixed-top" style={{backgroundImage: 'url('+'./../assets/images/woodHeader2.jpg'+')', height:"60px"}}>
+        <nav className="navbar navbar-fixed-top navbar-default" style={{backgroundImage: 'url('+'./../assets/images/woodHeader2.jpg'+')'}}>
           <div className="container-fluid">
-            <div className="navbar-header" style={{marginTop: '20px'}}>
-              <Link to="/home" style={{fontSize: "22px", textDecoration: "none", color: "white"}}>Pirate Stocks</Link>
+            <div className="navbar-header">
+              <Link to="/home">Pirate Stocks</Link>
             </div>
-            <form className="nav navbar-nav navbar-left" role="search">
+            <div className="nav navbar-nav navbar-left" role="search">
               {userGreeting}
-            </form>
-            <form className="nav navbar-nav navbar-right" role="search">
+            </div>
+            
+            <div className="nav navbar-nav navbar-right" role="search">
+
+
               <li><Link to="/join">Join a New Battle</Link></li>
               <li><Link to="/create">Design a Battle</Link></li>
-              <li><Link to="/matches">Yer Battles</Link></li>
-              <li><Link to="/pastMatches">Past Battles</Link></li>
+              
+              <li className="dropdown">
+                <a className="dropdown-toggle" data-toggle="dropdown" href="#">Battles
+                <span className="caret"></span></a>
+                <ul className="dropdown-menu">
+                  <li><a href="#/matches">Current</a></li>
+                  <li><a href="#/pendingMatches">Pending</a></li>
+                  <li><a href="#/pastMatches">Past</a></li> 
+                </ul>
+              </li>
+
               {logout}
-            </form>
+            </div>
           </div>
         </nav>
         {toShowNav}
         {this.props.children}
       </div>
-
     )
   }
 
@@ -89,6 +100,7 @@ ReactDOM.render(
       <Route path="/home" component={Home} />
       <Route path="join" component={Join}/>
       <Route path="/matches" component={Matches} />
+      <Route path="/pendingMatches" component={PendingMatches} />
       <Route path="/pastMatches" component={PastMatches} />
       <Route path="/matches/portfolio/:id" component={Portfolio} />
       <Route path="/matches/portfolio/:id/search" component={Search} />
@@ -97,5 +109,5 @@ ReactDOM.render(
   </Router>
 , document.getElementById('app'));
 
-
+/* */
 

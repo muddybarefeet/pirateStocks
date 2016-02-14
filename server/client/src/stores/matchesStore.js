@@ -7,6 +7,7 @@ var CHANGE_EVENT = "change";
 var _userMatches = {
   matches: [],
   pastMatches: [],
+  pendingMatches: [],
   startDate: null,
   endDate: null,
   errorMessage: null,
@@ -75,11 +76,14 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
 
     var matches = [];
     var past = [];
+    var pending = [];
 
     action.data.forEach(function (match, index) {
 
-      if (match.status === 'pending' || match.status === 'active') {
+      if (match.status === 'active') {
         matches.push(formatMatch(match));
+      } else if (match.status === 'pending') {
+        pending.push(formatMatch(match));
       } else if (match.status === 'complete') {
         past.push(formatMatch(match));
 
@@ -89,6 +93,7 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
 
     _userMatches.matches = matches;
     _userMatches.pastMatches = past;
+    _userMatches.pendingMatches = pending;
 
     matchesStore.emitChange();
 
