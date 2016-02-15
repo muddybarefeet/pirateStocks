@@ -61,10 +61,11 @@
 
 	var Create = __webpack_require__(232);
 	var Portfolio = __webpack_require__(386);
-	var Search = __webpack_require__(392);
-	var Join = __webpack_require__(395);
-	var Matches = __webpack_require__(398);
-	var PastMatches = __webpack_require__(399);
+	var Search = __webpack_require__(393);
+	var Join = __webpack_require__(396);
+	var Matches = __webpack_require__(399);
+	var PastMatches = __webpack_require__(400);
+	var PendingMatches = __webpack_require__(401);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -87,9 +88,14 @@
 	    var userGreeting;
 
 	    var logoutButton = React.createElement(
-	      'button',
-	      { style: { "float": "right", marginTop: '10px' }, type: 'button', className: 'btn btn-primary', onClick: this.logout },
-	      'Logout'
+	      'li',
+	      null,
+	      React.createElement(
+	        'a',
+	        { href: '#' },
+	        React.createElement('span', { className: 'glyphicon glyphicon-log-in', onClick: this.logout }),
+	        ' Logout'
+	      )
 	    );
 
 	    if (localStorage.jwt) {
@@ -98,8 +104,8 @@
 
 	    if (localStorage.username) {
 	      userGreeting = React.createElement(
-	        'div',
-	        { style: { marginTop: '24px', marginRight: '10px', fontSize: "15px", textDecoration: "none", color: "white", float: 'right' } },
+	        'li',
+	        { style: { textDecoration: "none", color: "white" } },
 	        'Ahoy: ',
 	        localStorage.username + "!"
 	      );
@@ -110,26 +116,26 @@
 	      null,
 	      React.createElement(
 	        'nav',
-	        { className: 'navbar navbar-fixed-top', style: { backgroundImage: 'url(' + './../assets/images/woodHeader2.jpg' + ')', height: "60px" } },
+	        { className: 'navbar navbar-fixed-top navbar-inverse', style: { backgroundImage: 'url(' + './../assets/images/woodHeader2.jpg' + ')' } },
 	        React.createElement(
 	          'div',
 	          { className: 'container-fluid' },
 	          React.createElement(
 	            'div',
-	            { className: 'navbar-header', style: { marginTop: '20px' } },
+	            { className: 'navbar-header' },
 	            React.createElement(
 	              Link,
-	              { to: '/home', style: { fontSize: "22px", textDecoration: "none", color: "white" } },
+	              { className: 'navbar-brand', to: '/home' },
 	              'Pirate Stocks'
 	            )
 	          ),
 	          React.createElement(
-	            'form',
-	            { className: 'nav navbar-nav navbar-left', role: 'search' },
+	            'ul',
+	            { className: 'nav navbar-nav navbar-left' },
 	            userGreeting
 	          ),
 	          React.createElement(
-	            'form',
+	            'div',
 	            { className: 'nav navbar-nav navbar-right', role: 'search' },
 	            React.createElement(
 	              'li',
@@ -151,20 +157,43 @@
 	            ),
 	            React.createElement(
 	              'li',
-	              null,
+	              { className: 'dropdown' },
 	              React.createElement(
-	                Link,
-	                { to: '/matches' },
-	                'Yer Battles'
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
+	                'a',
+	                { className: 'dropdown-toggle', 'data-toggle': 'dropdown', href: '#' },
+	                'Battles',
+	                React.createElement('span', { className: 'caret' })
+	              ),
 	              React.createElement(
-	                Link,
-	                { to: '/pastMatches' },
-	                'Past Battles'
+	                'ul',
+	                { className: 'dropdown-menu' },
+	                React.createElement(
+	                  'li',
+	                  null,
+	                  React.createElement(
+	                    'a',
+	                    { href: '#/matches' },
+	                    'Current'
+	                  )
+	                ),
+	                React.createElement(
+	                  'li',
+	                  null,
+	                  React.createElement(
+	                    'a',
+	                    { href: '#/pendingMatches' },
+	                    'Pending'
+	                  )
+	                ),
+	                React.createElement(
+	                  'li',
+	                  null,
+	                  React.createElement(
+	                    'a',
+	                    { href: '#/pastMatches' },
+	                    'Past'
+	                  )
+	                )
 	              )
 	            ),
 	            logout
@@ -188,12 +217,15 @@
 	    React.createElement(Route, { path: '/home', component: Home }),
 	    React.createElement(Route, { path: 'join', component: Join }),
 	    React.createElement(Route, { path: '/matches', component: Matches }),
+	    React.createElement(Route, { path: '/pendingMatches', component: PendingMatches }),
 	    React.createElement(Route, { path: '/pastMatches', component: PastMatches }),
 	    React.createElement(Route, { path: '/matches/portfolio/:id', component: Portfolio }),
 	    React.createElement(Route, { path: '/matches/portfolio/:id/search', component: Search }),
 	    React.createElement(Route, { path: 'create', component: Create })
 	  )
 	), document.getElementById('app'));
+
+	/* */
 
 /***/ },
 /* 1 */
@@ -41029,6 +41061,7 @@
 	var _userMatches = {
 	  matches: [],
 	  pastMatches: [],
+	  pendingMatches: [],
 	  startDate: null,
 	  endDate: null,
 	  errorMessage: null,
@@ -41079,11 +41112,14 @@
 
 	    var matches = [];
 	    var past = [];
+	    var pending = [];
 
 	    action.data.forEach(function (match, index) {
 
-	      if (match.status === 'pending' || match.status === 'active') {
+	      if (match.status === 'active') {
 	        matches.push(formatMatch(match));
+	      } else if (match.status === 'pending') {
+	        pending.push(formatMatch(match));
 	      } else if (match.status === 'complete') {
 	        past.push(formatMatch(match));
 	      }
@@ -41091,6 +41127,7 @@
 
 	    _userMatches.matches = matches;
 	    _userMatches.pastMatches = past;
+	    _userMatches.pendingMatches = pending;
 
 	    matchesStore.emitChange();
 	  }
@@ -43803,7 +43840,7 @@
 
 	  _onChangeEvent: function () {
 
-	    var match = portfolioStore.getMatchData(); //getPortfolioData
+	    var match = portfolioStore.getMatchData();
 	    if (this.state.errorMessage !== null) {
 	      this.state.errorMessage = null;
 	    }
@@ -43906,6 +43943,7 @@
 	                    { className: 'card-subtitle text-muted centreTitle' },
 	                    stock[1]
 	                  ),
+	                  React.createElement('hr', null),
 	                  React.createElement(
 	                    'div',
 	                    { className: 'row' },
@@ -44125,11 +44163,11 @@
 	var ReactDOM = __webpack_require__(158);
 	var c3 = __webpack_require__(389);
 	var chartActions = __webpack_require__(391);
-	var chartStore = __webpack_require__(400);
+	var chartStore = __webpack_require__(392);
 
 	//Chart used in each stock card to show the stock performance over the last year
-	var StockChart = React.createClass({
-	  displayName: 'StockChart',
+	var StockGraph = React.createClass({
+	  displayName: 'StockGraph',
 
 	  getInitialState: function () {
 	    return {
@@ -44199,7 +44237,7 @@
 	  }
 	});
 
-	module.exports = StockChart;
+	module.exports = StockGraph;
 
 /***/ },
 /* 389 */
@@ -60977,13 +61015,63 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	
+	var AppDispatcher = __webpack_require__(220);
+	var EventEmitter = __webpack_require__(230).EventEmitter;
+	var CHANGE_EVENT = "change";
+
+	var _chartData = {
+	  close: null,
+	  dates: null
+	};
+
+	var chartStore = Object.assign(new EventEmitter(), {
+
+	  getChartData: function () {
+	    return _chartData;
+	  },
+
+	  emitChange: function () {
+	    this.emit(CHANGE_EVENT);
+	  },
+
+	  addChangeListener: function (callback) {
+	    this.addListener(CHANGE_EVENT, callback);
+	  },
+
+	  removeChangeListener: function (callback) {
+	    this.removeListener(CHANGE_EVENT, callback);
+	  }
+
+	});
+
+	AppDispatcher.register(function (payload) {
+	  //'subscribes' to the dispatcher. Store wants to know if it does anything. Payload
+	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
+
+	  if (action.actionType === "STOCK_CHART_DATA") {
+
+	    _chartData.close = action.data.close;
+	    _chartData.dates = action.data.dates;
+
+	    chartStore.emitChange();
+	  }
+	});
+
+	module.exports = chartStore;
+
+/***/ },
+/* 393 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var searchActions = __webpack_require__(393);
+	var searchActions = __webpack_require__(394);
 	var matchActions = __webpack_require__(231);
-	var searchStore = __webpack_require__(394);
+	var searchStore = __webpack_require__(395);
 	var portfolioStore = __webpack_require__(387);
 	var numeral = __webpack_require__(233);
+	var StockChart = __webpack_require__(388);
 
 	var Search = React.createClass({
 	  displayName: 'Search',
@@ -61101,7 +61189,6 @@
 	        { className: 'alert alert-danger', role: 'alert' },
 	        this.state.errorMessage
 	      );
-	      // this.handleErr();
 	    }
 
 	    if (this.state.current && !this.state.clicked) {
@@ -61112,7 +61199,7 @@
 	          { key: index, onClick: that.handleClick },
 	          React.createElement(
 	            'li',
-	            null,
+	            { className: 'highlight pointer' },
 	            stock
 	          )
 	        );
@@ -61164,74 +61251,96 @@
 	                React.createElement(
 	                  'div',
 	                  null,
-	                  userCash,
 	                  React.createElement(
-	                    'h4',
-	                    { className: 'card-title centreTitle' },
-	                    stock[0]
-	                  ),
-	                  React.createElement(
-	                    'h6',
-	                    { className: 'card-subtitle text-muted centreTitle' },
-	                    stock[1]
-	                  ),
-	                  React.createElement(
-	                    'p',
-	                    { className: 'card-text' },
-	                    'Industry: ',
-	                    stock[2]
-	                  ),
-	                  React.createElement(
-	                    'p',
-	                    { className: 'card-text' },
-	                    'Sector: ',
-	                    stock[3]
-	                  ),
-	                  React.createElement(
-	                    'p',
-	                    { className: 'card-text' },
-	                    'Exchange:',
-	                    stock[4]
-	                  ),
-	                  React.createElement(
-	                    'p',
-	                    { className: 'card-text' },
-	                    'Percentage High: ',
-	                    stock[5]
-	                  ),
-	                  React.createElement(
-	                    'p',
-	                    { className: 'card-text' },
-	                    'Year High: ',
-	                    stock[6]
-	                  ),
-	                  React.createElement(
-	                    'p',
-	                    { className: 'card-text' },
-	                    'Year Low: ',
-	                    stock[7]
-	                  ),
-	                  React.createElement(
-	                    'p',
-	                    { className: 'card-text' },
-	                    'Ask: ',
-	                    stock[8]
+	                    'div',
+	                    { className: 'shiftRight' },
+	                    userCash
 	                  ),
 	                  React.createElement(
 	                    'div',
-	                    { className: 'form-group' },
+	                    null,
 	                    React.createElement(
-	                      'label',
-	                      { htmlFor: 'number' },
-	                      'Qty:'
+	                      'h4',
+	                      { className: 'card-title' },
+	                      stock[0]
 	                    ),
-	                    totalCost,
-	                    React.createElement('input', { className: 'form-control', onChange: that.handleBuyStocksChange })
+	                    React.createElement(
+	                      'h6',
+	                      { className: 'card-subtitle text-muted' },
+	                      stock[1]
+	                    )
 	                  ),
+	                  React.createElement('hr', null),
 	                  React.createElement(
-	                    'button',
-	                    { type: 'button', className: 'btn btn-primary', onClick: that.handleBuyClick },
-	                    'Buy'
+	                    'div',
+	                    { className: 'row' },
+	                    React.createElement(
+	                      'div',
+	                      { className: 'col-md-3' },
+	                      React.createElement(
+	                        'p',
+	                        { className: 'card-text' },
+	                        'Industry: ',
+	                        stock[2]
+	                      ),
+	                      React.createElement(
+	                        'p',
+	                        { className: 'card-text' },
+	                        'Sector: ',
+	                        stock[3]
+	                      ),
+	                      React.createElement(
+	                        'p',
+	                        { className: 'card-text' },
+	                        'Exchange:',
+	                        stock[4]
+	                      ),
+	                      React.createElement(
+	                        'p',
+	                        { className: 'card-text' },
+	                        'Percentage High: ',
+	                        stock[5]
+	                      ),
+	                      React.createElement(
+	                        'p',
+	                        { className: 'card-text' },
+	                        'Year High: ',
+	                        "$" + stock[6]
+	                      ),
+	                      React.createElement(
+	                        'p',
+	                        { className: 'card-text' },
+	                        'Year Low: ',
+	                        "$" + stock[7]
+	                      ),
+	                      React.createElement(
+	                        'p',
+	                        { className: 'card-text' },
+	                        'Ask: ',
+	                        "$" + stock[8]
+	                      ),
+	                      React.createElement(
+	                        'div',
+	                        { className: 'form-group' },
+	                        React.createElement(
+	                          'label',
+	                          { htmlFor: 'number' },
+	                          'Qty:'
+	                        ),
+	                        totalCost,
+	                        React.createElement('input', { className: 'form-control', onChange: that.handleBuyStocksChange })
+	                      ),
+	                      React.createElement(
+	                        'button',
+	                        { type: 'button', className: 'btn btn-primary', onClick: that.handleBuyClick },
+	                        'Buy'
+	                      )
+	                    ),
+	                    React.createElement(
+	                      'div',
+	                      { className: 'col-md-9' },
+	                      React.createElement(StockChart, { symbol: stock[1], startDate: new Date() })
+	                    )
 	                  )
 	                )
 	              )
@@ -61269,7 +61378,7 @@
 	      errorMessage,
 	      React.createElement(
 	        'ul',
-	        null,
+	        { className: 'listIndentation' },
 	        stocks
 	      ),
 	      stockInfo
@@ -61281,7 +61390,7 @@
 	module.exports = Search;
 
 /***/ },
-/* 393 */
+/* 394 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(220);
@@ -61324,7 +61433,7 @@
 	module.exports = searchActions;
 
 /***/ },
-/* 394 */
+/* 395 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -61382,7 +61491,7 @@
 	module.exports = searchStore;
 
 /***/ },
-/* 395 */
+/* 396 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//TODO: relace get data with refs so i can empty the text fields??
@@ -61390,8 +61499,8 @@
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var authActions = __webpack_require__(219);
-	var joinMatchStore = __webpack_require__(396);
-	var joinMatchActions = __webpack_require__(397);
+	var joinMatchStore = __webpack_require__(397);
+	var joinMatchActions = __webpack_require__(398);
 	var matchActions = __webpack_require__(231);
 
 	var MatchesToJoin = React.createClass({
@@ -61555,7 +61664,7 @@
 	module.exports = MatchesToJoin;
 
 /***/ },
-/* 396 */
+/* 397 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -61605,7 +61714,7 @@
 	module.exports = joinMatchStore;
 
 /***/ },
-/* 397 */
+/* 398 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -61650,7 +61759,7 @@
 	module.exports = joinMatchActions;
 
 /***/ },
-/* 398 */
+/* 399 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -61703,11 +61812,6 @@
 	      'div',
 	      null,
 	      React.createElement(
-	        'h1',
-	        { className: 'centreTitle' },
-	        'Battles'
-	      ),
-	      React.createElement(
 	        'table',
 	        { className: 'table' },
 	        React.createElement(
@@ -61729,14 +61833,7 @@
 	            React.createElement(
 	              'th',
 	              null,
-	              'Battle Starts'
-	            ),
-	            React.createElement(
-	              'th',
-	              null,
-	              'Length o',
-	              "'",
-	              ' Battle'
+	              'Battle Ends'
 	            ),
 	            React.createElement(
 	              'th',
@@ -61802,12 +61899,7 @@
 	          React.createElement(
 	            'td',
 	            null,
-	            match[2]
-	          ),
-	          React.createElement(
-	            'td',
-	            null,
-	            match[4]
+	            match[3]
 	          ),
 	          React.createElement(
 	            'td',
@@ -61842,6 +61934,11 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'container' },
+	      React.createElement(
+	        'h1',
+	        { className: 'centreTitle' },
+	        'Yer Current Battles'
+	      ),
 	      toDisplay
 	    );
 	  }
@@ -61851,7 +61948,7 @@
 	module.exports = Matches;
 
 /***/ },
-/* 399 */
+/* 400 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -62038,53 +62135,205 @@
 	module.exports = PastMatches;
 
 /***/ },
-/* 400 */
+/* 401 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	var AppDispatcher = __webpack_require__(220);
-	var EventEmitter = __webpack_require__(230).EventEmitter;
-	var CHANGE_EVENT = "change";
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var matchActions = __webpack_require__(231);
+	var matchesStore = __webpack_require__(333);
+	var numeral = __webpack_require__(233);
 
-	var _chartData = {
-	  close: null,
-	  dates: null
-	};
+	var PendingMatches = React.createClass({
+	  displayName: 'PendingMatches',
 
-	var chartStore = Object.assign(new EventEmitter(), {
-
-	  getChartData: function () {
-	    return _chartData;
+	  getInitialState: function () {
+	    return {};
 	  },
 
-	  emitChange: function () {
-	    this.emit(CHANGE_EVENT);
+	  componentWillMount: function () {
+	    matchActions.getUserMatches();
 	  },
 
-	  addChangeListener: function (callback) {
-	    this.addListener(CHANGE_EVENT, callback);
+	  componentDidMount: function () {
+	    matchesStore.addChangeListener(this._onChangeEvent);
 	  },
 
-	  removeChangeListener: function (callback) {
-	    this.removeListener(CHANGE_EVENT, callback);
+	  componentWillUnmount: function () {
+	    matchesStore.removeChangeListener(this._onChangeEvent);
+	  },
+
+	  _onChangeEvent: function () {
+	    var newMatches = matchesStore.getMatchData().pendingMatches;
+	    if (newMatches.length !== 0) {
+	      this.setState({
+	        pendingMatches: matchesStore.getMatchData().pendingMatches
+	      });
+	    }
+	  },
+
+	  handleClick: function (event) {
+	    var match = event.target.value.split(',');
+	    var matchId = match[match.length - 1];
+	    //trigger the store to get the correct match
+	    window.location.hash = "#/matches/portfolio/" + matchId;
+	  },
+
+	  render: function () {
+
+	    var arrayOfMatches = [];
+	    var toDisplay;
+	    var matchTable = React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'table',
+	        { className: 'table' },
+	        React.createElement(
+	          'thead',
+	          null,
+	          React.createElement(
+	            'tr',
+	            null,
+	            React.createElement(
+	              'th',
+	              null,
+	              'Name of Yer Battle'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Type'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Battle Starts'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Length o',
+	              "'",
+	              ' Battle'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Starting Gold'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Yer Treasure',
+	              "'",
+	              's Value'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Opponents Treasure'
+	            ),
+	            React.createElement(
+	              'th',
+	              null,
+	              'Gauge'
+	            ),
+	            React.createElement('th', null)
+	          )
+	        ),
+	        React.createElement(
+	          'tbody',
+	          null,
+	          arrayOfMatches
+	        )
+	      )
+	    );
+
+	    if (!this.state.pendingMatches) {
+	      toDisplay = React.createElement(
+	        'p',
+	        { key: 0 },
+	        'Oh arr! Ye ',
+	        "'",
+	        'ave nah created or joined any battles yet, get t',
+	        "'",
+	        ' t',
+	        "'",
+	        ' it handsomely!'
+	      );
+	    } else {
+	      var that = this;
+	      this.state.pendingMatches.map(function (match, index) {
+	        arrayOfMatches.push(React.createElement(
+	          'tr',
+	          { key: index },
+	          React.createElement(
+	            'td',
+	            null,
+	            match[0]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[1]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[2]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            match[4]
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            '$' + numeral(match[5]).format('0,0')
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            '$' + numeral(match[6]).format('0,0.00')
+	          ),
+	          React.createElement(
+	            'td',
+	            null,
+	            '$' + numeral(match[7]).format('0,0.00')
+	          ),
+	          React.createElement('td', null),
+	          React.createElement(
+	            'td',
+	            null,
+	            React.createElement(
+	              'button',
+	              { value: match, type: 'button', className: 'btn btn-primary', onClick: that.handleClick },
+	              'To Portfolio'
+	            )
+	          )
+	        ));
+	      });
+	      toDisplay = matchTable;
+	    }
+
+	    return React.createElement(
+	      'div',
+	      { className: 'container' },
+	      React.createElement(
+	        'h1',
+	        { className: 'centreTitle' },
+	        'Yer Pending Battles'
+	      ),
+	      toDisplay
+	    );
 	  }
 
 	});
 
-	AppDispatcher.register(function (payload) {
-	  //'subscribes' to the dispatcher. Store wants to know if it does anything. Payload
-	  var action = payload.action; //payload is the object of data coming from dispactcher //action is the object passed from the actions file
-
-	  if (action.actionType === "STOCK_CHART_DATA") {
-
-	    _chartData.close = action.data.close;
-	    _chartData.dates = action.data.dates;
-
-	    chartStore.emitChange();
-	  }
-	});
-
-	module.exports = chartStore;
+	module.exports = PendingMatches;
 
 /***/ }
 /******/ ]);

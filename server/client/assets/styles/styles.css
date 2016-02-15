@@ -36,4 +36,20 @@ div h1 {
   text-transform: capitalize;   
 }
 
+li {
+  list-style: none;
+}
+
+.highlight:hover {
+  background-color: #337ab7;
+  color: white;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.listIndentation {
+  margin-left: -40px;
+}
 
