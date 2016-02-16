@@ -64,8 +64,8 @@
 	var Search = __webpack_require__(393);
 	var Join = __webpack_require__(396);
 	var Matches = __webpack_require__(399);
-	var PastMatches = __webpack_require__(400);
-	var PendingMatches = __webpack_require__(401);
+	var PastMatches = __webpack_require__(401);
+	var PendingMatches = __webpack_require__(402);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -43805,6 +43805,7 @@
 	var portfolioStore = __webpack_require__(387);
 	var matchActions = __webpack_require__(231);
 	var StockChart = __webpack_require__(388);
+	var PortfolioDonut = __webpack_require__(403);
 	var numeral = __webpack_require__(233);
 
 	var Portfolio = React.createClass({
@@ -43897,6 +43898,12 @@
 
 	    var errorToDisplay;
 	    var date;
+	    var arrayOfStocks;
+	    var stocksDonut;
+
+	    if (this.state.stocks) {
+	      stocksDonut = React.createElement(PortfolioDonut, { stocks: this.state.stocks, availableCash: this.state.availableCash });
+	    }
 
 	    var error = React.createElement(
 	      'div',
@@ -43912,8 +43919,6 @@
 	    if (this.state.startDate) {
 	      date = this.state.startDate;
 	    }
-
-	    var arrayOfStocks;
 
 	    if (this.state.stocks) {
 	      var that = this;
@@ -44064,6 +44069,7 @@
 	        ' gold values $',
 	        numeral(this.state.totalValue).format('0,0.00')
 	      ),
+	      stocksDonut,
 	      errorToDisplay,
 	      arrayOfStocks
 	    );
@@ -61768,6 +61774,7 @@
 	var matchActions = __webpack_require__(231);
 	var matchesStore = __webpack_require__(333);
 	var numeral = __webpack_require__(233);
+	var GaugeGraph = __webpack_require__(400);
 
 	var Matches = React.createClass({
 	  displayName: 'Matches',
@@ -61916,7 +61923,11 @@
 	            null,
 	            '$' + numeral(match[7]).format('0,0.00')
 	          ),
-	          React.createElement('td', null),
+	          React.createElement(
+	            'td',
+	            null,
+	            React.createElement(GaugeGraph, { cashValue: match[6], opponentValue: match[7] })
+	          ),
 	          React.createElement(
 	            'td',
 	            null,
@@ -61949,6 +61960,60 @@
 
 /***/ },
 /* 400 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	//two gauges made on reflection could have made one
+
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+	// var { toJS } = require('immutable');
+	var c3 = __webpack_require__(389);
+
+	var Gauge = React.createClass({
+	  displayName: 'Gauge',
+
+	  componentDidMount() {
+	    //working out the percentage of the user funds
+	    console.log();
+	    var you = parseFloat(this.props.cashValue.substr(1));
+	    var opponent = parseFloat(this.props.opponentValue.substr(1));
+	    var total = you + opponent;
+	    var yourPercent = you / total * 100;
+	    var opponentPercent = you / total * 100;
+	    //call with the date to build the gauge chart
+	    this.buildChart(yourPercent.toFixed(2), opponentPercent.toFixed(2));
+	  },
+
+	  buildChart(you, opponent) {
+	    c3.generate({
+	      bindto: ReactDOM.findDOMNode(this.refs.chart),
+	      data: {
+	        columns: [['Me', you]],
+	        type: 'gauge'
+	      },
+	      color: {
+	        pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
+	        threshold: {
+	          values: [30, 60, 90, 100]
+	        }
+	      },
+	      size: {
+	        height: 90
+	      }
+	    });
+	  },
+
+	  render() {
+	    return React.createElement('div', { ref: 'chart' });
+	  }
+
+	});
+
+	module.exports = Gauge;
+
+/***/ },
+/* 401 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -62135,7 +62200,7 @@
 	module.exports = PastMatches;
 
 /***/ },
-/* 401 */
+/* 402 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -62223,23 +62288,6 @@
 	              null,
 	              'Starting Gold'
 	            ),
-	            React.createElement(
-	              'th',
-	              null,
-	              'Yer Treasure',
-	              "'",
-	              's Value'
-	            ),
-	            React.createElement(
-	              'th',
-	              null,
-	              'Opponents Treasure'
-	            ),
-	            React.createElement(
-	              'th',
-	              null,
-	              'Gauge'
-	            ),
 	            React.createElement('th', null)
 	          )
 	        ),
@@ -62297,17 +62345,6 @@
 	          React.createElement(
 	            'td',
 	            null,
-	            '$' + numeral(match[6]).format('0,0.00')
-	          ),
-	          React.createElement(
-	            'td',
-	            null,
-	            '$' + numeral(match[7]).format('0,0.00')
-	          ),
-	          React.createElement('td', null),
-	          React.createElement(
-	            'td',
-	            null,
 	            React.createElement(
 	              'button',
 	              { value: match, type: 'button', className: 'btn btn-primary', onClick: that.handleClick },
@@ -62334,6 +62371,52 @@
 	});
 
 	module.exports = PendingMatches;
+
+/***/ },
+/* 403 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	//used on a users portfolio page
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+	var c3 = __webpack_require__(389);
+
+	var PortfolioDonut = React.createClass({
+	  displayName: 'PortfolioDonut',
+
+	  //take the names of the stocks that you have and their values and pass them to the bar graph
+	  componentDidMount() {
+	    var portfolio = this.props.stocks.reduce(function (portfolio, stock) {
+	      portfolio[stock[0]] = parseFloat(stock[6]) * stock[7];
+	      return portfolio;
+	    }, {});
+	    portfolio['cash'] = this.props.availableCash.toFixed(2);
+	    console.log(portfolio);
+	    //trigger the function to render the donut
+	    this.buildChart(portfolio);
+	  },
+
+	  buildChart(portfolio) {
+	    c3.generate({
+	      bindto: ReactDOM.findDOMNode(this.refs.donut),
+	      data: {
+	        json: portfolio,
+	        type: 'donut'
+	      },
+	      donut: {
+	        title: "Portfolio"
+	      }
+	    });
+	  },
+
+	  render() {
+	    return React.createElement('div', { ref: 'donut' });
+	  }
+
+	});
+
+	module.exports = PortfolioDonut;
 
 /***/ }
 /******/ ]);

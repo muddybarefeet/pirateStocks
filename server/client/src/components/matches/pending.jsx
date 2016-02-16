@@ -53,9 +53,6 @@ var PendingMatches = React.createClass({
                 <th>Battle Starts</th>
                 <th>Length o{"'"} Battle</th>
                 <th>Starting Gold</th>
-                <th>Yer Treasure{"'"}s Value</th>
-                <th>Opponents Treasure</th>
-                <th>Gauge</th>
                 <th></th>
               </tr>
             </thead>
@@ -76,9 +73,6 @@ var PendingMatches = React.createClass({
                                 <td>{match[2]}</td>
                                 <td>{match[4]}</td>
                                 <td>{'$'+numeral(match[5]).format('0,0')}</td>
-                                <td>{'$'+numeral(match[6]).format('0,0.00')}</td>
-                                <td>{'$'+numeral(match[7]).format('0,0.00')}</td>
-                                <td></td>
                                 <td><button value={match} type="button" className="btn btn-primary" onClick={that.handleClick}>To Portfolio</button></td>
                               </tr>);
         });

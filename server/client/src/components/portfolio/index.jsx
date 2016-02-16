@@ -4,6 +4,7 @@ var Link = require('react-router').Link;
 var portfolioStore = require('./../../stores/portfolioStore.js');
 var matchActions = require('./../../actions/matchActions.js');
 var StockChart = require('./stockChart.jsx');
+var PortfolioDonut = require('./portfolioDonut.jsx');
 var numeral = require('numeral');
 
 var Portfolio = React.createClass({
@@ -96,6 +97,12 @@ var Portfolio = React.createClass({
 
     var errorToDisplay;
     var date;
+    var arrayOfStocks;
+    var stocksDonut;
+
+    if (this.state.stocks) {
+      stocksDonut = (<PortfolioDonut stocks={this.state.stocks} availableCash={this.state.availableCash} />);
+    }
 
     var error = (
       <div className="alert alert-danger" role="alert">{this.state.errorMessage}</div>
@@ -110,7 +117,6 @@ var Portfolio = React.createClass({
       date = this.state.startDate;
     }
 
-    var arrayOfStocks;
 
     if (this.state.stocks) {
       var that = this;
@@ -177,6 +183,8 @@ var Portfolio = React.createClass({
 
         <h4>Yer {"'"}ave ${numeral(this.state.availableCash).format('0,0.00')} gold ter spend</h4>
         <h4>Yer current chest o{"'"} gold values ${numeral(this.state.totalValue).format('0,0.00')}</h4>
+
+        {stocksDonut}
 
         {errorToDisplay}
 
