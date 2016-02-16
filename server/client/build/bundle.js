@@ -61926,7 +61926,11 @@
 	          React.createElement(
 	            'td',
 	            null,
-	            React.createElement(GaugeGraph, { cashValue: match[6], opponentValue: match[7] })
+	            React.createElement(
+	              'div',
+	              { className: 'topMarginGauge' },
+	              React.createElement(GaugeGraph, { cashValue: match[6], opponentValue: match[7] })
+	            )
 	          ),
 	          React.createElement(
 	            'td',

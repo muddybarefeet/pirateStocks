@@ -77,7 +77,7 @@ var Matches = React.createClass({
                                 <td>{'$'+numeral(match[5]).format('0,0')}</td>
                                 <td>{'$'+numeral(match[6]).format('0,0.00')}</td>
                                 <td>{'$'+numeral(match[7]).format('0,0.00')}</td>
-                                <td><GaugeGraph cashValue={match[6]} opponentValue={match[7]} /></td>
+                                <td><div className="topMarginGauge"><GaugeGraph cashValue={match[6]} opponentValue={match[7]} /></div></td>
                                 <td><button value={match} type="button" className="btn btn-primary" onClick={that.handleClick}>To Portfolio</button></td>
                               </tr>);
         });
