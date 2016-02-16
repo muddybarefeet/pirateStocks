@@ -57,15 +57,15 @@
 
 	// var App = require('./components/index.jsx');
 	var Home = __webpack_require__(217);
-	var Login = __webpack_require__(218);
+	var Auth = __webpack_require__(413);
 
 	var Create = __webpack_require__(232);
 	var Portfolio = __webpack_require__(386);
-	var Search = __webpack_require__(393);
-	var Join = __webpack_require__(396);
-	var Matches = __webpack_require__(399);
-	var PastMatches = __webpack_require__(401);
-	var PendingMatches = __webpack_require__(402);
+	var Search = __webpack_require__(394);
+	var Join = __webpack_require__(397);
+	var Matches = __webpack_require__(400);
+	var PastMatches = __webpack_require__(403);
+	var PendingMatches = __webpack_require__(404);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -213,7 +213,7 @@
 	  React.createElement(
 	    Route,
 	    { path: '/', component: App },
-	    React.createElement(Route, { path: '/login', component: Login }),
+	    React.createElement(Route, { path: '/auth', component: Auth }),
 	    React.createElement(Route, { path: '/home', component: Home }),
 	    React.createElement(Route, { path: 'join', component: Join }),
 	    React.createElement(Route, { path: '/matches', component: Matches }),
@@ -24862,181 +24862,8 @@
 
 	module.exports = Home;
 
-	/*  <div className="centreTitle" >
-	          <a href="http://localhost:3000/api/auth/facebook"><img className="imgWidth" src='./../../assets/images/login.png' alt="facebook login button" /></a>
-	        </div>*/
-
 /***/ },
-/* 218 */
-/***/ function(module, exports, __webpack_require__) {
-
-	//TODO: relace get data with refs so i can empty the text fields??
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var authActions = __webpack_require__(219);
-	var authStore = __webpack_require__(229);
-	var matchActions = __webpack_require__(231);
-
-	var Login = React.createClass({
-	  displayName: 'Login',
-
-	  getInitialState: function () {
-	    return authStore.getUserData();
-	  },
-
-	  componentDidMount: function () {
-	    authStore.addChangeListener(this._onChangeEvent);
-	  },
-
-	  componentWillUnmount: function () {
-	    authStore.removeChangeListener(this._onChangeEvent);
-	  },
-
-	  _onChangeEvent: function () {
-	    console.log('jwt in component', localStorage.username);
-	    window.location.hash = "#/matches";
-	  },
-
-	  //-------methods for login-------
-	  handleLoginEmailChange: function (event) {
-	    this.setState({ emailLogin: event.target.value });
-	  },
-
-	  handleLoginPasswordChange: function (event) {
-	    this.setState({ passLogin: event.target.value });
-	  },
-
-	  handleLoginClick: function (i) {
-	    authActions.sendLogin(this.state.emailLogin, this.state.passLogin);
-	    this.setState({ emailLogin: "", passLogin: "" });
-	    //want to empty the text box
-	  },
-
-	  //-------methods for signup-------
-	  handleSignupUsernameChange: function (event) {
-	    this.setState({ usernameSignup: event.target.value });
-	  },
-
-	  handleSignupEmailChange: function (event) {
-	    var that = this;
-	    this.setState({ emailSignup: event.target.value });
-	  },
-
-	  handleSignupPasswordChange: function (event) {
-	    var that = this;
-	    this.setState({ passSignup: event.target.value });
-	  },
-
-	  handleSignupClick: function (i) {
-	    authActions.sendSignup(this.state.usernameSignup, this.state.emailSignup, this.state.passSignup);
-	    this.setState({ usernameSignup: "", emailSignup: "", passSignup: "" });
-	    //want to empty the text box
-	  },
-
-	  render: function () {
-
-	    return React.createElement(
-	      'div',
-	      { className: 'container' },
-	      React.createElement(
-	        'div',
-	        { className: 'row' },
-	        React.createElement(
-	          'div',
-	          { className: 'col-md-6' },
-	          React.createElement(
-	            'h1',
-	            null,
-	            'Login'
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'form-group' },
-	            React.createElement(
-	              'label',
-	              { htmlFor: 'email' },
-	              'Email:'
-	            ),
-	            React.createElement('input', { type: 'email', className: 'form-control', id: 'usr', onChange: this.handleLoginEmailChange })
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'form-group' },
-	            React.createElement(
-	              'label',
-	              { htmlFor: 'usr' },
-	              'Password:'
-	            ),
-	            React.createElement('input', { type: 'password', className: 'form-control', id: 'pwd', onChange: this.handleLoginPasswordChange })
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            React.createElement(
-	              'button',
-	              { type: 'button', className: 'btn btn-warning', onClick: this.handleLoginClick },
-	              'Login'
-	            )
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'col-md-6' },
-	          React.createElement(
-	            'h1',
-	            null,
-	            'Signup'
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'form-group' },
-	            React.createElement(
-	              'label',
-	              { htmlFor: 'userName' },
-	              'Username:'
-	            ),
-	            React.createElement('input', { type: 'userName', className: 'form-control', id: 'usrname', onChange: this.handleSignupUsernameChange })
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'form-group' },
-	            React.createElement(
-	              'label',
-	              { htmlFor: 'usr' },
-	              'Email:'
-	            ),
-	            React.createElement('input', { type: 'text', className: 'form-control', id: 'usr', onChange: this.handleSignupEmailChange })
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'form-group' },
-	            React.createElement(
-	              'label',
-	              { htmlFor: 'pwd' },
-	              'Password:'
-	            ),
-	            React.createElement('input', { type: 'password', className: 'form-control', id: 'pwd', onChange: this.handleSignupPasswordChange })
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            React.createElement(
-	              'button',
-	              { type: 'button', className: 'btn btn-warning', onClick: this.handleSignupClick },
-	              'Signup'
-	            )
-	          )
-	        )
-	      )
-	    );
-	  }
-
-	});
-
-	module.exports = Login;
-
-/***/ },
+/* 218 */,
 /* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -43803,9 +43630,9 @@
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var portfolioStore = __webpack_require__(387);
-	var matchActions = __webpack_require__(231);
-	var StockChart = __webpack_require__(404);
-	var PortfolioDonut = __webpack_require__(405);
+	var portfolioActions = __webpack_require__(411);
+	var StockGraph = __webpack_require__(412);
+	var PortfolioDonut = __webpack_require__(393);
 	var numeral = __webpack_require__(233);
 	var moment = __webpack_require__(234);
 
@@ -43828,7 +43655,7 @@
 
 	  componentDidMount: function () {
 	    if (this.state.portfolioId) {
-	      matchActions.getMatchPortfolio(this.state.portfolioId);
+	      portfolioActions.getMatchPortfolio(this.state.portfolioId);
 	    } /*else {*/
 	    //MAKE A NOT FOUND PAGE
 	    // window.location.hash = "#/notFound";
@@ -43870,7 +43697,7 @@
 	    var numSharesHave = event.target.parentElement.childNodes[7].textContent;
 	    numSharesHave = parseInt(numSharesHave.split(": ")[1]);
 	    var symbol = event.target.parentElement.childNodes[1].textContent;
-	    matchActions.makeTrade(this.state.portfolioId, this.state.qtySell, symbol, 'sell', numSharesHave);
+	    portfolioActions.makeTrade(this.state.portfolioId, this.state.qtySell, symbol, 'sell', numSharesHave);
 	    this.setState({
 	      qtySell: ""
 	    });
@@ -44035,7 +43862,7 @@
 	                    React.createElement(
 	                      'div',
 	                      { className: 'col-md-9' },
-	                      React.createElement(StockChart, { symbol: stock[1], startDate: date })
+	                      React.createElement(StockGraph, { symbol: stock[1], startDate: date })
 	                    )
 	                  )
 	                )
@@ -60939,7 +60766,7 @@
 	var chartActions = {
 
 	  getStockHistory: function (symbol, startDate) {
-	    //request.get('/stocks/history/'+this.props.symbol+'/'+this.props.startdate)
+
 	    requestHelper.get('stocks/history/' + symbol + '/' + startDate, jwt).end(function (err, response) {
 	      if (response.status === 200) {
 
@@ -61012,14 +60839,69 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	
+	//used on a users portfolio page
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+	var c3 = __webpack_require__(389);
+
+	var PortfolioDonut = React.createClass({
+	  displayName: 'PortfolioDonut',
+
+	  //take the names of the stocks that you have and their values and pass them to the bar graph
+	  componentDidMount() {
+	    var portfolio = this.props.stocks.reduce(function (portfolio, stock) {
+	      portfolio[stock[0]] = parseFloat(stock[6]) * stock[7];
+	      return portfolio;
+	    }, {});
+	    portfolio['cash'] = this.props.availableCash.toFixed(2);
+	    //trigger the function to render the donut
+	    this.buildChart(portfolio);
+	  },
+
+	  // above repeated in componentDidUpdate so that on refresh the data stays on the page
+	  componentDidUpdate() {
+	    var portfolio = this.props.stocks.reduce(function (portfolio, stock) {
+	      portfolio[stock[0]] = parseFloat(stock[6]) * stock[7];
+	      return portfolio;
+	    }, {});
+	    portfolio['cash'] = this.props.availableCash.toFixed(2);
+	    this.buildChart(portfolio);
+	  },
+
+	  buildChart(portfolio) {
+	    c3.generate({
+	      bindto: ReactDOM.findDOMNode(this.refs.donut),
+	      data: {
+	        json: portfolio,
+	        type: 'donut'
+	      },
+	      donut: {
+	        title: "Portfolio"
+	      }
+	    });
+	  },
+
+	  render() {
+	    return React.createElement('div', { ref: 'donut' });
+	  }
+
+	});
+
+	module.exports = PortfolioDonut;
+
+/***/ },
+/* 394 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
-	var searchActions = __webpack_require__(394);
+	var searchActions = __webpack_require__(395);
 	var matchActions = __webpack_require__(231);
-	var searchStore = __webpack_require__(395);
+	var searchStore = __webpack_require__(396);
 	var portfolioStore = __webpack_require__(387);
 	var numeral = __webpack_require__(233);
-	var StockChart = __webpack_require__(404);
+	var StockGraph = __webpack_require__(412);
 
 	var Search = React.createClass({
 	  displayName: 'Search',
@@ -61287,7 +61169,7 @@
 	                    React.createElement(
 	                      'div',
 	                      { className: 'col-md-9' },
-	                      React.createElement(StockChart, { symbol: stock[1], startDate: new Date() })
+	                      React.createElement(StockGraph, { symbol: stock[1], startDate: new Date() })
 	                    )
 	                  )
 	                )
@@ -61338,7 +61220,7 @@
 	module.exports = Search;
 
 /***/ },
-/* 394 */
+/* 395 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(220);
@@ -61381,7 +61263,7 @@
 	module.exports = searchActions;
 
 /***/ },
-/* 395 */
+/* 396 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -61439,7 +61321,7 @@
 	module.exports = searchStore;
 
 /***/ },
-/* 396 */
+/* 397 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//TODO: relace get data with refs so i can empty the text fields??
@@ -61447,8 +61329,8 @@
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var authActions = __webpack_require__(219);
-	var joinMatchStore = __webpack_require__(397);
-	var joinMatchActions = __webpack_require__(398);
+	var joinMatchStore = __webpack_require__(398);
+	var joinMatchActions = __webpack_require__(399);
 	var matchActions = __webpack_require__(231);
 
 	var MatchesToJoin = React.createClass({
@@ -61612,7 +61494,7 @@
 	module.exports = MatchesToJoin;
 
 /***/ },
-/* 397 */
+/* 398 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -61662,7 +61544,7 @@
 	module.exports = joinMatchStore;
 
 /***/ },
-/* 398 */
+/* 399 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -61707,7 +61589,7 @@
 	module.exports = joinMatchActions;
 
 /***/ },
-/* 399 */
+/* 400 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -61716,8 +61598,8 @@
 	var matchActions = __webpack_require__(231);
 	var matchesStore = __webpack_require__(333);
 	var numeral = __webpack_require__(233);
-	var GaugeGraph = __webpack_require__(400);
-	var GaugeGraphSolo = __webpack_require__(406);
+	var GaugeGraph = __webpack_require__(410);
+	var GaugeGraphSolo = __webpack_require__(409);
 
 	var Matches = React.createClass({
 	  displayName: 'Matches',
@@ -61755,10 +61637,6 @@
 	  },
 
 	  render: function () {
-
-	    var gauge;
-
-	    // if ()
 
 	    var arrayOfMatches = [];
 	    var toDisplay;
@@ -61910,61 +61788,9 @@
 	module.exports = Matches;
 
 /***/ },
-/* 400 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	//two gauges made on reflection could have made one
-
-	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(158);
-	// var { toJS } = require('immutable');
-	var c3 = __webpack_require__(389);
-
-	var Gauge = React.createClass({
-	  displayName: 'Gauge',
-
-	  componentDidMount() {
-	    //working out the percentage of the user funds
-	    console.log();
-	    var you = parseFloat(this.props.cashValue.substr(1));
-	    var opponent = parseFloat(this.props.opponentValue.substr(1));
-	    var total = you + opponent;
-	    var yourPercent = you / total * 100;
-	    var opponentPercent = you / total * 100;
-	    //call with the date to build the gauge chart
-	    this.buildChart(yourPercent.toFixed(2), opponentPercent.toFixed(2));
-	  },
-
-	  buildChart(you, opponent) {
-	    c3.generate({
-	      bindto: ReactDOM.findDOMNode(this.refs.chart),
-	      data: {
-	        columns: [['Me', you]],
-	        type: 'gauge'
-	      },
-	      color: {
-	        pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
-	        threshold: {
-	          values: [30, 60, 90, 100]
-	        }
-	      },
-	      size: {
-	        height: 90
-	      }
-	    });
-	  },
-
-	  render() {
-	    return React.createElement('div', { ref: 'chart' });
-	  }
-
-	});
-
-	module.exports = Gauge;
-
-/***/ },
-/* 401 */
+/* 401 */,
+/* 402 */,
+/* 403 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -62151,7 +61977,7 @@
 	module.exports = PastMatches;
 
 /***/ },
-/* 402 */
+/* 404 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -62324,8 +62150,164 @@
 	module.exports = PendingMatches;
 
 /***/ },
-/* 403 */,
-/* 404 */
+/* 405 */,
+/* 406 */,
+/* 407 */,
+/* 408 */,
+/* 409 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	//two gauges made on reflection could have made one
+
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+	// var { toJS } = require('immutable');
+	var c3 = __webpack_require__(389);
+
+	var SoloGauge = React.createClass({
+	  displayName: 'SoloGauge',
+
+	  componentDidMount() {
+	    //working out the percentage of the user funds
+	    var startFunds = parseFloat(this.props.cashValue);
+	    var you = parseFloat(this.props.portfolio);
+	    var total = startFunds + you;
+	    var percentage = you / total * 100;
+	    //call with the date to build the gauge chart
+	    this.buildChart(percentage.toFixed(2));
+	  },
+
+	  buildChart(you) {
+	    c3.generate({
+	      bindto: ReactDOM.findDOMNode(this.refs.chart),
+	      data: {
+	        columns: [['Me', you]],
+	        type: 'gauge'
+	      },
+	      color: {
+	        pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the color levels for the percentage values.
+	        threshold: {
+	          values: [30, 60, 90, 100]
+	        }
+	      },
+	      size: {
+	        height: 90
+	      }
+	    });
+	  },
+
+	  render() {
+	    return React.createElement('div', { ref: 'chart' });
+	  }
+
+	});
+
+	module.exports = SoloGauge;
+
+/***/ },
+/* 410 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	//two gauges made on reflection could have made one
+
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+	// var { toJS } = require('immutable');
+	var c3 = __webpack_require__(389);
+
+	var Gauge = React.createClass({
+	  displayName: 'Gauge',
+
+	  componentDidMount() {
+	    //working out the percentage of the user funds
+	    console.log();
+	    var you = parseFloat(this.props.cashValue.substr(1));
+	    var opponent = parseFloat(this.props.opponentValue.substr(1));
+	    var total = you + opponent;
+	    var yourPercent = you / total * 100;
+	    var opponentPercent = you / total * 100;
+	    //call with the date to build the gauge chart
+	    this.buildChart(yourPercent.toFixed(2), opponentPercent.toFixed(2));
+	  },
+
+	  buildChart(you, opponent) {
+	    c3.generate({
+	      bindto: ReactDOM.findDOMNode(this.refs.chart),
+	      data: {
+	        columns: [['Me', you]],
+	        type: 'gauge'
+	      },
+	      color: {
+	        pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
+	        threshold: {
+	          values: [30, 60, 90, 100]
+	        }
+	      },
+	      size: {
+	        height: 90
+	      }
+	    });
+	  },
+
+	  render() {
+	    return React.createElement('div', { ref: 'chart' });
+	  }
+
+	});
+
+	module.exports = Gauge;
+
+/***/ },
+/* 411 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(220);
+	var jwt = __webpack_require__(225).jwt;
+	var requestHelper = __webpack_require__(224);
+
+	var portfolioActions = {
+
+	  getMatchPortfolio: function (matchId) {
+	    requestHelper.get('trades/' + matchId, jwt).end(function (err, response) {
+	      if (response.status === 200) {
+	        response = response.body.data;
+	        AppDispatcher.handleServerAction({
+	          actionType: "GET_USER_MATCH",
+	          data: response
+	        });
+	      } else {
+	        console.log('err', err);
+	      }
+	    });
+	  },
+
+	  makeTrade: function (matchId, qty, symbol, action, numSharesHave) {
+	    var actionType = "MAKE_" + action.toUpperCase() + "_ERROR";
+	    requestHelper.post('trades/' + matchId, { matchId: matchId, numShares: qty, symbol: symbol, action: action, numSharesHave: numSharesHave }, jwt).end(function (err, response) {
+	      if (response.status !== 200) {
+	        response = response.body.message;
+	        AppDispatcher.handleServerAction({
+	          actionType: actionType,
+	          message: response
+	        });
+	      } else {
+	        response = response.body.data;
+	        AppDispatcher.handleServerAction({
+	          actionType: "MAKE_TRADE",
+	          data: response
+	        });
+	      }
+	    });
+	  }
+
+	};
+
+	module.exports = portfolioActions;
+
+/***/ },
+/* 412 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -62409,111 +62391,174 @@
 	module.exports = StockGraph;
 
 /***/ },
-/* 405 */
+/* 413 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
-	//used on a users portfolio page
+	//TODO: relace get data with refs so i can empty the text fields??
+
 	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(158);
-	var c3 = __webpack_require__(389);
+	var Link = __webpack_require__(159).Link;
+	var authActions = __webpack_require__(219);
+	var authStore = __webpack_require__(229);
+	var matchActions = __webpack_require__(231);
 
-	var PortfolioDonut = React.createClass({
-	  displayName: 'PortfolioDonut',
+	var Login = React.createClass({
+	  displayName: 'Login',
 
-	  //take the names of the stocks that you have and their values and pass them to the bar graph
-	  componentDidMount() {
-	    var portfolio = this.props.stocks.reduce(function (portfolio, stock) {
-	      portfolio[stock[0]] = parseFloat(stock[6]) * stock[7];
-	      return portfolio;
-	    }, {});
-	    portfolio['cash'] = this.props.availableCash.toFixed(2);
-	    //trigger the function to render the donut
-	    this.buildChart(portfolio);
+	  getInitialState: function () {
+	    return authStore.getUserData();
 	  },
 
-	  // above repeated in componentDidUpdate so that on refresh the data stays on the page
-	  componentDidUpdate() {
-	    var portfolio = this.props.stocks.reduce(function (portfolio, stock) {
-	      portfolio[stock[0]] = parseFloat(stock[6]) * stock[7];
-	      return portfolio;
-	    }, {});
-	    portfolio['cash'] = this.props.availableCash.toFixed(2);
-	    this.buildChart(portfolio);
+	  componentDidMount: function () {
+	    authStore.addChangeListener(this._onChangeEvent);
 	  },
 
-	  buildChart(portfolio) {
-	    c3.generate({
-	      bindto: ReactDOM.findDOMNode(this.refs.donut),
-	      data: {
-	        json: portfolio,
-	        type: 'donut'
-	      },
-	      donut: {
-	        title: "Portfolio"
-	      }
-	    });
+	  componentWillUnmount: function () {
+	    authStore.removeChangeListener(this._onChangeEvent);
 	  },
 
-	  render() {
-	    return React.createElement('div', { ref: 'donut' });
+	  _onChangeEvent: function () {
+	    console.log('jwt in component', localStorage.username);
+	    window.location.hash = "#/matches";
+	  },
+
+	  //-------methods for login-------
+	  handleLoginEmailChange: function (event) {
+	    this.setState({ emailLogin: event.target.value });
+	  },
+
+	  handleLoginPasswordChange: function (event) {
+	    this.setState({ passLogin: event.target.value });
+	  },
+
+	  handleLoginClick: function (i) {
+	    authActions.sendLogin(this.state.emailLogin, this.state.passLogin);
+	    this.setState({ emailLogin: "", passLogin: "" });
+	    //want to empty the text box
+	  },
+
+	  //-------methods for signup-------
+	  handleSignupUsernameChange: function (event) {
+	    this.setState({ usernameSignup: event.target.value });
+	  },
+
+	  handleSignupEmailChange: function (event) {
+	    var that = this;
+	    this.setState({ emailSignup: event.target.value });
+	  },
+
+	  handleSignupPasswordChange: function (event) {
+	    var that = this;
+	    this.setState({ passSignup: event.target.value });
+	  },
+
+	  handleSignupClick: function (i) {
+	    authActions.sendSignup(this.state.usernameSignup, this.state.emailSignup, this.state.passSignup);
+	    this.setState({ usernameSignup: "", emailSignup: "", passSignup: "" });
+	    //want to empty the text box
+	  },
+
+	  render: function () {
+
+	    return React.createElement(
+	      'div',
+	      { className: 'container' },
+	      React.createElement(
+	        'div',
+	        { className: 'row' },
+	        React.createElement(
+	          'div',
+	          { className: 'col-md-6' },
+	          React.createElement(
+	            'h1',
+	            null,
+	            'Login'
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'form-group' },
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'email' },
+	              'Email:'
+	            ),
+	            React.createElement('input', { type: 'email', className: 'form-control', id: 'usr', onChange: this.handleLoginEmailChange })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'form-group' },
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'usr' },
+	              'Password:'
+	            ),
+	            React.createElement('input', { type: 'password', className: 'form-control', id: 'pwd', onChange: this.handleLoginPasswordChange })
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            React.createElement(
+	              'button',
+	              { type: 'button', className: 'btn btn-warning', onClick: this.handleLoginClick },
+	              'Login'
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'col-md-6' },
+	          React.createElement(
+	            'h1',
+	            null,
+	            'Signup'
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'form-group' },
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'userName' },
+	              'Username:'
+	            ),
+	            React.createElement('input', { type: 'userName', className: 'form-control', id: 'usrname', onChange: this.handleSignupUsernameChange })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'form-group' },
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'usr' },
+	              'Email:'
+	            ),
+	            React.createElement('input', { type: 'text', className: 'form-control', id: 'usr', onChange: this.handleSignupEmailChange })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'form-group' },
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'pwd' },
+	              'Password:'
+	            ),
+	            React.createElement('input', { type: 'password', className: 'form-control', id: 'pwd', onChange: this.handleSignupPasswordChange })
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            React.createElement(
+	              'button',
+	              { type: 'button', className: 'btn btn-warning', onClick: this.handleSignupClick },
+	              'Signup'
+	            )
+	          )
+	        )
+	      )
+	    );
 	  }
 
 	});
 
-	module.exports = PortfolioDonut;
-
-/***/ },
-/* 406 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	//two gauges made on reflection could have made one
-
-	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(158);
-	// var { toJS } = require('immutable');
-	var c3 = __webpack_require__(389);
-
-	var SoloGauge = React.createClass({
-	  displayName: 'SoloGauge',
-
-	  componentDidMount() {
-	    //working out the percentage of the user funds
-	    var startFunds = parseFloat(this.props.cashValue);
-	    var you = parseFloat(this.props.portfolio);
-	    var total = startFunds + you;
-	    var percentage = you / total * 100;
-	    //call with the date to build the gauge chart
-	    this.buildChart(percentage.toFixed(2));
-	  },
-
-	  buildChart(you) {
-	    c3.generate({
-	      bindto: ReactDOM.findDOMNode(this.refs.chart),
-	      data: {
-	        columns: [['Me', you]],
-	        type: 'gauge'
-	      },
-	      color: {
-	        pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the color levels for the percentage values.
-	        threshold: {
-	          values: [30, 60, 90, 100]
-	        }
-	      },
-	      size: {
-	        height: 90
-	      }
-	    });
-	  },
-
-	  render() {
-	    return React.createElement('div', { ref: 'chart' });
-	  }
-
-	});
-
-	module.exports = SoloGauge;
+	module.exports = Login;
 
 /***/ }
 /******/ ]);

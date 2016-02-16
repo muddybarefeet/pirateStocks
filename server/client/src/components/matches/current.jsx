@@ -4,8 +4,8 @@ var Link = require('react-router').Link;
 var matchActions = require('./../../actions/matchActions.js');
 var matchesStore = require('./../../stores/matchesStore.js');
 var numeral= require('numeral');
-var GaugeGraph = require('./gaugeGraph.jsx');
-var GaugeGraphSolo = require('./gaugeGraphSolo.jsx');
+var GaugeGraph = require('./graphs/gaugeGraph.jsx');
+var GaugeGraphSolo = require('./graphs/gaugeGraphSolo.jsx');
 
 var Matches = React.createClass({
 
@@ -42,10 +42,6 @@ var Matches = React.createClass({
   },
 
   render: function () {
-
-    var gauge;
-
-    // if ()
 
     var arrayOfMatches = [];
     var toDisplay;

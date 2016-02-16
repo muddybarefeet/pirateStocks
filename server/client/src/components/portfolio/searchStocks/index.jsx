@@ -6,7 +6,7 @@ var matchActions = require('./../../../actions/matchActions.js');
 var searchStore = require('./../../../stores/searchStore.js');
 var portfolioStore = require('./../../../stores/portfolioStore.js');
 var numeral = require('numeral');
-var StockChart = require('./../graphs/stockChart.jsx');
+var StockGraph = require('./../graphs/stockGraph.jsx');
 
 var Search = React.createClass({
 
@@ -185,7 +185,7 @@ var Search = React.createClass({
 
                       <div className="col-md-9">
 
-                        <StockChart symbol={stock[1]} startDate={new Date()}/>
+                        <StockGraph symbol={stock[1]} startDate={new Date()}/>
 
                       </div>
 

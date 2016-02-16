@@ -11,7 +11,7 @@ var IndexRoute = require('react-router').IndexRoute;
 
 // var App = require('./components/index.jsx');
 var Home = require('./components/home.jsx');
-var Login = require('./components/login.jsx');
+var Auth = require('./components/auth.jsx');
 
 var Create = require('./components/createMatch/createMatch.jsx');
 var Portfolio = require('./components/portfolio/index.jsx');
@@ -97,7 +97,7 @@ var App = React.createClass({
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={App}>
-      <Route path="/login" component={Login} />
+      <Route path="/auth" component={Auth} />
       <Route path="/home" component={Home} />
       <Route path="join" component={Join}/>
       <Route path="/matches" component={Matches} />

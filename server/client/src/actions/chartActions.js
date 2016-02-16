@@ -7,7 +7,7 @@ var jwt = require('../constants.js').jwt;
 var chartActions = {
 
   getStockHistory: function (symbol, startDate) {
-    //request.get('/stocks/history/'+this.props.symbol+'/'+this.props.startdate)
+
     requestHelper
     .get('stocks/history/'+symbol+'/'+startDate, jwt)
     .end(function (err, response) {

@@ -2,8 +2,8 @@
 var React = require('react');
 var Link = require('react-router').Link;
 var portfolioStore = require('./../../stores/portfolioStore.js');
-var matchActions = require('./../../actions/matchActions.js');
-var StockChart = require('./graphs/stockChart.jsx');
+var portfolioActions = require('./../../actions/portfolioActions.js');
+var StockGraph = require('./graphs/stockGraph.jsx');
 var PortfolioDonut = require('./graphs/portfolioDonut.jsx');
 var numeral = require('numeral');
 var moment = require('moment');
@@ -26,7 +26,7 @@ var Portfolio = React.createClass({
 
   componentDidMount: function () {
     if (this.state.portfolioId) {
-        matchActions.getMatchPortfolio(this.state.portfolioId); 
+        portfolioActions.getMatchPortfolio(this.state.portfolioId); 
     } /*else {*/
       //MAKE A NOT FOUND PAGE
       // window.location.hash = "#/notFound";
@@ -68,7 +68,7 @@ var Portfolio = React.createClass({
     var numSharesHave = event.target.parentElement.childNodes[7].textContent;
     numSharesHave = parseInt(numSharesHave.split(": ")[1]);
     var symbol = event.target.parentElement.childNodes[1].textContent;
-    matchActions.makeTrade(this.state.portfolioId, this.state.qtySell, symbol, 'sell', numSharesHave);
+    portfolioActions.makeTrade(this.state.portfolioId, this.state.qtySell, symbol, 'sell', numSharesHave);
     this.setState({
       qtySell: ""
     });
@@ -163,7 +163,7 @@ var Portfolio = React.createClass({
                             </div>
 
                             <div className="col-md-9">
-                              <StockChart symbol={stock[1]} startDate={date}/>
+                              <StockGraph symbol={stock[1]} startDate={date}/>
 
                             </div>
 

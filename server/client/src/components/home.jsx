@@ -52,6 +52,3 @@ var Home = React.createClass({
 
 module.exports = Home;
 
-/*  <div className="centreTitle" >
-          <a href="http://localhost:3000/api/auth/facebook"><img className="imgWidth" src='./../../assets/images/login.png' alt="facebook login button" /></a>
-        </div>*/
