@@ -12,8 +12,17 @@ var PortfolioDonut = React.createClass ({
       return portfolio;
     }, {}) 
     portfolio['cash'] = this.props.availableCash.toFixed(2);
-    console.log(portfolio)
     //trigger the function to render the donut
+    this.buildChart(portfolio);
+  },
+
+  // above repeated in componentDidUpdate so that on refresh the data stays on the page
+  componentDidUpdate() {
+    var portfolio = this.props.stocks.reduce(function(portfolio, stock){
+      portfolio[stock[0]] = (parseFloat(stock[6]))*(stock[7]);
+      return portfolio;
+    }, {}) 
+    portfolio['cash'] = this.props.availableCash.toFixed(2);
     this.buildChart(portfolio);
   },
 
