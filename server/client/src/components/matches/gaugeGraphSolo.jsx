@@ -9,7 +9,7 @@ var SoloGauge = React.createClass({
 
   componentDidMount(){
     //working out the percentage of the user funds
-    var startFunds = parseFloat(this.props.matchFunds);
+    var startFunds = parseFloat(this.props.cashValue);
     var you = parseFloat(this.props.portfolio);
     var total = startFunds + you;
     var percentage = (you/total)*100;

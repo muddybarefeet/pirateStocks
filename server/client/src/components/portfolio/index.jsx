@@ -3,8 +3,8 @@ var React = require('react');
 var Link = require('react-router').Link;
 var portfolioStore = require('./../../stores/portfolioStore.js');
 var matchActions = require('./../../actions/matchActions.js');
-var StockChart = require('./stockChart.jsx');
-var PortfolioDonut = require('./portfolioDonut.jsx');
+var StockChart = require('./graphs/stockChart.jsx');
+var PortfolioDonut = require('./graphs/portfolioDonut.jsx');
 var numeral = require('numeral');
 
 var Portfolio = React.createClass({

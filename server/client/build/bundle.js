@@ -43804,8 +43804,8 @@
 	var Link = __webpack_require__(159).Link;
 	var portfolioStore = __webpack_require__(387);
 	var matchActions = __webpack_require__(231);
-	var StockChart = __webpack_require__(388);
-	var PortfolioDonut = __webpack_require__(403);
+	var StockChart = __webpack_require__(404);
+	var PortfolioDonut = __webpack_require__(405);
 	var numeral = __webpack_require__(233);
 
 	var Portfolio = React.createClass({
@@ -44161,91 +44161,7 @@
 	module.exports = portfolioStore;
 
 /***/ },
-/* 388 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(158);
-	var c3 = __webpack_require__(389);
-	var chartActions = __webpack_require__(391);
-	var chartStore = __webpack_require__(392);
-
-	//Chart used in each stock card to show the stock performance over the last year
-	var StockGraph = React.createClass({
-	  displayName: 'StockGraph',
-
-	  getInitialState: function () {
-	    return {
-	      close: null,
-	      dates: null
-	    };
-	  },
-
-	  //call the server to send a request to yahoo to get the data for each trade day over the last x weeks
-	  componentDidMount: function () {
-
-	    chartActions.getStockHistory(this.props.symbol, this.props.startDate);
-	    chartStore.addChangeListener(this._onChangeEvent);
-	  },
-
-	  componentWillUnmount: function () {
-	    chartStore.removeChangeListener(this._onChangeEvent);
-	  },
-
-	  _onChangeEvent: function () {
-
-	    var that = this;
-	    this.setState({
-	      close: chartStore.getChartData().close,
-	      xAxis: chartStore.getChartData().dates
-	    }, function () {
-	      this.render();
-	      //send the data to the chartBuild method
-	      that.buildChart(this.state.close, this.state.xAxis);
-	    });
-	  },
-
-	  buildChart: function (close, xAxis) {
-	    c3.generate({
-	      bindto: ReactDOM.findDOMNode(this.refs.chart),
-	      //data to pass to the graph
-	      data: {
-	        x: 'x',
-	        columns: [xAxis, close]
-	      },
-	      axis: {
-	        y: {
-	          //define the axis label and position
-	          label: {
-	            text: 'Closing Price in $',
-	            position: 'outer-middle'
-	          }
-	        },
-	        x: {
-	          //define the fields on the x axis
-	          type: 'timeseries',
-	          tick: {
-	            format: '%Y-%m'
-	          },
-	          //define the axis label and position
-	          label: {
-	            text: 'Date',
-	            position: 'outer-middle'
-	          }
-	        }
-	      }
-	    });
-	  },
-
-	  render() {
-	    return React.createElement('div', { ref: 'chart', className: 'c3Line' });
-	  }
-	});
-
-	module.exports = StockGraph;
-
-/***/ },
+/* 388 */,
 /* 389 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -61077,7 +60993,7 @@
 	var searchStore = __webpack_require__(395);
 	var portfolioStore = __webpack_require__(387);
 	var numeral = __webpack_require__(233);
-	var StockChart = __webpack_require__(388);
+	var StockChart = __webpack_require__(404);
 
 	var Search = React.createClass({
 	  displayName: 'Search',
@@ -61775,6 +61691,7 @@
 	var matchesStore = __webpack_require__(333);
 	var numeral = __webpack_require__(233);
 	var GaugeGraph = __webpack_require__(400);
+	var GaugeGraphSolo = __webpack_require__(406);
 
 	var Matches = React.createClass({
 	  displayName: 'Matches',
@@ -61812,6 +61729,10 @@
 	  },
 
 	  render: function () {
+
+	    var gauge;
+
+	    // if ()
 
 	    var arrayOfMatches = [];
 	    var toDisplay;
@@ -61929,7 +61850,7 @@
 	            React.createElement(
 	              'div',
 	              { className: 'topMarginGauge' },
-	              React.createElement(GaugeGraph, { cashValue: match[6], opponentValue: match[7] })
+	              match[1] === 'Solo' ? React.createElement(GaugeGraphSolo, { cashValue: match[6] }) : React.createElement(GaugeGraph, { cashValue: match[6], opponentValue: match[7] })
 	            )
 	          ),
 	          React.createElement(
@@ -62377,7 +62298,93 @@
 	module.exports = PendingMatches;
 
 /***/ },
-/* 403 */
+/* 403 */,
+/* 404 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+	var c3 = __webpack_require__(389);
+	var chartActions = __webpack_require__(391);
+	var chartStore = __webpack_require__(392);
+
+	//Chart used in each stock card to show the stock performance over the last year
+	var StockGraph = React.createClass({
+	  displayName: 'StockGraph',
+
+	  getInitialState: function () {
+	    return {
+	      close: null,
+	      dates: null
+	    };
+	  },
+
+	  //call the server to send a request to yahoo to get the data for each trade day over the last x weeks
+	  componentDidMount: function () {
+
+	    chartActions.getStockHistory(this.props.symbol, this.props.startDate);
+	    chartStore.addChangeListener(this._onChangeEvent);
+	  },
+
+	  componentWillUnmount: function () {
+	    chartStore.removeChangeListener(this._onChangeEvent);
+	  },
+
+	  _onChangeEvent: function () {
+
+	    var that = this;
+	    this.setState({
+	      close: chartStore.getChartData().close,
+	      xAxis: chartStore.getChartData().dates
+	    }, function () {
+	      this.render();
+	      //send the data to the chartBuild method
+	      that.buildChart(this.state.close, this.state.xAxis);
+	    });
+	  },
+
+	  buildChart: function (close, xAxis) {
+	    c3.generate({
+	      bindto: ReactDOM.findDOMNode(this.refs.chart),
+	      //data to pass to the graph
+	      data: {
+	        x: 'x',
+	        columns: [xAxis, close]
+	      },
+	      axis: {
+	        y: {
+	          //define the axis label and position
+	          label: {
+	            text: 'Closing Price in $',
+	            position: 'outer-middle'
+	          }
+	        },
+	        x: {
+	          //define the fields on the x axis
+	          type: 'timeseries',
+	          tick: {
+	            format: '%Y-%m'
+	          },
+	          //define the axis label and position
+	          label: {
+	            text: 'Date',
+	            position: 'outer-middle'
+	          }
+	        }
+	      }
+	    });
+	  },
+
+	  render() {
+	    return React.createElement('div', { ref: 'chart', className: 'c3Line' });
+	  }
+	});
+
+	module.exports = StockGraph;
+
+/***/ },
+/* 405 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -62430,6 +62437,58 @@
 	});
 
 	module.exports = PortfolioDonut;
+
+/***/ },
+/* 406 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	//two gauges made on reflection could have made one
+
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+	// var { toJS } = require('immutable');
+	var c3 = __webpack_require__(389);
+
+	var SoloGauge = React.createClass({
+	  displayName: 'SoloGauge',
+
+	  componentDidMount() {
+	    //working out the percentage of the user funds
+	    var startFunds = parseFloat(this.props.cashValue);
+	    var you = parseFloat(this.props.portfolio);
+	    var total = startFunds + you;
+	    var percentage = you / total * 100;
+	    //call with the date to build the gauge chart
+	    this.buildChart(percentage.toFixed(2));
+	  },
+
+	  buildChart(you) {
+	    c3.generate({
+	      bindto: ReactDOM.findDOMNode(this.refs.chart),
+	      data: {
+	        columns: [['Me', you]],
+	        type: 'gauge'
+	      },
+	      color: {
+	        pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the color levels for the percentage values.
+	        threshold: {
+	          values: [30, 60, 90, 100]
+	        }
+	      },
+	      size: {
+	        height: 90
+	      }
+	    });
+	  },
+
+	  render() {
+	    return React.createElement('div', { ref: 'chart' });
+	  }
+
+	});
+
+	module.exports = SoloGauge;
 
 /***/ }
 /******/ ]);

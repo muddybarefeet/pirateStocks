@@ -6,7 +6,7 @@ var matchActions = require('./../../../actions/matchActions.js');
 var searchStore = require('./../../../stores/searchStore.js');
 var portfolioStore = require('./../../../stores/portfolioStore.js');
 var numeral = require('numeral');
-var StockChart = require('./../stockChart.jsx');
+var StockChart = require('./../graphs/stockChart.jsx');
 
 var Search = React.createClass({
 

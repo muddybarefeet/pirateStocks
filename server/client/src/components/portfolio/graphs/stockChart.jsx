@@ -2,8 +2,8 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var c3 = require('c3');
-var chartActions = require('./../../actions/chartActions.js');
-var chartStore = require('./../../stores/chartStore.js');
+var chartActions = require('./../../../actions/chartActions.js');
+var chartStore = require('./../../../stores/chartStore.js');
 
 //Chart used in each stock card to show the stock performance over the last year
 var StockGraph = React.createClass ({
