@@ -28,7 +28,6 @@ var StockGraph = React.createClass ({
   },
 
   _onChangeEvent: function () {
-
     var that = this;
     this.setState({
       close: chartStore.getChartData().close,

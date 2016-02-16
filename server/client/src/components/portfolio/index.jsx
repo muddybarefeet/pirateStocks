@@ -6,6 +6,7 @@ var matchActions = require('./../../actions/matchActions.js');
 var StockChart = require('./graphs/stockChart.jsx');
 var PortfolioDonut = require('./graphs/portfolioDonut.jsx');
 var numeral = require('numeral');
+var moment = require('moment');
 
 var Portfolio = React.createClass({
 
@@ -99,6 +100,15 @@ var Portfolio = React.createClass({
     var date;
     var arrayOfStocks;
     var stocksDonut;
+    var time;
+
+    if (moment(this.state.endDate).isBefore(new Date())) {
+      time = (<h5 className="centreTitle">Ended: {moment(this.state.endDate).fromNow()}</h5>);
+    } else if (moment(this.state.startDate).isBefore(new Date())) {
+      time = (<h5 className="centreTitle">Ends in: {moment(this.state.endDate).fromNow()}</h5>);
+    } else if (moment(this.state.startDate).isAfter(new Date())) {
+      time = (<h5 className="centreTitle">Starts in: {moment(this.state.startDate).fromNow()}</h5>);
+    }
 
     if (this.state.stocks) {
       stocksDonut = (<PortfolioDonut stocks={this.state.stocks} availableCash={this.state.availableCash} />);
@@ -153,7 +163,6 @@ var Portfolio = React.createClass({
                             </div>
 
                             <div className="col-md-9">
-
                               <StockChart symbol={stock[1]} startDate={date}/>
 
                             </div>
@@ -171,9 +180,10 @@ var Portfolio = React.createClass({
     }
 
     return (
-      <div className="container">
+      <div className="container centreTitle">
 
         <h1>Yer be dabblin{"'"} in {this.state.matchTitle}</h1>
+        {time}
         <div>
           <Link to="/matches">Return to Yer Battles</Link>
         </div>

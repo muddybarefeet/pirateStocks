@@ -43807,6 +43807,7 @@
 	var StockChart = __webpack_require__(404);
 	var PortfolioDonut = __webpack_require__(405);
 	var numeral = __webpack_require__(233);
+	var moment = __webpack_require__(234);
 
 	var Portfolio = React.createClass({
 	  displayName: 'Portfolio',
@@ -43900,6 +43901,30 @@
 	    var date;
 	    var arrayOfStocks;
 	    var stocksDonut;
+	    var time;
+
+	    if (moment(this.state.endDate).isBefore(new Date())) {
+	      time = React.createElement(
+	        'h5',
+	        { className: 'centreTitle' },
+	        'Ended: ',
+	        moment(this.state.endDate).fromNow()
+	      );
+	    } else if (moment(this.state.startDate).isBefore(new Date())) {
+	      time = React.createElement(
+	        'h5',
+	        { className: 'centreTitle' },
+	        'Ends in: ',
+	        moment(this.state.endDate).fromNow()
+	      );
+	    } else if (moment(this.state.startDate).isAfter(new Date())) {
+	      time = React.createElement(
+	        'h5',
+	        { className: 'centreTitle' },
+	        'Starts in: ',
+	        moment(this.state.startDate).fromNow()
+	      );
+	    }
 
 	    if (this.state.stocks) {
 	      stocksDonut = React.createElement(PortfolioDonut, { stocks: this.state.stocks, availableCash: this.state.availableCash });
@@ -44023,7 +44048,7 @@
 
 	    return React.createElement(
 	      'div',
-	      { className: 'container' },
+	      { className: 'container centreTitle' },
 	      React.createElement(
 	        'h1',
 	        null,
@@ -44032,6 +44057,7 @@
 	        ' in ',
 	        this.state.matchTitle
 	      ),
+	      time,
 	      React.createElement(
 	        'div',
 	        null,
@@ -62332,7 +62358,6 @@
 	  },
 
 	  _onChangeEvent: function () {
-
 	    var that = this;
 	    this.setState({
 	      close: chartStore.getChartData().close,
