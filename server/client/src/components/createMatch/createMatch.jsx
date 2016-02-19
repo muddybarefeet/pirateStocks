@@ -124,12 +124,12 @@ var Create = React.createClass({
               <li className="list-group-item container">
                 <div>
 
-                  <div className="form-group">
-                    <h4>Ahoy! Yer next battle be : {this.state.title}</h4>
+                  <div className="form-group centreTitle">
+                    <h4 className="subText">Ahoy! Yer next battle be : <span className="font">{this.state.title}</span></h4>
                   </div>
 
                   <div className="row container">
-                    <div className="col-sm-4">
+                    <div className="col-sm-6">
                       <h4>Start Date:</h4>
                       <DateTimePicker start="startDate" />
                       <h4>Type o{"'"} Battle:</h4>
@@ -140,7 +140,7 @@ var Create = React.createClass({
                       </select>
                     </div>
 
-                    <div className="col-sm-4 form-group">
+                    <div className="col-sm-6 form-group">
                       <h4>Finish Date:</h4>
                       <DateTimePicker end="endDate" />
                       <h4>Starting Gold:</h4>

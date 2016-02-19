@@ -14,10 +14,6 @@ body {
   width: 200px;
 }
 
-/*h1, h2 {
-  font-family: 'Jim Nightshade', cursive;
-  font-size: 50px;
-}*/
 p, div {
   font-family: 'Raleway', sans-serif;
   font-size: 14px;
@@ -30,6 +26,16 @@ p, div {
 div h1 {
   font-family: 'Jim Nightshade', cursive;
   font-size: 60px;
+}
+
+.font {
+  font-family: 'Jim Nightshade', cursive;
+  font-size: 30px;
+  color: #333;
+}
+
+.subText {
+  color: grey;
 }
 
 .capitalize {

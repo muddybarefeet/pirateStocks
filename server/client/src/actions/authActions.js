@@ -16,7 +16,10 @@ var authActions = {
           data: userData
         });
       } else {
-        console.log('err', err);
+        AppDispatcher.handleServerAction({
+          actionType: "USER_LOGIN_ERROR",
+          data: userData
+        });
       }
     });
 
@@ -30,11 +33,12 @@ var authActions = {
       if (response.status === 200) {
         userData = response.body.data;
         AppDispatcher.handleServerAction({
-          actionType: "USER_SIGNUP",
-          data: userData
+          actionType: "USER_SIGNUP"
         });
       } else {
-        console.log('err', err);
+        AppDispatcher.handleServerAction({
+          actionType: "USER_SIGNUP_ERROR"
+        });
       }
     });
 

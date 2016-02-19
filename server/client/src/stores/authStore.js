@@ -6,7 +6,9 @@ var CHANGE_EVENT = "change";
 
 
 var _userDetails = {
-  userName: null
+  userName: null,
+  signupError: null,
+  loginError: null
 };
 
 var authStore = Object.assign(new EventEmitter (), {
@@ -41,6 +43,16 @@ AppDispatcher.register( function (payload){ //'subscribes' to the dispatcher. St
   if (action.actionType === "USER_LOGIN") {
     localStorage.setItem("jwt", action.data.jwt);
     localStorage.setItem("username", action.data.username);
+    authStore.emitChange();
+  }
+
+  if (action.actionType === "USER_LOGIN_ERROR") {
+    _userDetails.loginError = "User details were nah found. Try loggin' yer details again or make a new account yer scurvy nave!";
+    authStore.emitChange();
+  }
+
+  if (action.actionType === "USER_SIGNUP_ERROR") {
+    _userDetails.signupError = "Thar was an error makin' yer account, me deepest appologies. Try yer luck again.";
     authStore.emitChange();
   }
 

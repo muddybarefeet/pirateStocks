@@ -18,6 +18,7 @@ module.exports = function (services) {
         });
       })
       .catch(function(err){
+        console.log('err', err);
         res.status(404).json({
             message: err.message
         });
@@ -40,6 +41,7 @@ module.exports = function (services) {
         });
       })
       .catch(function(err){
+        console.log('err', err);
         res.status(404).json({
             message: err.message
         });

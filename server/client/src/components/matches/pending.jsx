@@ -63,7 +63,7 @@ var PendingMatches = React.createClass({
         </div>);
 
       if (!this.state.pendingMatches) {
-        toDisplay = (<p key={0}>Oh arr! Ye {"'"}ave nah created or joined any battles yet, get t{"'"} t{"'"} it handsomely!</p>);
+        toDisplay = (<p key={0} className="centreTitle">Oh arr! Ye 'ave nah got an upcomin' battles yet, get t{"'"} t{"'"} it handsomely!</p>);
       } else {
         var that = this;
         this.state.pendingMatches.map(function (match, index) {

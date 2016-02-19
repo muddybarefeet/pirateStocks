@@ -67,7 +67,7 @@ var Matches = React.createClass({
         </div>);
 
       if (!this.state.matches) {
-        toDisplay = (<p key={0}>Oh arr! Ye {"'"}ave nah created or joined any battles yet, get t{"'"} t{"'"} it handsomely!</p>);
+        toDisplay = (<p key={0} className="centreTitle">Oh arr! Ye be nah in th' thick o' any battles yet , get t{"'"} t{"'"} it handsomely!</p>);
       } else {
         var that = this;
         this.state.matches.map(function (match, index) {

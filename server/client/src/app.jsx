@@ -41,7 +41,7 @@ var App = React.createClass({
     var userGreeting;
 
     var logoutButton = (
-      <li><a href="#"><span className="glyphicon glyphicon-log-in" onClick={this.logout} ></span> Logout</a></li>
+      <li><a onClick={this.logout}><span className="glyphicon glyphicon-log-in"></span>Logout</a></li>
     );
 
 

@@ -92,9 +92,9 @@
 	      null,
 	      React.createElement(
 	        'a',
-	        { href: '#' },
-	        React.createElement('span', { className: 'glyphicon glyphicon-log-in', onClick: this.logout }),
-	        ' Logout'
+	        { onClick: this.logout },
+	        React.createElement('span', { className: 'glyphicon glyphicon-log-in' }),
+	        'Logout'
 	      )
 	    );
 
@@ -24792,7 +24792,7 @@
 	  displayName: 'Home',
 
 	  handleLoginClick: function () {
-	    window.location.hash = '#/login';
+	    window.location.hash = '#/auth';
 	  },
 
 	  render: function () {
@@ -24832,10 +24832,10 @@
 	        { className: 'container' },
 	        React.createElement(
 	          'div',
-	          { className: 'font' },
+	          null,
 	          React.createElement(
 	            'h5',
-	            { className: 'font' },
+	            null,
 	            '1. Join or make a Battle'
 	          ),
 	          React.createElement(
@@ -24883,7 +24883,10 @@
 	          data: userData
 	        });
 	      } else {
-	        console.log('err', err);
+	        AppDispatcher.handleServerAction({
+	          actionType: "USER_LOGIN_ERROR",
+	          data: userData
+	        });
 	      }
 	    });
 	  },
@@ -24894,11 +24897,12 @@
 	      if (response.status === 200) {
 	        userData = response.body.data;
 	        AppDispatcher.handleServerAction({
-	          actionType: "USER_SIGNUP",
-	          data: userData
+	          actionType: "USER_SIGNUP"
 	        });
 	      } else {
-	        console.log('err', err);
+	        AppDispatcher.handleServerAction({
+	          actionType: "USER_SIGNUP_ERROR"
+	        });
 	      }
 	    });
 	  }
@@ -25257,11 +25261,6 @@
 	var baseUrl = __webpack_require__(225).BASE_URL;
 
 	var rp = __webpack_require__(226);
-
-	var displayErrorMsg = function (msg) {
-	  //display error message on screen
-	  //remove error message after XYZ seconds
-	};
 
 	var requestHelper = {
 
@@ -26709,7 +26708,9 @@
 	var CHANGE_EVENT = "change";
 
 	var _userDetails = {
-	  userName: null
+	  userName: null,
+	  signupError: null,
+	  loginError: null
 	};
 
 	var authStore = Object.assign(new EventEmitter(), {
@@ -26745,6 +26746,16 @@
 	  if (action.actionType === "USER_LOGIN") {
 	    localStorage.setItem("jwt", action.data.jwt);
 	    localStorage.setItem("username", action.data.username);
+	    authStore.emitChange();
+	  }
+
+	  if (action.actionType === "USER_LOGIN_ERROR") {
+	    _userDetails.loginError = "User details were nah found. Try loggin' yer details again or make a new account yer scurvy nave!";
+	    authStore.emitChange();
+	  }
+
+	  if (action.actionType === "USER_SIGNUP_ERROR") {
+	    _userDetails.signupError = "Thar was an error makin' yer account, me deepest appologies. Try yer luck again.";
 	    authStore.emitChange();
 	  }
 	});
@@ -27264,12 +27275,16 @@
 	                null,
 	                React.createElement(
 	                  'div',
-	                  { className: 'form-group' },
+	                  { className: 'form-group centreTitle' },
 	                  React.createElement(
 	                    'h4',
-	                    null,
+	                    { className: 'subText' },
 	                    'Ahoy! Yer next battle be : ',
-	                    this.state.title
+	                    React.createElement(
+	                      'span',
+	                      { className: 'font' },
+	                      this.state.title
+	                    )
 	                  )
 	                ),
 	                React.createElement(
@@ -27277,7 +27292,7 @@
 	                  { className: 'row container' },
 	                  React.createElement(
 	                    'div',
-	                    { className: 'col-sm-4' },
+	                    { className: 'col-sm-6' },
 	                    React.createElement(
 	                      'h4',
 	                      null,
@@ -27313,7 +27328,7 @@
 	                  ),
 	                  React.createElement(
 	                    'div',
-	                    { className: 'col-sm-4 form-group' },
+	                    { className: 'col-sm-6 form-group' },
 	                    React.createElement(
 	                      'h4',
 	                      null,
@@ -61703,10 +61718,8 @@
 	    if (!this.state.matches) {
 	      toDisplay = React.createElement(
 	        'p',
-	        { key: 0 },
-	        'Oh arr! Ye ',
-	        "'",
-	        'ave nah created or joined any battles yet, get t',
+	        { key: 0, className: 'centreTitle' },
+	        'Oh arr! Ye be nah in th\' thick o\' any battles yet , get t',
 	        "'",
 	        ' t',
 	        "'",
@@ -61899,10 +61912,14 @@
 	    if (!this.state.pastMatches) {
 	      toDisplay = React.createElement(
 	        'p',
-	        { key: 0 },
+	        { key: 0, className: 'centreTitle' },
 	        'Oh arr! Ye ',
 	        "'",
-	        'ave nah any past battles'
+	        'ave nah any past battles, get t',
+	        "'",
+	        ' t',
+	        "'",
+	        ' it handsomely!'
 	      );
 	    } else {
 	      var that = this;
@@ -62079,10 +62096,8 @@
 	    if (!this.state.pendingMatches) {
 	      toDisplay = React.createElement(
 	        'p',
-	        { key: 0 },
-	        'Oh arr! Ye ',
-	        "'",
-	        'ave nah created or joined any battles yet, get t',
+	        { key: 0, className: 'centreTitle' },
+	        'Oh arr! Ye \'ave nah got an upcomin\' battles yet, get t',
 	        "'",
 	        ' t',
 	        "'",

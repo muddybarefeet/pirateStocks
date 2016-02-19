@@ -5,7 +5,7 @@ var Link = require('react-router').Link;
 var Home = React.createClass({
 
   handleLoginClick: function () {
-    window.location.hash = '#/login';
+    window.location.hash = '#/auth';
   },
 
   render: function () {
@@ -28,8 +28,8 @@ var Home = React.createClass({
           <h6>Fantasy Stock Trading for Pirates and Penguins: because every pirate has an inner penguin</h6>
         </div>
         <div className="container">
-          <div className="font">
-            <h5 className="font">
+          <div>
+            <h5>
               1. Join or make a Battle
             </h5> 
             <h5>

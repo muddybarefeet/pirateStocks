@@ -64,7 +64,7 @@ var PastMatches = React.createClass({
         </div>);
 
       if (!this.state.pastMatches) {
-        toDisplay = (<p key={0}>Oh arr! Ye {"'"}ave nah any past battles</p>);
+        toDisplay = (<p key={0} className="centreTitle">Oh arr! Ye {"'"}ave nah any past battles, get t{"'"} t{"'"} it handsomely!</p>);
       } else {
         var that = this;
         this.state.pastMatches.map(function (match, index) {

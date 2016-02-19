@@ -50,7 +50,6 @@ module.exports = function (knex) {
         var obj = {};
         obj.jwt = encode({id: id, exp: current});
         obj.username = user_name;
-        console.log('from db methods',obj);
         return obj;
       } else {
         throw new Error("User Not Verified");
@@ -77,17 +76,12 @@ module.exports = function (knex) {
       }, '*');
     })
     .then(function (insertedUser) {
-      console.log('inserted data', insertedUser);
       //make an encoded jwt to send back to client plus username
       var obj = {};
       obj.jwt = encode({id: insertedUser[0].u_id});
       obj.username = insertedUser[0].username;
       console.log('return obj', obj);
       return obj;
-    })
-    .catch(function (err) {
-      // console.log('Error', err);
-      throw new Error("Email already exists");
     });
 
   };
